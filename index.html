@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <title>Sokunō (速脳) — Fast Brain</title>
+
+  <link rel="stylesheet" href="css/main.css?v=4">
+  <link rel="stylesheet" href="css/calculator.css?v=4">
+  <link rel="stylesheet" href="css/worldmap.css?v=4">
+  <link rel="stylesheet" href="css/dialogue.css?v=4">
+</head>
+<body>
+  <div id="game-container">
+
+    <!-- ============ TITLE SCREEN ============ -->
+    <div id="screen-title" class="screen">
+      <div class="title-kanji">速脳</div>
+      <div class="title-logo">SOKUNO</div>
+      <div class="title-subtitle">Fast Brain</div>
+      <button id="btn-start" class="btn-primary">Start</button>
+      <div class="title-controls">
+        <button id="btn-sound" class="btn-icon" title="Toggle Sound">🔊</button>
+        <button id="btn-reset" class="btn-icon" title="Hold to Reset">↺</button>
+      </div>
+    </div>
+
+    <!-- ============ WORLD MAP ============ -->
+    <div id="screen-worldmap" class="screen hidden">
+      <div class="worldmap-header">
+        <div class="worldmap-title">Dream World</div>
+        <div class="worldmap-subtitle">Choose a realm</div>
+      </div>
+      <div id="world-list" class="world-list"></div>
+    </div>
+
+    <!-- ============ GUARDIAN PICKER ============ -->
+    <div id="screen-guardian-pick" class="screen hidden">
+      <div class="guardian-pick-header">
+        <button id="btn-back-guardian" class="btn-back">← Back</button>
+        <div class="guardian-pick-title">Choose Your Companion</div>
+        <div class="guardian-pick-subtitle">One guardian will accompany you through this realm</div>
+      </div>
+      <div id="guardian-pick-list" class="guardian-pick-list"></div>
+    </div>
+
+    <!-- ============ STAGE SELECT ============ -->
+    <div id="screen-stageselect" class="screen hidden">
+      <div class="stageselect-header">
+        <button id="btn-back-worldmap" class="btn-back">← Back</button>
+        <div id="stage-world-name" class="stage-world-name"></div>
+        <div id="stage-companion" class="stage-companion"></div>
+      </div>
+      <div id="stage-list" class="stage-list"></div>
+    </div>
+
+    <!-- ============ GAMEPLAY ============ -->
+    <div id="screen-game" class="screen hidden">
+      <!-- Header: world label + sleep bar -->
+      <div class="game-header">
+        <div id="game-world-label" class="game-world-label"></div>
+        <div id="sleep-bar" class="sleep-bar-container">
+          <div id="sleep-bar-fill" class="sleep-bar-fill" style="width: 50%"></div>
+        </div>
+      </div>
+
+      <!-- Problem area -->
+      <div class="problem-area">
+        <div id="problem-display" class="problem-display">3 + 4 = ?</div>
+        <div id="answer-display" class="answer-box empty"></div>
+      </div>
+
+      <!-- Calculator -->
+      <div class="calculator-grid">
+        <button class="calc-btn number" data-value="7">7</button>
+        <button class="calc-btn number" data-value="8">8</button>
+        <button class="calc-btn number" data-value="9">9</button>
+        <button class="calc-btn number" data-value="4">4</button>
+        <button class="calc-btn number" data-value="5">5</button>
+        <button class="calc-btn number" data-value="6">6</button>
+        <button class="calc-btn number" data-value="1">1</button>
+        <button class="calc-btn number" data-value="2">2</button>
+        <button class="calc-btn number" data-value="3">3</button>
+        <button class="calc-btn clear" data-value="C">C</button>
+        <button class="calc-btn number" data-value="0">0</button>
+        <button class="calc-btn submit" data-value="submit">✓</button>
+      </div>
+
+      <!-- Power buttons -->
+      <div id="power-buttons" class="power-bar"></div>
+
+      <!-- Particles -->
+      <div id="particles"></div>
+
+      <!-- Power effect popup -->
+      <div id="power-effect" class="hidden"></div>
+    </div>
+
+    <!-- ============ VICTORY SCREEN ============ -->
+    <div id="screen-victory" class="screen hidden">
+      <div class="result-title" style="color: var(--gold);">Stage Clear!</div>
+      <div id="victory-stars" class="result-stars">⭐⭐⭐</div>
+      <div id="victory-errors" class="result-info">Errors: 0</div>
+      <div id="victory-problems" class="result-info">Problems solved: 10</div>
+      <div class="result-buttons">
+        <button id="btn-next-stage" class="btn-primary">Next Stage</button>
+        <button id="btn-victory-worldmap" class="btn-secondary">World Map</button>
+      </div>
+    </div>
+
+    <!-- ============ DEFEAT SCREEN ============ -->
+    <div id="screen-defeat" class="screen hidden">
+      <div class="result-title" style="color: var(--danger);">Defeated</div>
+      <div id="defeat-message" class="result-info">The Nightmares wake you up...</div>
+      <div class="result-buttons">
+        <button id="btn-retry" class="btn-primary">Retry</button>
+        <button id="btn-defeat-worldmap" class="btn-secondary">World Map</button>
+      </div>
+    </div>
+
+    <!-- ============ DIALOGUE OVERLAY ============ -->
+    <div id="dialogue-overlay" class="hidden"></div>
+
+  </div>
+
+  <!-- Scripts (order matters) -->
+  <script src="js/storage.js?v=4"></script>
+  <script src="js/audio.js?v=4"></script>
+  <script src="js/problems.js?v=4"></script>
+  <script src="js/sleepbar.js?v=4"></script>
+  <script src="js/powers.js?v=4"></script>
+  <script src="js/progression.js?v=4"></script>
+  <script src="js/dialogue.js?v=4"></script>
+  <script src="js/calculator.js?v=4"></script>
+  <script src="js/game.js?v=4"></script>
+</body>
+</html>

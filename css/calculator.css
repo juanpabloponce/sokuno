@@ -1,0 +1,315 @@
+/* calculator.css — Calculator and gameplay UI (dreamy night theme, enhanced) */
+
+/* --- Game Screen Layout --- */
+#screen-game {
+  background:
+    radial-gradient(ellipse at 50% 30%, rgba(93,230,200,0.06) 0%, transparent 50%),
+    radial-gradient(ellipse at 80% 70%, rgba(180,160,255,0.04) 0%, transparent 40%),
+    linear-gradient(180deg, #060e18 0%, #0c1a2e 40%, #122844 100%);
+  background-size: 400% 400%;
+}
+
+.game-header {
+  padding: 14px 18px 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.game-world-label {
+  font-family: 'Zen Dots', 'Fredoka', sans-serif;
+  font-size: 13px;
+  font-weight: 400;
+  color: var(--teal);
+  text-align: center;
+  letter-spacing: 1.5px;
+  filter: drop-shadow(0 0 8px var(--teal-glow));
+}
+
+/* --- Dream Sleep Bar --- */
+.sleep-bar-container {
+  width: 100%;
+  height: 16px;
+  background: rgba(8, 18, 32, 0.85);
+  border-radius: 20px;
+  overflow: hidden;
+  position: relative;
+  border: 1.5px solid rgba(93, 230, 200, 0.12);
+  box-shadow:
+    inset 0 2px 8px rgba(0,0,0,0.4),
+    0 0 12px rgba(93, 230, 200, 0.06);
+}
+
+.sleep-bar-fill {
+  height: 100%;
+  border-radius: 20px;
+  background: linear-gradient(90deg, #9B5DE5, #5de6c8, #ffe066);
+  background-size: 200% 100%;
+  animation: dreamBarShimmer 3s ease-in-out infinite;
+  transition: width 0.15s ease;
+  position: relative;
+  box-shadow: 0 0 14px rgba(93, 230, 200, 0.35);
+}
+
+@keyframes dreamBarShimmer {
+  0%   { background-position: 0% 50%; }
+  50%  { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+.sleep-bar-fill.pulse {
+  animation: dreamBarShimmer 3s ease-in-out infinite, barPulseGlow 1.2s ease-in-out infinite;
+}
+
+@keyframes barPulseGlow {
+  0%, 100% { box-shadow: 0 0 14px rgba(93, 230, 200, 0.35); }
+  50% { box-shadow: 0 0 24px rgba(255, 224, 102, 0.5), 0 0 40px rgba(93, 230, 200, 0.25); }
+}
+
+.sleep-bar-container.frozen {
+  border-color: rgba(126, 200, 227, 0.5);
+  box-shadow:
+    inset 0 2px 8px rgba(0,0,0,0.3),
+    0 0 20px rgba(126, 200, 227, 0.3),
+    0 0 40px rgba(126, 200, 227, 0.1);
+}
+
+.sleep-bar-container.frozen .sleep-bar-fill {
+  background: linear-gradient(90deg, #7ec8e3, #b4d8ee, #d4ecf7) !important;
+  background-size: 200% 100% !important;
+  animation: dreamBarShimmer 2s ease-in-out infinite !important;
+}
+
+/* --- Problem Display --- */
+.problem-area {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 24px;
+  padding: 20px;
+}
+
+.problem-display {
+  font-family: 'Zen Dots', 'Fredoka', sans-serif;
+  font-size: 40px;
+  font-weight: 400;
+  color: var(--text-primary);
+  letter-spacing: 5px;
+  text-align: center;
+  min-height: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-shadow: 0 0 24px rgba(93,230,200,0.12), 0 0 60px rgba(93,230,200,0.04);
+}
+
+/* --- Answer Display --- */
+.answer-box {
+  width: 180px;
+  height: 58px;
+  background: var(--glass-bg);
+  border: 2px solid rgba(93, 230, 200, 0.18);
+  border-radius: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Zen Dots', 'Fredoka', sans-serif;
+  font-size: 34px;
+  font-weight: 400;
+  color: var(--text-primary);
+  position: relative;
+  transition: border-color 0.2s, background 0.2s, box-shadow 0.2s, transform 0.15s;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+}
+
+.answer-box.empty::after {
+  content: '|';
+  animation: cursorBlink 1s step-end infinite;
+  color: var(--teal);
+  opacity: 0.6;
+}
+
+@keyframes cursorBlink {
+  0%, 50% { opacity: 0.6; }
+  51%, 100% { opacity: 0; }
+}
+
+.answer-box.correct-flash {
+  border-color: var(--success);
+  background: rgba(125, 255, 179, 0.12);
+  box-shadow: 0 0 30px rgba(125, 255, 179, 0.3), 0 0 60px rgba(125, 255, 179, 0.1);
+  animation: correctPulse 0.35s ease-out;
+}
+
+@keyframes correctPulse {
+  0% { transform: scale(1); }
+  40% { transform: scale(1.06); }
+  100% { transform: scale(1); }
+}
+
+.answer-box.wrong-flash {
+  border-color: var(--danger);
+  background: rgba(255, 107, 129, 0.12);
+  box-shadow: 0 0 30px rgba(255, 107, 129, 0.25), 0 0 60px rgba(255, 107, 129, 0.08);
+  animation: shake 0.35s ease;
+}
+
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  20% { transform: translateX(-7px); }
+  40% { transform: translateX(7px); }
+  60% { transform: translateX(-5px); }
+  80% { transform: translateX(5px); }
+}
+
+/* Combo scale effect */
+.answer-box.combo-boost {
+  animation: comboScale 0.3s ease-out;
+}
+
+@keyframes comboScale {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.1); }
+  100% { transform: scale(1); }
+}
+
+/* --- Calculator Buttons --- */
+.calculator-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+  padding: 10px 24px;
+  max-width: 320px;
+  margin: 0 auto;
+  width: 100%;
+}
+
+.calc-btn {
+  height: 58px;
+  border: none;
+  border-radius: 18px;
+  font-family: 'Zen Dots', 'Fredoka', sans-serif;
+  font-size: 24px;
+  font-weight: 400;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.1s ease, background 0.1s ease, box-shadow 0.15s ease, border-color 0.15s;
+  -webkit-tap-highlight-color: transparent;
+  position: relative;
+  overflow: hidden;
+}
+
+.calc-btn.number {
+  background: var(--glass-bg);
+  color: var(--text-primary);
+  border: 1.5px solid rgba(93, 230, 200, 0.1);
+  box-shadow: 0 2px 12px rgba(0,0,0,0.2);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+
+.calc-btn.number:active,
+.calc-btn.number.pressed {
+  transform: scale(0.92);
+  background: rgba(93, 230, 200, 0.18);
+  border-color: rgba(93, 230, 200, 0.3);
+  box-shadow: 0 0 16px rgba(93, 230, 200, 0.2), 0 2px 8px rgba(0,0,0,0.2);
+}
+
+.calc-btn.clear {
+  background: rgba(255, 107, 129, 0.08);
+  color: var(--danger);
+  border: 1.5px solid rgba(255, 107, 129, 0.12);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+
+.calc-btn.clear:active,
+.calc-btn.clear.pressed {
+  transform: scale(0.92);
+  background: rgba(255, 107, 129, 0.22);
+  border-color: rgba(255, 107, 129, 0.3);
+  box-shadow: 0 0 14px rgba(255, 107, 129, 0.2);
+}
+
+.calc-btn.submit {
+  background: rgba(125, 255, 179, 0.08);
+  color: var(--success);
+  font-size: 26px;
+  border: 1.5px solid rgba(125, 255, 179, 0.12);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+
+.calc-btn.submit:active,
+.calc-btn.submit.pressed {
+  transform: scale(0.92);
+  background: rgba(125, 255, 179, 0.22);
+  border-color: rgba(125, 255, 179, 0.3);
+  box-shadow: 0 0 16px rgba(125, 255, 179, 0.25);
+}
+
+/* --- Power Buttons --- */
+.power-bar {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+  padding: 10px 16px 20px;
+}
+
+.power-btn {
+  width: 54px;
+  height: 54px;
+  border-radius: 16px;
+  border: 1.5px solid rgba(93, 230, 200, 0.1);
+  background: var(--glass-bg);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+  transition: transform 0.15s, border-color 0.2s, box-shadow 0.25s;
+  position: relative;
+}
+
+.power-btn.unlocked {
+  border-color: rgba(255, 224, 102, 0.2);
+  box-shadow: 0 0 14px rgba(255, 224, 102, 0.08), 0 4px 16px rgba(0,0,0,0.2);
+}
+
+.power-btn.unlocked:active {
+  transform: scale(0.9);
+  box-shadow: 0 0 20px rgba(255, 224, 102, 0.2), 0 0 40px rgba(255, 224, 102, 0.08);
+  border-color: rgba(255, 224, 102, 0.35);
+}
+
+.power-btn.locked, .power-btn.spent {
+  opacity: 0.3;
+  cursor: default;
+}
+
+.power-emoji {
+  font-size: 20px;
+  line-height: 1;
+}
+
+.power-uses {
+  font-family: 'Fredoka', sans-serif;
+  font-size: 10px;
+  font-weight: 800;
+  color: var(--gold);
+}
+
+.power-btn.locked .power-uses {
+  color: var(--text-dim);
+  font-size: 12px;
+}

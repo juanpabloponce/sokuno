@@ -1,0 +1,458 @@
+/* worldmap.css — World map, guardian picker, stage select (dreamy night, enhanced) */
+
+/* Shared screen background */
+#screen-worldmap,
+#screen-stageselect,
+#screen-guardian-pick {
+  background:
+    radial-gradient(ellipse at 50% 90%, rgba(93,230,200,0.06) 0%, transparent 40%),
+    radial-gradient(ellipse at 20% 20%, rgba(180,160,255,0.05) 0%, transparent 35%),
+    radial-gradient(ellipse at 80% 50%, rgba(255,224,102,0.03) 0%, transparent 35%),
+    linear-gradient(180deg, #060e18 0%, #0c1a2e 35%, #122844 65%, #163656 100%);
+  background-size: 400% 400%;
+}
+
+/* ============================================= */
+/* ===           WORLD MAP                   === */
+/* ============================================= */
+
+.worldmap-header {
+  padding: 24px 16px 10px;
+  text-align: center;
+}
+
+.worldmap-title {
+  font-family: 'Zen Dots', 'Fredoka', sans-serif;
+  font-size: 26px;
+  font-weight: 400;
+  background: linear-gradient(135deg, #ffe066 0%, #ffb88c 60%, #ff7eb3 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  filter: drop-shadow(0 0 14px rgba(255,224,102,0.3));
+}
+
+.worldmap-subtitle {
+  font-family: 'Fredoka', sans-serif;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text-secondary);
+  margin-top: 4px;
+  letter-spacing: 1px;
+}
+
+.world-list {
+  flex: 1;
+  overflow-y: auto;
+  padding: 10px 18px 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.world-card {
+  padding: 16px 18px;
+  border-radius: 20px;
+  background: var(--glass-bg);
+  border: 1.5px solid var(--glass-border);
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  cursor: pointer;
+  transition: transform 0.2s ease, border-color 0.25s, background 0.25s, box-shadow 0.3s;
+  position: relative;
+  overflow: hidden;
+  backdrop-filter: blur(var(--glass-blur));
+  -webkit-backdrop-filter: blur(var(--glass-blur));
+  box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+}
+
+.world-card.unlocked:active {
+  transform: scale(0.97);
+}
+
+.world-card.unlocked {
+  border-color: rgba(93, 230, 200, 0.12);
+  box-shadow: 0 4px 24px rgba(0,0,0,0.25), 0 0 20px rgba(93,230,200,0.06);
+}
+
+.world-card.unlocked:hover {
+  border-color: rgba(93, 230, 200, 0.2);
+  box-shadow: 0 4px 24px rgba(0,0,0,0.25), 0 0 25px rgba(93,230,200,0.1);
+}
+
+.world-card.unlocked::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 3px;
+  height: 100%;
+  background: linear-gradient(180deg, var(--world-primary), var(--world-accent));
+  border-radius: 0 4px 4px 0;
+  box-shadow: 0 0 10px var(--world-primary);
+}
+
+.world-card.complete {
+  border-color: rgba(255, 224, 102, 0.2);
+}
+
+.world-card.complete::before {
+  background: linear-gradient(180deg, var(--gold), var(--peach));
+  box-shadow: 0 0 12px rgba(255,224,102,0.3);
+}
+
+.world-card.locked {
+  opacity: 0.3;
+  cursor: default;
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+}
+
+.world-emoji {
+  font-size: 32px;
+  width: 52px;
+  height: 52px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  border-radius: 16px;
+  flex-shrink: 0;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.15);
+}
+
+.world-info {
+  display: flex;
+  flex-direction: column;
+}
+
+.world-name {
+  font-family: 'Fredoka', sans-serif;
+  font-size: 17px;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.world-guardian {
+  font-family: 'Fredoka', sans-serif;
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--text-secondary);
+  margin-top: 1px;
+}
+
+.world-stars {
+  font-size: 11px;
+  color: var(--gold);
+  margin-top: 4px;
+  font-weight: 700;
+  filter: drop-shadow(0 0 4px rgba(255,224,102,0.25));
+}
+
+.world-lock {
+  position: absolute;
+  right: 18px;
+  font-size: 22px;
+  opacity: 0.5;
+}
+
+/* ============================================= */
+/* ===         GUARDIAN PICKER               === */
+/* ============================================= */
+
+.guardian-pick-header {
+  padding: 22px 16px 8px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+}
+
+.guardian-pick-title {
+  font-family: 'Zen Dots', 'Fredoka', sans-serif;
+  font-size: 22px;
+  font-weight: 400;
+  background: linear-gradient(135deg, #ffe066 0%, #ffb88c 60%, #ff7eb3 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  filter: drop-shadow(0 0 10px rgba(255,224,102,0.25));
+}
+
+.guardian-pick-subtitle {
+  font-family: 'Fredoka', sans-serif;
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--text-secondary);
+  letter-spacing: 0.5px;
+}
+
+.guardian-pick-list {
+  flex: 1;
+  overflow-y: auto;
+  padding: 14px 18px 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.guardian-option {
+  padding: 14px 16px;
+  border-radius: 18px;
+  background: var(--glass-bg);
+  border: 1.5px solid var(--glass-border);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  cursor: pointer;
+  transition: transform 0.2s ease, border-color 0.25s, background 0.25s, box-shadow 0.3s;
+  position: relative;
+  backdrop-filter: blur(var(--glass-blur));
+  -webkit-backdrop-filter: blur(var(--glass-blur));
+  box-shadow: 0 4px 16px rgba(0,0,0,0.2);
+}
+
+.guardian-option:active {
+  transform: scale(0.97);
+}
+
+.guardian-option:hover {
+  border-color: rgba(93, 230, 200, 0.2);
+  background: rgba(20, 45, 75, 0.6);
+  box-shadow: 0 4px 20px rgba(0,0,0,0.25), 0 0 16px rgba(93,230,200,0.08);
+}
+
+.guardian-option.locked {
+  opacity: 0.25;
+  cursor: default;
+  pointer-events: none;
+}
+
+.guardian-option.native {
+  border-color: rgba(255, 224, 102, 0.18);
+  box-shadow: 0 0 16px rgba(255, 224, 102, 0.06), 0 4px 16px rgba(0,0,0,0.2);
+}
+
+.guardian-option.native:hover {
+  border-color: rgba(255, 224, 102, 0.3);
+  box-shadow: 0 0 24px rgba(255, 224, 102, 0.1), 0 4px 20px rgba(0,0,0,0.25);
+}
+
+.guardian-option.native .guardian-opt-tag {
+  display: inline-block;
+}
+
+.guardian-opt-emoji {
+  font-size: 30px;
+  width: 48px;
+  height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  border-radius: 50%;
+  flex-shrink: 0;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.15);
+}
+
+.guardian-opt-info {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  flex: 1;
+}
+
+.guardian-opt-name {
+  font-family: 'Fredoka', sans-serif;
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.guardian-opt-power {
+  font-family: 'Fredoka', sans-serif;
+  font-size: 12px;
+  color: var(--gold);
+  font-weight: 600;
+  filter: drop-shadow(0 0 4px rgba(255,224,102,0.2));
+}
+
+.guardian-opt-desc {
+  font-family: 'Fredoka', sans-serif;
+  font-size: 11px;
+  color: var(--text-secondary);
+  line-height: 1.3;
+  font-weight: 500;
+}
+
+.guardian-opt-tag {
+  display: none;
+  font-family: 'Fredoka', sans-serif;
+  font-size: 9px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: var(--gold);
+  background: rgba(255, 224, 102, 0.08);
+  border: 1px solid rgba(255, 224, 102, 0.15);
+  padding: 3px 8px;
+  border-radius: 8px;
+  position: absolute;
+  top: 8px;
+  right: 10px;
+}
+
+.guardian-opt-lock {
+  font-size: 18px;
+  position: absolute;
+  right: 16px;
+  opacity: 0.5;
+}
+
+/* Stage companion badge */
+.stage-companion {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  font-family: 'Fredoka', sans-serif;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text-secondary);
+  margin-top: 2px;
+}
+
+.stage-companion .companion-emoji {
+  font-size: 16px;
+}
+
+.stage-companion .companion-name {
+  font-weight: 700;
+  color: var(--gold);
+  filter: drop-shadow(0 0 4px rgba(255,224,102,0.2));
+}
+
+/* ============================================= */
+/* ===          STAGE SELECT                 === */
+/* ============================================= */
+
+.stageselect-header {
+  padding: 22px 16px 12px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+}
+
+.stage-world-name {
+  font-family: 'Zen Dots', 'Fredoka', sans-serif;
+  font-size: 22px;
+  font-weight: 400;
+  filter: drop-shadow(0 0 10px var(--teal-glow));
+}
+
+.btn-back {
+  align-self: flex-start;
+  padding: 8px 16px;
+  font-family: 'Fredoka', sans-serif;
+  font-size: 13px;
+  font-weight: 600;
+  border: 1.5px solid rgba(93, 230, 200, 0.15);
+  border-radius: 20px;
+  background: var(--glass-bg);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  color: var(--teal);
+  cursor: pointer;
+  transition: background 0.2s, border-color 0.2s, box-shadow 0.25s;
+}
+
+.btn-back:active {
+  background: rgba(93, 230, 200, 0.12);
+  border-color: rgba(93, 230, 200, 0.25);
+  box-shadow: 0 0 12px rgba(93, 230, 200, 0.12);
+}
+
+.stage-list {
+  flex: 1;
+  overflow-y: auto;
+  padding: 14px 18px 24px;
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 10px;
+  align-content: start;
+}
+
+.stage-card {
+  aspect-ratio: 1;
+  border-radius: 16px;
+  background: var(--glass-bg);
+  border: 1.5px solid var(--glass-border);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  cursor: pointer;
+  transition: transform 0.2s ease, border-color 0.25s, box-shadow 0.3s, background 0.25s;
+  position: relative;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  box-shadow: 0 2px 12px rgba(0,0,0,0.2);
+}
+
+.stage-card.unlocked {
+  border-color: rgba(93, 230, 200, 0.12);
+  box-shadow: 0 2px 14px rgba(0,0,0,0.2), 0 0 10px rgba(93,230,200,0.04);
+}
+
+.stage-card.unlocked:active {
+  transform: scale(0.92);
+  border-color: rgba(93, 230, 200, 0.25);
+  box-shadow: 0 0 16px rgba(93, 230, 200, 0.12);
+}
+
+.stage-card.unlocked:hover {
+  border-color: rgba(93, 230, 200, 0.2);
+  box-shadow: 0 2px 16px rgba(0,0,0,0.25), 0 0 14px rgba(93,230,200,0.08);
+}
+
+.stage-card.boss {
+  border-color: rgba(255, 224, 102, 0.2);
+  background: rgba(255, 224, 102, 0.04);
+  box-shadow: 0 0 14px rgba(255, 224, 102, 0.08), 0 2px 12px rgba(0,0,0,0.2);
+}
+
+.stage-card.boss:hover {
+  border-color: rgba(255, 224, 102, 0.35);
+  box-shadow: 0 0 20px rgba(255, 224, 102, 0.12);
+}
+
+.stage-card.locked {
+  opacity: 0.2;
+  cursor: default;
+}
+
+.stage-number {
+  font-family: 'Zen Dots', 'Fredoka', sans-serif;
+  font-size: 20px;
+  font-weight: 400;
+  color: var(--text-primary);
+}
+
+.stage-stars {
+  font-size: 9px;
+  letter-spacing: 1px;
+  filter: drop-shadow(0 0 3px rgba(255,224,102,0.25));
+}
+
+.stage-lock {
+  position: absolute;
+  font-size: 14px;
+  opacity: 0.5;
+}

@@ -1,0 +1,144 @@
+{
+  "intro": [
+    { "speaker": "Yumemori", "emoji": "👁️", "text": "Welcome, young dreamer." },
+    { "speaker": "Yumemori", "emoji": "👁️", "text": "I am Yumemori, Guardian of Dreams. Before we begin, tell me..." },
+    { "speaker": "Yumemori", "emoji": "👁️", "text": "What is your name, dreamer?", "type": "nameInput", "button": "That's my name" },
+    { "speaker": "Yumemori", "emoji": "👁️", "text": "{playerName}... what a wonderful name. I will remember it." },
+    { "speaker": "Yumemori", "emoji": "👁️", "text": "You have found your way to the Dream World, {playerName}. A place where minds grow stronger." },
+    { "speaker": "Yumemori", "emoji": "👁️", "text": "For centuries, I have watched over this realm." },
+    { "speaker": "Yumemori", "emoji": "👁️", "text": "But darkness has come. The Nightmares have put our guardians to sleep and covered the realms in shadow." },
+    { "speaker": "Yumemori", "emoji": "👁️", "text": "I have waited for someone like you, {playerName}. A dreamer with a bright mind." },
+    { "speaker": "Yumemori", "emoji": "👁️", "text": "Will you help me awaken the guardians and bring light back to the Dream World?", "button": "Yes, I will help" },
+    { "speaker": "Yumemori", "emoji": "👁️", "text": "Thank you, brave {playerName}. Your journey begins in the Realm of Ice, where Fubuki sleeps." },
+    { "speaker": "Yumemori", "emoji": "👁️", "text": "Solve the challenges. Fill your mind with light. And the guardians will awaken." },
+    { "speaker": "Yumemori", "emoji": "👁️", "text": "But beware... the Nightmares will try to wake you. Stay focused. Stay bright." },
+    { "speaker": "Yumemori", "emoji": "👁️", "text": "Go now, {playerName}. I believe in you." }
+  ],
+  "worldIntros": {
+    "1": [
+      { "speaker": "Yumemori", "emoji": "👁️", "text": "This is the Realm of Ice, home of Fubuki, the guardian of frost." },
+      { "speaker": "Yumemori", "emoji": "👁️", "text": "Fubuki sleeps beneath the frozen lake. Only your light can reach her." },
+      { "speaker": "Yumemori", "emoji": "👁️", "text": "The challenges here will test your ability to add and subtract quickly." },
+      { "speaker": "Yumemori", "emoji": "👁️", "text": "Remember: each correct answer brings light. Each mistake lets the Nightmares closer." },
+      { "speaker": "Yumemori", "emoji": "👁️", "text": "Fill the light bar to complete each stage. Complete all ten, and Fubuki will awaken.", "button": "Begin" }
+    ],
+    "2": [
+      { "speaker": "Yumemori", "emoji": "👁️", "text": "Welcome to the Psychic Realm, {playerName}. Home of Omoi, the guardian of thought." },
+      { "speaker": "Yumemori", "emoji": "👁️", "text": "Omoi sees what others cannot. But the Nightmares have clouded his vision." },
+      { "speaker": "Yumemori", "emoji": "👁️", "text": "The numbers here will grow larger. But your mind is ready." },
+      { "speaker": "Yumemori", "emoji": "👁️", "text": "Add and subtract with focus. Light the way to Omoi.", "button": "Begin" }
+    ],
+    "3": [
+      { "speaker": "Yumemori", "emoji": "👁️", "text": "This is the Jungle Realm, where Midori tends to growth." },
+      { "speaker": "Yumemori", "emoji": "👁️", "text": "Here, you will learn to multiply, {playerName}. Numbers will grow, just like the forest." },
+      { "speaker": "Yumemori", "emoji": "👁️", "text": "Midori believes in growth through patience. Trust the process.", "button": "Begin" }
+    ],
+    "4": [
+      { "speaker": "Yumemori", "emoji": "👁️", "text": "The Cosmos Realm stretches across the stars. Uchū watches over infinity." },
+      { "speaker": "Yumemori", "emoji": "👁️", "text": "Here, you will learn to divide. To break the large into the small." },
+      { "speaker": "Yumemori", "emoji": "👁️", "text": "The universe is vast, but your mind can contain it, {playerName}.", "button": "Begin" }
+    ],
+    "5": [
+      { "speaker": "Yumemori", "emoji": "👁️", "text": "The Volcano Realm burns with intensity. Kaen thrives in the heat." },
+      { "speaker": "Yumemori", "emoji": "👁️", "text": "Here, multiplication and division combine. The challenges will be fierce." },
+      { "speaker": "Yumemori", "emoji": "👁️", "text": "But fire also brings strength. Let Kaen's spirit fuel you, {playerName}.", "button": "Begin" }
+    ],
+    "6": [
+      { "speaker": "Yumemori", "emoji": "👁️", "text": "The Ocean Realm is the deepest part of the Dream World. Nami flows through all." },
+      { "speaker": "Yumemori", "emoji": "👁️", "text": "Here, all your training comes together, {playerName}. Every operation you have learned." },
+      { "speaker": "Yumemori", "emoji": "👁️", "text": "This is your final test. But you are ready." },
+      { "speaker": "Yumemori", "emoji": "👁️", "text": "Flow like water. Adapt. Overcome.", "button": "Begin" }
+    ]
+  },
+  "stage10Intros": {
+    "1": [
+      { "speaker": "Yumemori", "emoji": "👁️", "text": "This is it, {playerName}. Fubuki is almost awake." },
+      { "speaker": "Yumemori", "emoji": "👁️", "text": "But the Nightmares are fighting hard. They do not want to lose this realm." },
+      { "speaker": "Yumemori", "emoji": "👁️", "text": "The bar will drain faster. You will start with less light." },
+      { "speaker": "Yumemori", "emoji": "👁️", "text": "Stay calm. Stay focused. You can do this.", "button": "Awaken Fubuki" }
+    ],
+    "2": [
+      { "speaker": "Yumemori", "emoji": "👁️", "text": "Omoi stirs in the mist. One final push, {playerName}." },
+      { "speaker": "Yumemori", "emoji": "👁️", "text": "The Nightmares will fight harder than ever. But so will you.", "button": "Awaken Omoi" }
+    ],
+    "3": [
+      { "speaker": "Yumemori", "emoji": "👁️", "text": "The jungle trembles. Midori is close to waking." },
+      { "speaker": "Yumemori", "emoji": "👁️", "text": "Show the Nightmares the power of growth, {playerName}.", "button": "Awaken Midori" }
+    ],
+    "4": [
+      { "speaker": "Yumemori", "emoji": "👁️", "text": "The stars are aligning. Uchū reaches out from the void." },
+      { "speaker": "Yumemori", "emoji": "👁️", "text": "One final challenge among the stars, {playerName}.", "button": "Awaken Uchū" }
+    ],
+    "5": [
+      { "speaker": "Yumemori", "emoji": "👁️", "text": "The volcano rumbles. Kaen's fire wants to break free." },
+      { "speaker": "Yumemori", "emoji": "👁️", "text": "Channel the flames, {playerName}. Let your mind burn bright.", "button": "Awaken Kaen" }
+    ],
+    "6": [
+      { "speaker": "Yumemori", "emoji": "👁️", "text": "The ocean stirs. The final guardian awaits." },
+      { "speaker": "Yumemori", "emoji": "👁️", "text": "Everything you have learned leads to this moment, {playerName}.", "button": "Awaken Nami" }
+    ]
+  },
+  "awakenings": {
+    "1": [
+      { "speaker": "Yumemori", "emoji": "👁️", "text": "{playerName}, you did it!" },
+      { "speaker": "Fubuki", "emoji": "❄️", "text": "..." },
+      { "speaker": "Fubuki", "emoji": "❄️", "text": "I... I am awake." },
+      { "speaker": "Fubuki", "emoji": "❄️", "text": "Thank you, {playerName}. The Nightmares kept me frozen for so long." },
+      { "speaker": "Fubuki", "emoji": "❄️", "text": "Now I will help you. When the darkness feels too strong, call on me." },
+      { "speaker": "Fubuki", "emoji": "❄️", "text": "I can freeze the Nightmares in their tracks. Your light will have time to grow." },
+      { "speaker": "Yumemori", "emoji": "👁️", "text": "Fubuki's power is now yours. Use it wisely, {playerName}." },
+      { "speaker": "system", "text": "New Power Unlocked: Freeze — Stops bar drain for 5 seconds", "type": "power" },
+      { "speaker": "Yumemori", "emoji": "👁️", "text": "Five realms remain. The Psychic Realm awaits.", "button": "Continue" }
+    ],
+    "2": [
+      { "speaker": "Omoi", "emoji": "🔮", "text": "I can see again." },
+      { "speaker": "Omoi", "emoji": "🔮", "text": "The Nightmares blinded me with doubt. But your light cut through, {playerName}." },
+      { "speaker": "Omoi", "emoji": "🔮", "text": "I offer you my gift: Insight. When a problem seems too hard, I will show you the way." },
+      { "speaker": "system", "text": "New Power Unlocked: Insight — Reveals first half of answer", "type": "power" },
+      { "speaker": "Yumemori", "emoji": "👁️", "text": "Two guardians stand with you now. The Jungle Realm calls.", "button": "Continue" }
+    ],
+    "3": [
+      { "speaker": "Midori", "emoji": "🌿", "text": "Life returns." },
+      { "speaker": "Midori", "emoji": "🌿", "text": "The Nightmares wanted everything to wither. But you brought growth, {playerName}." },
+      { "speaker": "Midori", "emoji": "🌿", "text": "Take my gift: Restore. When your light fades, I will help it bloom again." },
+      { "speaker": "system", "text": "New Power Unlocked: Restore — Recovers 20% of sleep bar", "type": "power" },
+      { "speaker": "Yumemori", "emoji": "👁️", "text": "Three guardians awake. The Cosmos awaits.", "button": "Continue" }
+    ],
+    "4": [
+      { "speaker": "Uchū", "emoji": "👾", "text": "The stars remember." },
+      { "speaker": "Uchū", "emoji": "👾", "text": "I have traveled the cosmos alone while sleeping. But you called me back, {playerName}." },
+      { "speaker": "Uchū", "emoji": "👾", "text": "My gift: Cosmic Solve. When the weight of the universe feels too heavy, I will carry one problem for you." },
+      { "speaker": "system", "text": "New Power Unlocked: Cosmic Solve — Auto-completes one problem correctly", "type": "power" },
+      { "speaker": "Yumemori", "emoji": "👁️", "text": "Four guardians shine. The Volcano rumbles.", "button": "Continue" }
+    ],
+    "5": [
+      { "speaker": "Kaen", "emoji": "🔥", "text": "FINALLY!" },
+      { "speaker": "Kaen", "emoji": "🔥", "text": "I was burning with frustration in that darkness. Now I burn with PURPOSE!" },
+      { "speaker": "Kaen", "emoji": "🔥", "text": "My gift to you, {playerName}: Blaze Skip. Some problems are not worth the fight. Skip them. Move on. Win." },
+      { "speaker": "system", "text": "New Power Unlocked: Blaze Skip — Skip problem without penalty", "type": "power" },
+      { "speaker": "Yumemori", "emoji": "👁️", "text": "Five guardians blaze. One remains. The Ocean calls.", "button": "Continue" }
+    ],
+    "6": [
+      { "speaker": "Nami", "emoji": "🌊", "text": "Peace." },
+      { "speaker": "Nami", "emoji": "🌊", "text": "The currents are calm again. You have brought balance, {playerName}." },
+      { "speaker": "Nami", "emoji": "🌊", "text": "My gift: Simplify. When the waters are too rough, I will smooth them for you." },
+      { "speaker": "system", "text": "New Power Unlocked: Simplify — Reduces problem to easier numbers", "type": "power" },
+      { "speaker": "Yumemori", "emoji": "👁️", "text": "All six guardians stand with you now.", "button": "Continue" }
+    ]
+  },
+  "finale": [
+    { "speaker": "Yumemori", "emoji": "👁️", "text": "You have done it, {playerName}." },
+    { "speaker": "Yumemori", "emoji": "👁️", "text": "All six realms shine bright. All six guardians stand with you." },
+    { "speaker": "Fubuki", "emoji": "❄️", "text": "You melted through the cold, {playerName}." },
+    { "speaker": "Omoi", "emoji": "🔮", "text": "You saw through the doubt." },
+    { "speaker": "Midori", "emoji": "🌿", "text": "You grew through the struggle." },
+    { "speaker": "Uchū", "emoji": "👾", "text": "You reached across infinity." },
+    { "speaker": "Kaen", "emoji": "🔥", "text": "You burned through the barriers!" },
+    { "speaker": "Nami", "emoji": "🌊", "text": "You flowed through every challenge." },
+    { "speaker": "Yumemori", "emoji": "👁️", "text": "The Nightmares have retreated. The Dream World is whole again." },
+    { "speaker": "Yumemori", "emoji": "👁️", "text": "But remember, {playerName}... the Nightmares never disappear forever." },
+    { "speaker": "Yumemori", "emoji": "👁️", "text": "They wait. They hope you will stop training. Stop dreaming." },
+    { "speaker": "Yumemori", "emoji": "👁️", "text": "So return every night. Keep your light bright. Keep your mind sharp." },
+    { "speaker": "Yumemori", "emoji": "👁️", "text": "You are Sokunō now, {playerName}. The Fast Brain. The Dreamer who saved the Dream World.", "button": "Continue Training" }
+  ]
+}

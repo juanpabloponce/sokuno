@@ -1,0 +1,185 @@
+/* dialogue.css — Dialogue and story scenes (dreamy night theme, enhanced) */
+
+#dialogue-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background:
+    radial-gradient(ellipse at 50% 80%, rgba(93,230,200,0.04) 0%, transparent 50%),
+    radial-gradient(ellipse at 30% 30%, rgba(180,160,255,0.03) 0%, transparent 40%),
+    rgba(4, 10, 22, 0.92);
+  z-index: 500;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  padding: 20px;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  animation: dialogueFadeIn 0.3s ease-out;
+}
+
+@keyframes dialogueFadeIn {
+  0% { opacity: 0; }
+  100% { opacity: 1; }
+}
+
+#dialogue-overlay.hidden {
+  display: none;
+}
+
+.dialogue-box {
+  width: 100%;
+  max-width: 400px;
+  background: var(--glass-bg);
+  border: 1.5px solid rgba(93, 230, 200, 0.12);
+  border-radius: 24px;
+  padding: 24px;
+  margin-bottom: 20px;
+  box-shadow:
+    0 10px 50px rgba(0, 0, 0, 0.45),
+    0 0 40px rgba(93, 230, 200, 0.06),
+    inset 0 1px 0 rgba(255,255,255,0.04);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  animation: dialogueBoxSlideIn 0.35s ease-out;
+}
+
+@keyframes dialogueBoxSlideIn {
+  0% {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.dialogue-speaker {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 14px;
+}
+
+.dialogue-emoji {
+  font-size: 28px;
+  filter: drop-shadow(0 0 10px rgba(255,224,102,0.25));
+}
+
+.dialogue-name {
+  font-family: 'Zen Dots', 'Fredoka', sans-serif;
+  font-size: 16px;
+  font-weight: 400;
+  background: linear-gradient(135deg, var(--gold), var(--peach));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  letter-spacing: 1px;
+}
+
+.dialogue-text {
+  font-family: 'Fredoka', sans-serif;
+  font-size: 15px;
+  line-height: 1.7;
+  color: var(--text-primary);
+  min-height: 60px;
+  margin-bottom: 20px;
+  font-weight: 500;
+}
+
+.dialogue-text.power-unlock {
+  color: var(--gold);
+  font-weight: 700;
+  text-align: center;
+  padding: 16px;
+  background: rgba(255, 224, 102, 0.06);
+  border-radius: 16px;
+  border: 1px solid rgba(255, 224, 102, 0.12);
+  box-shadow: 0 0 24px rgba(255, 224, 102, 0.06);
+  animation: powerUnlockGlow 2s ease-in-out infinite alternate;
+}
+
+@keyframes powerUnlockGlow {
+  0% { box-shadow: 0 0 20px rgba(255, 224, 102, 0.04); }
+  100% { box-shadow: 0 0 30px rgba(255, 224, 102, 0.1); }
+}
+
+.dialogue-continue-btn {
+  width: 100%;
+  padding: 14px;
+  font-family: 'Fredoka', sans-serif;
+  font-size: 15px;
+  font-weight: 700;
+  border: none;
+  border-radius: 16px;
+  background: linear-gradient(135deg, rgba(93, 230, 200, 0.1), rgba(126, 200, 227, 0.06));
+  border: 1.5px solid rgba(93, 230, 200, 0.18);
+  color: var(--teal);
+  cursor: pointer;
+  transition: transform 0.15s, background 0.2s, box-shadow 0.25s, border-color 0.2s;
+  letter-spacing: 1px;
+}
+
+.dialogue-continue-btn:active {
+  transform: scale(0.97);
+  background: rgba(93, 230, 200, 0.18);
+  border-color: rgba(93, 230, 200, 0.3);
+  box-shadow: 0 0 18px rgba(93, 230, 200, 0.15);
+}
+
+/* --- Name Input in Dialogue --- */
+.dialogue-input-area {
+  margin-bottom: 16px;
+}
+
+.dialogue-input-area.hidden {
+  display: none;
+}
+
+.dialogue-name-input {
+  width: 100%;
+  padding: 14px 18px;
+  font-family: 'Fredoka', sans-serif;
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--text-primary);
+  background: rgba(14, 32, 58, 0.6);
+  border: 2px solid rgba(93, 230, 200, 0.18);
+  border-radius: 16px;
+  outline: none;
+  text-align: center;
+  letter-spacing: 1px;
+  transition: border-color 0.25s, box-shadow 0.3s, background 0.25s;
+  caret-color: var(--teal);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+
+.dialogue-name-input::placeholder {
+  color: var(--text-dim);
+  font-weight: 500;
+  letter-spacing: 1px;
+}
+
+.dialogue-name-input:focus {
+  border-color: rgba(93, 230, 200, 0.4);
+  background: rgba(14, 32, 58, 0.75);
+  box-shadow: 0 0 24px rgba(93, 230, 200, 0.14), 0 0 50px rgba(93, 230, 200, 0.04);
+}
+
+.dialogue-name-input.shake {
+  animation: inputShake 0.4s ease;
+  border-color: var(--danger);
+  box-shadow: 0 0 16px rgba(255, 107, 129, 0.2);
+}
+
+@keyframes inputShake {
+  0%, 100% { transform: translateX(0); }
+  20% { transform: translateX(-6px); }
+  40% { transform: translateX(6px); }
+  60% { transform: translateX(-4px); }
+  80% { transform: translateX(4px); }
+}

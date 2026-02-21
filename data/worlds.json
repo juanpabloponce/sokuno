@@ -1,0 +1,106 @@
+{
+  "worlds": [
+    {
+      "id": 1,
+      "name": "Ice",
+      "guardian": "Fubuki",
+      "guardianMeaning": "Blizzard",
+      "guardianEmoji": "❄️",
+      "powerName": "Freeze",
+      "powerEffect": "Stops bar drain for 5 seconds",
+      "operations": ["addition", "subtraction"],
+      "numberRange": [1, 10],
+      "colors": {
+        "primary": "#A8D5E5",
+        "secondary": "#E8F4F8",
+        "accent": "#5BC0EB"
+      },
+      "stages": 10
+    },
+    {
+      "id": 2,
+      "name": "Psychic",
+      "guardian": "Omoi",
+      "guardianMeaning": "Thought",
+      "guardianEmoji": "🔮",
+      "powerName": "Insight",
+      "powerEffect": "Reveals first half of answer",
+      "operations": ["addition", "subtraction"],
+      "numberRange": [1, 20],
+      "colors": {
+        "primary": "#9B5DE5",
+        "secondary": "#F0E6FF",
+        "accent": "#00BBF9"
+      },
+      "stages": 10
+    },
+    {
+      "id": 3,
+      "name": "Jungle",
+      "guardian": "Midori",
+      "guardianMeaning": "Green",
+      "guardianEmoji": "🌿",
+      "powerName": "Restore",
+      "powerEffect": "Recovers 20% of sleep bar",
+      "operations": ["multiplication"],
+      "numberRange": [1, 5],
+      "colors": {
+        "primary": "#57CC99",
+        "secondary": "#E8F5E9",
+        "accent": "#80ED99"
+      },
+      "stages": 10
+    },
+    {
+      "id": 4,
+      "name": "Cosmos",
+      "guardian": "Uchū",
+      "guardianMeaning": "Universe",
+      "guardianEmoji": "👾",
+      "powerName": "Cosmic Solve",
+      "powerEffect": "Auto-completes current problem correctly",
+      "operations": ["division"],
+      "numberRange": [1, 5],
+      "colors": {
+        "primary": "#1A1A2E",
+        "secondary": "#16213E",
+        "accent": "#E94560"
+      },
+      "stages": 10
+    },
+    {
+      "id": 5,
+      "name": "Volcano",
+      "guardian": "Kaen",
+      "guardianMeaning": "Flame",
+      "guardianEmoji": "🔥",
+      "powerName": "Blaze Skip",
+      "powerEffect": "Skips current problem without penalty",
+      "operations": ["multiplication", "division"],
+      "numberRange": [1, 10],
+      "colors": {
+        "primary": "#FF6B35",
+        "secondary": "#FFF3E0",
+        "accent": "#F7931E"
+      },
+      "stages": 10
+    },
+    {
+      "id": 6,
+      "name": "Ocean",
+      "guardian": "Nami",
+      "guardianMeaning": "Wave",
+      "guardianEmoji": "🌊",
+      "powerName": "Simplify",
+      "powerEffect": "Reduces current problem to easier numbers",
+      "operations": ["addition", "subtraction", "multiplication", "division"],
+      "numberRange": [1, 20],
+      "colors": {
+        "primary": "#00B4D8",
+        "secondary": "#CAF0F8",
+        "accent": "#0077B6"
+      },
+      "stages": 10
+    }
+  ]
+}
