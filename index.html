@@ -7,28 +7,46 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <title>Sokunō (速脳) — Fast Brain</title>
 
-  <link rel="stylesheet" href="css/main.css?v=4">
-  <link rel="stylesheet" href="css/calculator.css?v=4">
-  <link rel="stylesheet" href="css/worldmap.css?v=4">
-  <link rel="stylesheet" href="css/dialogue.css?v=4">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Jost:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/main.css?v=26">
+  <link rel="stylesheet" href="css/calculator.css?v=26">
+  <link rel="stylesheet" href="css/worldmap.css?v=26">
+  <link rel="stylesheet" href="css/dialogue.css?v=26">
 </head>
 <body>
   <div id="game-container">
 
+    <!-- ============ WAKE UP SCREEN ============ -->
+    <div id="screen-wakeup" class="screen wakeup-screen">
+      <div class="wakeup-text" id="wakeup-text"></div>
+      <div class="wakeup-tap">tap</div>
+    </div>
+
     <!-- ============ TITLE SCREEN ============ -->
-    <div id="screen-title" class="screen">
-      <div class="title-kanji">速脳</div>
+    <div id="screen-title" class="screen hidden">
+      <!-- Starfield behind fog -->
+      <div id="title-stars" class="star-field"></div>
+      <!-- Animated fog layers -->
+      <div class="fog-container">
+        <div class="fog-layer fog-1"></div>
+        <div class="fog-layer fog-2"></div>
+        <div class="fog-layer fog-3"></div>
+        <div class="fog-layer fog-4"></div>
+      </div>
+
       <div class="title-logo">SOKUNO</div>
-      <div class="title-subtitle">Fast Brain</div>
-      <button id="btn-start" class="btn-primary">Start</button>
-      <div class="title-controls">
-        <button id="btn-sound" class="btn-icon" title="Toggle Sound">🔊</button>
-        <button id="btn-reset" class="btn-icon" title="Hold to Reset">↺</button>
+      <button id="btn-start" class="btn-start-dream">Enter the Dream World</button>
+      <div class="title-tagline">
+        Multi-sensory brain trainer — designed for flow state<br>
+        🎧 Headphones on. World off.
       </div>
     </div>
 
     <!-- ============ WORLD MAP ============ -->
     <div id="screen-worldmap" class="screen hidden">
+      <div id="worldmap-stars" class="star-field"></div>
       <div class="worldmap-header">
         <div class="worldmap-title">Dream World</div>
         <div class="worldmap-subtitle">Choose a realm</div>
@@ -48,6 +66,7 @@
 
     <!-- ============ STAGE SELECT ============ -->
     <div id="screen-stageselect" class="screen hidden">
+      <div id="stageselect-stars" class="star-field"></div>
       <div class="stageselect-header">
         <button id="btn-back-worldmap" class="btn-back">← Back</button>
         <div id="stage-world-name" class="stage-world-name"></div>
@@ -58,6 +77,7 @@
 
     <!-- ============ GAMEPLAY ============ -->
     <div id="screen-game" class="screen hidden">
+      <div id="game-stars" class="star-field"></div>
       <!-- Header: world label + sleep bar -->
       <div class="game-header">
         <div id="game-world-label" class="game-world-label"></div>
@@ -101,7 +121,7 @@
     <!-- ============ VICTORY SCREEN ============ -->
     <div id="screen-victory" class="screen hidden">
       <div class="result-title" style="color: var(--gold);">Stage Clear!</div>
-      <div id="victory-stars" class="result-stars">⭐⭐⭐</div>
+      <div id="victory-stars" class="result-stars"></div>
       <div id="victory-errors" class="result-info">Errors: 0</div>
       <div id="victory-problems" class="result-info">Problems solved: 10</div>
       <div class="result-buttons">
@@ -113,7 +133,7 @@
     <!-- ============ DEFEAT SCREEN ============ -->
     <div id="screen-defeat" class="screen hidden">
       <div class="result-title" style="color: var(--danger);">Defeated</div>
-      <div id="defeat-message" class="result-info">The Nightmares wake you up...</div>
+      <div id="defeat-message" class="result-info">The Nightmares have woken you up... You have left the Dream World.</div>
       <div class="result-buttons">
         <button id="btn-retry" class="btn-primary">Retry</button>
         <button id="btn-defeat-worldmap" class="btn-secondary">World Map</button>
@@ -126,14 +146,16 @@
   </div>
 
   <!-- Scripts (order matters) -->
-  <script src="js/storage.js?v=4"></script>
-  <script src="js/audio.js?v=4"></script>
-  <script src="js/problems.js?v=4"></script>
-  <script src="js/sleepbar.js?v=4"></script>
-  <script src="js/powers.js?v=4"></script>
-  <script src="js/progression.js?v=4"></script>
-  <script src="js/dialogue.js?v=4"></script>
-  <script src="js/calculator.js?v=4"></script>
-  <script src="js/game.js?v=4"></script>
+  <script src="js/worlds-data.js?v=26"></script>
+  <script src="js/dialogues-data.js?v=26"></script>
+  <script src="js/storage.js?v=26"></script>
+  <script src="js/audio.js?v=26"></script>
+  <script src="js/problems.js?v=26"></script>
+  <script src="js/sleepbar.js?v=26"></script>
+  <script src="js/powers.js?v=26"></script>
+  <script src="js/progression.js?v=26"></script>
+  <script src="js/dialogue.js?v=26"></script>
+  <script src="js/calculator.js?v=26"></script>
+  <script src="js/game.js?v=26"></script>
 </body>
 </html>

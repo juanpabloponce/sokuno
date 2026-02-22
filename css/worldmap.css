@@ -22,8 +22,8 @@
 }
 
 .worldmap-title {
-  font-family: 'Zen Dots', 'Fredoka', sans-serif;
-  font-size: 26px;
+  font-family: 'Leander', 'Zen Dots', 'Jost', sans-serif;
+  font-size: 34px;
   font-weight: 400;
   background: linear-gradient(135deg, #ffe066 0%, #ffb88c 60%, #ff7eb3 100%);
   -webkit-background-clip: text;
@@ -33,7 +33,7 @@
 }
 
 .worldmap-subtitle {
-  font-family: 'Fredoka', sans-serif;
+  font-family: 'Courier New', Courier, monospace;
   font-size: 13px;
   font-weight: 500;
   color: var(--text-secondary);
@@ -123,32 +123,132 @@
   box-shadow: 0 2px 12px rgba(0,0,0,0.15);
 }
 
+/* Low-poly SVG world icons */
+.world-icon {
+  width: 52px;
+  height: 52px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  border-radius: 16px;
+  flex-shrink: 0;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.15);
+  padding: 8px;
+}
+
+.world-icon svg,
+.world-icon img {
+  width: 100%;
+  height: 100%;
+  display: block;
+  object-fit: contain;
+}
+
+/* Inline icon for stage select title */
+.world-icon-inline {
+  display: inline-block;
+  width: 28px;
+  height: 28px;
+  vertical-align: middle;
+  margin-right: 4px;
+}
+
+.world-icon-inline svg,
+.world-icon-inline img {
+  width: 100%;
+  height: 100%;
+  display: block;
+  object-fit: contain;
+}
+
+/* Small icon for gameplay HUD label */
+.world-icon-small {
+  display: inline-block;
+  width: 20px;
+  height: 20px;
+  vertical-align: middle;
+  margin-right: 3px;
+}
+
+.world-icon-small svg,
+.world-icon-small img {
+  width: 100%;
+  height: 100%;
+  display: block;
+  object-fit: contain;
+}
+
 .world-info {
   display: flex;
   flex-direction: column;
 }
 
 .world-name {
-  font-family: 'Fredoka', sans-serif;
+  font-family: 'Courier New', Courier, monospace;
   font-size: 17px;
   font-weight: 700;
   color: var(--text-primary);
 }
 
 .world-guardian {
-  font-family: 'Fredoka', sans-serif;
+  font-family: 'Courier New', Courier, monospace;
   font-size: 12px;
   font-weight: 500;
   color: var(--text-secondary);
   margin-top: 1px;
 }
 
-.world-stars {
-  font-size: 11px;
-  color: var(--gold);
-  margin-top: 4px;
-  font-weight: 700;
-  filter: drop-shadow(0 0 4px rgba(255,224,102,0.25));
+/* --- World Orbs (stage progress dots) --- */
+
+.world-orbs {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  margin-top: 6px;
+}
+
+.world-orb {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  border: 1.5px solid var(--world-accent, var(--accent));
+  opacity: 0.3;
+  transition: all 0.3s ease;
+  background: transparent;
+  flex-shrink: 0;
+}
+
+/* Completed (1 star — passed the stage) */
+.world-orb.filled {
+  opacity: 0.7;
+  background: var(--world-accent, var(--accent));
+  width: 8px;
+  height: 8px;
+}
+
+/* Good (2 stars — ≤3 errors) */
+.world-orb.good {
+  opacity: 0.85;
+  width: 9px;
+  height: 9px;
+  box-shadow: 0 0 4px var(--world-accent, var(--accent));
+}
+
+/* Perfect (3 stars — 0 errors) */
+.world-orb.perfect {
+  opacity: 1;
+  width: 9px;
+  height: 9px;
+  box-shadow: 0 0 6px var(--world-accent, var(--accent)),
+              0 0 12px var(--world-accent, var(--accent));
+  animation: orbPulse 2.5s ease-in-out infinite;
+}
+
+@keyframes orbPulse {
+  0%, 100% { box-shadow: 0 0 6px var(--world-accent, var(--accent)), 0 0 12px var(--world-accent, var(--accent)); }
+  50% { box-shadow: 0 0 8px var(--world-accent, var(--accent)), 0 0 18px var(--world-accent, var(--accent)); }
 }
 
 .world-lock {
@@ -172,8 +272,8 @@
 }
 
 .guardian-pick-title {
-  font-family: 'Zen Dots', 'Fredoka', sans-serif;
-  font-size: 22px;
+  font-family: 'Leander', 'Zen Dots', 'Jost', sans-serif;
+  font-size: 28px;
   font-weight: 400;
   background: linear-gradient(135deg, #ffe066 0%, #ffb88c 60%, #ff7eb3 100%);
   -webkit-background-clip: text;
@@ -183,7 +283,7 @@
 }
 
 .guardian-pick-subtitle {
-  font-family: 'Fredoka', sans-serif;
+  font-family: 'Courier New', Courier, monospace;
   font-size: 12px;
   font-weight: 500;
   color: var(--text-secondary);
@@ -246,7 +346,6 @@
 }
 
 .guardian-opt-emoji {
-  font-size: 30px;
   width: 48px;
   height: 48px;
   display: flex;
@@ -257,6 +356,16 @@
   border-radius: 50%;
   flex-shrink: 0;
   box-shadow: 0 2px 10px rgba(0,0,0,0.15);
+  padding: 8px;
+}
+
+/* Guardian seal SVG icons */
+.guardian-seal {
+  width: 100%;
+  height: 100%;
+  display: block;
+  object-fit: contain;
+  filter: drop-shadow(0 0 6px rgba(255,224,102,0.15));
 }
 
 .guardian-opt-info {
@@ -267,14 +376,14 @@
 }
 
 .guardian-opt-name {
-  font-family: 'Fredoka', sans-serif;
+  font-family: 'Courier New', Courier, monospace;
   font-size: 15px;
   font-weight: 700;
   color: var(--text-primary);
 }
 
 .guardian-opt-power {
-  font-family: 'Fredoka', sans-serif;
+  font-family: 'Courier New', Courier, monospace;
   font-size: 12px;
   color: var(--gold);
   font-weight: 600;
@@ -282,7 +391,7 @@
 }
 
 .guardian-opt-desc {
-  font-family: 'Fredoka', sans-serif;
+  font-family: 'Courier New', Courier, monospace;
   font-size: 11px;
   color: var(--text-secondary);
   line-height: 1.3;
@@ -291,7 +400,7 @@
 
 .guardian-opt-tag {
   display: none;
-  font-family: 'Fredoka', sans-serif;
+  font-family: 'Courier New', Courier, monospace;
   font-size: 9px;
   font-weight: 700;
   text-transform: uppercase;
@@ -319,7 +428,7 @@
   align-items: center;
   justify-content: center;
   gap: 6px;
-  font-family: 'Fredoka', sans-serif;
+  font-family: 'Courier New', Courier, monospace;
   font-size: 13px;
   font-weight: 500;
   color: var(--text-secondary);
@@ -328,6 +437,19 @@
 
 .stage-companion .companion-emoji {
   font-size: 16px;
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  vertical-align: middle;
+}
+
+.companion-seal {
+  width: 18px;
+  height: 18px;
+  display: inline-block;
+  object-fit: contain;
+  vertical-align: middle;
+  filter: drop-shadow(0 0 4px rgba(255,224,102,0.15));
 }
 
 .stage-companion .companion-name {
@@ -350,8 +472,8 @@
 }
 
 .stage-world-name {
-  font-family: 'Zen Dots', 'Fredoka', sans-serif;
-  font-size: 22px;
+  font-family: 'Leander', 'Zen Dots', 'Jost', sans-serif;
+  font-size: 28px;
   font-weight: 400;
   filter: drop-shadow(0 0 10px var(--teal-glow));
 }
@@ -359,7 +481,7 @@
 .btn-back {
   align-self: flex-start;
   padding: 8px 16px;
-  font-family: 'Fredoka', sans-serif;
+  font-family: 'Leander', 'Zen Dots', sans-serif;
   font-size: 13px;
   font-weight: 600;
   border: 1.5px solid rgba(93, 230, 200, 0.15);
@@ -439,20 +561,274 @@
 }
 
 .stage-number {
-  font-family: 'Zen Dots', 'Fredoka', sans-serif;
-  font-size: 20px;
+  font-family: 'Leander', 'Zen Dots', 'Jost', sans-serif;
+  font-size: 24px;
   font-weight: 400;
   color: var(--text-primary);
 }
 
 .stage-stars {
-  font-size: 9px;
-  letter-spacing: 1px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
   filter: drop-shadow(0 0 3px rgba(255,224,102,0.25));
+}
+
+.stage-stars .star-rating {
+  width: 14px;
+  height: 14px;
+  display: inline-block;
+  object-fit: contain;
+}
+
+.stage-stars .star-rating.empty {
+  opacity: 0.3;
 }
 
 .stage-lock {
   position: absolute;
   font-size: 14px;
   opacity: 0.5;
+}
+
+/* ============================================= */
+/* ===    WORLD-THEMED CARD BACKGROUNDS      === */
+/* ============================================= */
+
+/* World 1: Ice — Frozen tundra, glacial blues */
+.world-card[data-world="1"].unlocked {
+  background: linear-gradient(135deg, rgba(120,200,230,0.15), rgba(168,213,229,0.08), rgba(91,192,235,0.12));
+  border-color: rgba(168,213,229,0.25);
+  box-shadow: 0 4px 24px rgba(0,0,0,0.25), 0 0 20px rgba(168,213,229,0.1);
+}
+.world-card[data-world="1"] .world-emoji {
+  background: rgba(168,213,229,0.15);
+  border-color: rgba(168,213,229,0.2);
+}
+.world-card[data-world="1"] .world-name {
+  color: #c8e8f4;
+}
+
+/* World 2: Psychic — Mystical purples, ethereal mist */
+.world-card[data-world="2"].unlocked {
+  background: linear-gradient(135deg, rgba(155,93,229,0.15), rgba(120,80,200,0.08), rgba(0,187,249,0.1));
+  border-color: rgba(155,93,229,0.25);
+  box-shadow: 0 4px 24px rgba(0,0,0,0.25), 0 0 20px rgba(155,93,229,0.1);
+}
+.world-card[data-world="2"] .world-emoji {
+  background: rgba(155,93,229,0.15);
+  border-color: rgba(155,93,229,0.2);
+}
+.world-card[data-world="2"] .world-name {
+  color: #d4b8ff;
+}
+
+/* World 3: Jungle — Lush greens, tropical life */
+.world-card[data-world="3"].unlocked {
+  background: linear-gradient(135deg, rgba(87,204,153,0.15), rgba(128,237,153,0.08), rgba(34,139,34,0.1));
+  border-color: rgba(87,204,153,0.25);
+  box-shadow: 0 4px 24px rgba(0,0,0,0.25), 0 0 20px rgba(87,204,153,0.1);
+}
+.world-card[data-world="3"] .world-emoji {
+  background: rgba(87,204,153,0.15);
+  border-color: rgba(87,204,153,0.2);
+}
+.world-card[data-world="3"] .world-name {
+  color: #a8f0c8;
+}
+
+/* World 4: Cosmos — Deep space, nebula dark blues & reds */
+.world-card[data-world="4"].unlocked {
+  background: linear-gradient(135deg, rgba(26,26,46,0.8), rgba(22,33,62,0.6), rgba(233,69,96,0.08));
+  border-color: rgba(233,69,96,0.2);
+  box-shadow: 0 4px 24px rgba(0,0,0,0.35), 0 0 20px rgba(233,69,96,0.08);
+}
+.world-card[data-world="4"] .world-emoji {
+  background: rgba(26,26,46,0.6);
+  border-color: rgba(233,69,96,0.2);
+}
+.world-card[data-world="4"] .world-name {
+  color: #e8c0cc;
+}
+
+/* World 5: Volcano — Hot oranges, molten reds */
+.world-card[data-world="5"].unlocked {
+  background: linear-gradient(135deg, rgba(255,107,53,0.15), rgba(247,147,30,0.1), rgba(200,40,20,0.08));
+  border-color: rgba(255,107,53,0.25);
+  box-shadow: 0 4px 24px rgba(0,0,0,0.25), 0 0 20px rgba(255,107,53,0.1);
+}
+.world-card[data-world="5"] .world-emoji {
+  background: rgba(255,107,53,0.15);
+  border-color: rgba(255,107,53,0.2);
+}
+.world-card[data-world="5"] .world-name {
+  color: #ffc8a8;
+}
+
+/* World 6: Ocean — Deep blues, aquatic glow */
+.world-card[data-world="6"].unlocked {
+  background: linear-gradient(135deg, rgba(0,180,216,0.15), rgba(0,119,182,0.1), rgba(202,240,248,0.06));
+  border-color: rgba(0,180,216,0.25);
+  box-shadow: 0 4px 24px rgba(0,0,0,0.25), 0 0 20px rgba(0,180,216,0.1);
+}
+.world-card[data-world="6"] .world-emoji {
+  background: rgba(0,180,216,0.15);
+  border-color: rgba(0,180,216,0.2);
+}
+.world-card[data-world="6"] .world-name {
+  color: #a8e4f8;
+}
+
+/* World 7: The Abyss — Void black, cracked gold */
+.world-card[data-world="7"] {
+  background: linear-gradient(135deg, rgba(13,13,13,0.9), rgba(26,26,26,0.8));
+  border-color: rgba(255, 215, 0, 0.15);
+}
+.world-card[data-world="7"].unlocked {
+  border-color: rgba(255, 215, 0, 0.25);
+  box-shadow: 0 4px 24px rgba(0,0,0,0.5), 0 0 20px rgba(255,215,0,0.08);
+}
+.world-card[data-world="7"].unlocked:hover {
+  border-color: rgba(255, 215, 0, 0.35);
+  box-shadow: 0 4px 24px rgba(0,0,0,0.5), 0 0 30px rgba(255,215,0,0.12);
+}
+.world-card[data-world="7"].unlocked::before {
+  background: linear-gradient(180deg, #FFD700, #B8860B);
+  box-shadow: 0 0 12px rgba(255,215,0,0.3);
+}
+.world-card[data-world="7"] .world-name {
+  background: linear-gradient(135deg, #FFD700, #FFA500);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+.world-card[data-world="7"] .world-emoji {
+  background: rgba(0,0,0,0.6);
+  border-color: rgba(255,215,0,0.2);
+}
+
+/* ============================================= */
+/* ===   STAGE SELECT — THEMED BACKGROUNDS   === */
+/* ============================================= */
+
+#screen-stageselect[data-world="1"] {
+  background:
+    radial-gradient(ellipse at 50% 80%, rgba(168,213,229,0.1) 0%, transparent 50%),
+    radial-gradient(ellipse at 20% 20%, rgba(91,192,235,0.08) 0%, transparent 40%),
+    radial-gradient(ellipse at 80% 30%, rgba(200,230,244,0.05) 0%, transparent 35%),
+    linear-gradient(180deg, #081820 0%, #0a2030 35%, #0e3048 65%, #184060 100%);
+  background-size: 400% 400%;
+}
+
+#screen-stageselect[data-world="2"] {
+  background:
+    radial-gradient(ellipse at 50% 80%, rgba(155,93,229,0.1) 0%, transparent 50%),
+    radial-gradient(ellipse at 30% 20%, rgba(180,160,255,0.08) 0%, transparent 40%),
+    radial-gradient(ellipse at 70% 40%, rgba(0,187,249,0.05) 0%, transparent 35%),
+    linear-gradient(180deg, #0c0818 0%, #180e30 35%, #251848 65%, #301e5a 100%);
+  background-size: 400% 400%;
+}
+
+#screen-stageselect[data-world="3"] {
+  background:
+    radial-gradient(ellipse at 50% 80%, rgba(87,204,153,0.1) 0%, transparent 50%),
+    radial-gradient(ellipse at 20% 30%, rgba(128,237,153,0.06) 0%, transparent 40%),
+    radial-gradient(ellipse at 80% 20%, rgba(34,139,34,0.05) 0%, transparent 35%),
+    linear-gradient(180deg, #061808 0%, #0a2e12 35%, #0e4420 65%, #165a2e 100%);
+  background-size: 400% 400%;
+}
+
+#screen-stageselect[data-world="4"] {
+  background:
+    radial-gradient(ellipse at 50% 70%, rgba(233,69,96,0.06) 0%, transparent 45%),
+    radial-gradient(ellipse at 20% 20%, rgba(26,26,46,0.5) 0%, transparent 50%),
+    radial-gradient(ellipse at 80% 40%, rgba(180,160,255,0.04) 0%, transparent 35%),
+    linear-gradient(180deg, #08060e 0%, #0e0c1e 35%, #161230 65%, #1a1a2e 100%);
+  background-size: 400% 400%;
+}
+
+#screen-stageselect[data-world="5"] {
+  background:
+    radial-gradient(ellipse at 50% 85%, rgba(255,107,53,0.1) 0%, transparent 50%),
+    radial-gradient(ellipse at 30% 20%, rgba(247,147,30,0.06) 0%, transparent 40%),
+    radial-gradient(ellipse at 70% 50%, rgba(200,40,20,0.04) 0%, transparent 35%),
+    linear-gradient(180deg, #180c06 0%, #2e1508 35%, #44200e 65%, #5a2a14 100%);
+  background-size: 400% 400%;
+}
+
+#screen-stageselect[data-world="6"] {
+  background:
+    radial-gradient(ellipse at 50% 80%, rgba(0,180,216,0.1) 0%, transparent 50%),
+    radial-gradient(ellipse at 20% 20%, rgba(0,119,182,0.08) 0%, transparent 40%),
+    radial-gradient(ellipse at 80% 40%, rgba(202,240,248,0.04) 0%, transparent 35%),
+    linear-gradient(180deg, #04101a 0%, #061e30 35%, #0a3050 65%, #0e4068 100%);
+  background-size: 400% 400%;
+}
+
+#screen-stageselect[data-world="7"] {
+  background:
+    radial-gradient(ellipse at 50% 80%, rgba(255,215,0,0.04) 0%, transparent 40%),
+    radial-gradient(ellipse at 30% 30%, rgba(13,13,13,0.6) 0%, transparent 50%),
+    linear-gradient(180deg, #020202 0%, #080808 35%, #0d0d0d 65%, #111111 100%);
+  background-size: 400% 400%;
+}
+
+/* ============================================= */
+/* ===   GAMEPLAY — THEMED BACKGROUNDS       === */
+/* ============================================= */
+
+#screen-game[data-world="1"] {
+  background:
+    radial-gradient(ellipse at 50% 20%, rgba(168,213,229,0.08) 0%, transparent 50%),
+    radial-gradient(ellipse at 80% 80%, rgba(91,192,235,0.05) 0%, transparent 40%),
+    linear-gradient(180deg, #081820 0%, #0e3048 50%, #184060 100%);
+  background-size: 400% 400%;
+}
+
+#screen-game[data-world="2"] {
+  background:
+    radial-gradient(ellipse at 50% 20%, rgba(155,93,229,0.08) 0%, transparent 50%),
+    radial-gradient(ellipse at 80% 80%, rgba(0,187,249,0.04) 0%, transparent 40%),
+    linear-gradient(180deg, #0c0818 0%, #251848 50%, #301e5a 100%);
+  background-size: 400% 400%;
+}
+
+#screen-game[data-world="3"] {
+  background:
+    radial-gradient(ellipse at 50% 20%, rgba(87,204,153,0.08) 0%, transparent 50%),
+    radial-gradient(ellipse at 80% 80%, rgba(128,237,153,0.04) 0%, transparent 40%),
+    linear-gradient(180deg, #061808 0%, #0e4420 50%, #165a2e 100%);
+  background-size: 400% 400%;
+}
+
+#screen-game[data-world="4"] {
+  background:
+    radial-gradient(ellipse at 50% 20%, rgba(233,69,96,0.05) 0%, transparent 50%),
+    radial-gradient(ellipse at 80% 80%, rgba(26,26,46,0.3) 0%, transparent 50%),
+    linear-gradient(180deg, #08060e 0%, #161230 50%, #1a1a2e 100%);
+  background-size: 400% 400%;
+}
+
+#screen-game[data-world="5"] {
+  background:
+    radial-gradient(ellipse at 50% 20%, rgba(255,107,53,0.08) 0%, transparent 50%),
+    radial-gradient(ellipse at 80% 80%, rgba(247,147,30,0.04) 0%, transparent 40%),
+    linear-gradient(180deg, #180c06 0%, #44200e 50%, #5a2a14 100%);
+  background-size: 400% 400%;
+}
+
+#screen-game[data-world="6"] {
+  background:
+    radial-gradient(ellipse at 50% 20%, rgba(0,180,216,0.08) 0%, transparent 50%),
+    radial-gradient(ellipse at 80% 80%, rgba(0,119,182,0.05) 0%, transparent 40%),
+    linear-gradient(180deg, #04101a 0%, #0a3050 50%, #0e4068 100%);
+  background-size: 400% 400%;
+}
+
+#screen-game[data-world="7"] {
+  background:
+    radial-gradient(ellipse at 50% 30%, rgba(255,215,0,0.03) 0%, transparent 40%),
+    linear-gradient(180deg, #020202 0%, #080808 50%, #0d0d0d 100%);
+  background-size: 400% 400%;
 }

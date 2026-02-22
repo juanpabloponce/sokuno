@@ -101,6 +101,23 @@
         "accent": "#0077B6"
       },
       "stages": 10
+    },
+    {
+      "id": 7,
+      "name": "The Abyss",
+      "guardian": "Kurayami",
+      "guardianMeaning": "Darkness",
+      "guardianEmoji": "🌑",
+      "powerName": null,
+      "powerEffect": null,
+      "operations": ["addition", "subtraction", "multiplication", "division"],
+      "numberRange": [1, 20],
+      "colors": {
+        "primary": "#0D0D0D",
+        "secondary": "#1A1A1A",
+        "accent": "#FFD700"
+      },
+      "stages": 10
     }
   ]
 }

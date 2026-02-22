@@ -108,7 +108,13 @@ const SleepBar = (() => {
     // Worlds get progressively harder
     rate += (worldId - 1) * 0.13;
 
-    const startValue = stageNum === 10 ? 25 : 45;
+    let startValue = stageNum === 10 ? 25 : 45;
+
+    // The Abyss (World 7) — drains faster than any other world
+    if (worldId === 7) {
+      rate *= 1.3; // 30% faster drain across all stages
+      startValue = stageNum === 10 ? 20 : 25; // starts lower
+    }
 
     return { drainRate: rate, startValue };
   }

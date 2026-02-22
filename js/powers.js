@@ -6,12 +6,12 @@ const Powers = (() => {
   let chosenGuardianId = null; // only one guardian active per world
 
   const POWER_DEFS = {
-    freeze:      { id: 'freeze',      name: 'Freeze',       emoji: '❄️', guardian: 'Fubuki', desc: 'Stops bar drain for 5 seconds', maxUses: 2, worldUnlock: 1 },
-    insight:     { id: 'insight',     name: 'Insight',      emoji: '🔮', guardian: 'Omoi',   desc: 'Reveals first half of answer', maxUses: 2, worldUnlock: 2 },
-    restore:     { id: 'restore',     name: 'Restore',      emoji: '🌿', guardian: 'Midori', desc: 'Recovers 20% of sleep bar', maxUses: 2, worldUnlock: 3 },
-    cosmicSolve: { id: 'cosmicSolve', name: 'Cosmic Solve', emoji: '👾', guardian: 'Uchū',   desc: 'Auto-completes current problem', maxUses: 1, worldUnlock: 4 },
-    blazeSkip:   { id: 'blazeSkip',   name: 'Blaze Skip',   emoji: '🔥', guardian: 'Kaen',   desc: 'Skips problem without penalty', maxUses: 2, worldUnlock: 5 },
-    simplify:    { id: 'simplify',    name: 'Simplify',     emoji: '🌊', guardian: 'Nami',   desc: 'Reduces problem to easier numbers', maxUses: 2, worldUnlock: 6 }
+    freeze:      { id: 'freeze',      name: 'Freeze',       icon: 'assets/guardians/ice.svg',    guardian: 'Fubuki', desc: 'Stops bar drain for 5 seconds', maxUses: 2, worldUnlock: 1 },
+    insight:     { id: 'insight',     name: 'Insight',      icon: 'assets/guardians/psy.svg',    guardian: 'Omoi',   desc: 'Reveals first half of answer', maxUses: 2, worldUnlock: 2 },
+    restore:     { id: 'restore',     name: 'Restore',      icon: 'assets/guardians/nature.svg', guardian: 'Midori', desc: 'Recovers 20% of sleep bar', maxUses: 2, worldUnlock: 3 },
+    cosmicSolve: { id: 'cosmicSolve', name: 'Cosmic Solve', icon: 'assets/guardians/cosmos.svg', guardian: 'Uchū',   desc: 'Auto-completes current problem', maxUses: 1, worldUnlock: 4 },
+    blazeSkip:   { id: 'blazeSkip',   name: 'Blaze Skip',   icon: 'assets/guardians/fire.svg',   guardian: 'Kaen',   desc: 'Skips problem without penalty', maxUses: 2, worldUnlock: 5 },
+    simplify:    { id: 'simplify',    name: 'Simplify',     icon: 'assets/guardians/ocean.svg',  guardian: 'Nami',   desc: 'Reduces problem to easier numbers', maxUses: 2, worldUnlock: 6 }
   };
 
   // Map worldId -> powerId (native guardian of that world)
@@ -57,7 +57,7 @@ const Powers = (() => {
   }
 
   function isChosenGuardian(powerId) {
-    return chosenGuardianId === powerId;
+    return chosenGuardianId === powerId || chosenGuardianId === 'all';
   }
 
   function canUse(powerId, saveData) {

@@ -67,11 +67,21 @@
 .dialogue-emoji {
   font-size: 28px;
   filter: drop-shadow(0 0 10px rgba(255,224,102,0.25));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.dialogue-speaker-icon {
+  width: 28px;
+  height: 28px;
+  object-fit: contain;
+  filter: drop-shadow(0 0 8px rgba(255,224,102,0.3));
 }
 
 .dialogue-name {
-  font-family: 'Zen Dots', 'Fredoka', sans-serif;
-  font-size: 16px;
+  font-family: 'Leander', 'Zen Dots', 'Jost', sans-serif;
+  font-size: 20px;
   font-weight: 400;
   background: linear-gradient(135deg, var(--gold), var(--peach));
   -webkit-background-clip: text;
@@ -81,7 +91,7 @@
 }
 
 .dialogue-text {
-  font-family: 'Fredoka', sans-serif;
+  font-family: 'Courier New', Courier, monospace;
   font-size: 15px;
   line-height: 1.7;
   color: var(--text-primary);
@@ -110,7 +120,7 @@
 .dialogue-continue-btn {
   width: 100%;
   padding: 14px;
-  font-family: 'Fredoka', sans-serif;
+  font-family: 'Leander', 'Zen Dots', sans-serif;
   font-size: 15px;
   font-weight: 700;
   border: none;
@@ -142,7 +152,7 @@
 .dialogue-name-input {
   width: 100%;
   padding: 14px 18px;
-  font-family: 'Fredoka', sans-serif;
+  font-family: 'Courier New', Courier, monospace;
   font-size: 18px;
   font-weight: 600;
   color: var(--text-primary);

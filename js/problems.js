@@ -141,6 +141,14 @@ const Problems = (() => {
         else { min = 2; max = 22; }
         break;
 
+      case 7: // The Abyss — All operations, extreme, unpredictable
+        operations = ['addition', 'subtraction', 'multiplication', 'division'];
+        if (stageNum <= 3) { min = 3; max = 14; }
+        else if (stageNum <= 6) { min = 4; max = 18; }
+        else if (stageNum <= 9) { min = 5; max = 22; }
+        else { min = 3; max = 25; } // Stage 10: Final battle
+        break;
+
       default:
         operations = ['addition'];
         min = 1; max = 10;

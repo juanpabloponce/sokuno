@@ -9,14 +9,9 @@ const Dialogue = (() => {
   let onComplete = null;
   let fullText = '';
 
-  async function loadDialogues() {
-    try {
-      const resp = await fetch('data/dialogues.json');
-      dialogueData = await resp.json();
-    } catch (e) {
-      console.warn('Failed to load dialogues:', e);
-      dialogueData = { intro: [], worldIntros: {}, stage10Intros: {}, awakenings: {}, finale: [] };
-    }
+  function loadDialogues() {
+    // Load from inline script data
+    dialogueData = DIALOGUES_DATA;
   }
 
   // Replace {playerName} in text with actual player name
@@ -33,6 +28,12 @@ const Dialogue = (() => {
       currentSequence = dialogueData.intro || [];
     } else if (sequenceKey === 'finale') {
       currentSequence = dialogueData.finale || [];
+    } else if (sequenceKey === 'gathering') {
+      currentSequence = dialogueData.gathering || [];
+    } else if (sequenceKey === 'abyssMidpoint') {
+      currentSequence = dialogueData.abyssMidpoint || [];
+    } else if (sequenceKey === 'finalBattleVictory') {
+      currentSequence = dialogueData.finalBattleVictory || [];
     } else if (sequenceKey.startsWith('worldIntro_')) {
       const wId = sequenceKey.split('_')[1];
       currentSequence = dialogueData.worldIntros[wId] || [];
@@ -140,13 +141,23 @@ const Dialogue = (() => {
     // Apply variable replacement to text
     const processedText = replaceVariables(line.text);
 
+    // Set speaker icon (Yumemori uses SVG, guardians use their seal, others use emoji text)
+    function setSpeakerIcon(el, emoji) {
+      if (!emoji) { el.innerHTML = ''; return; }
+      if (emoji === '👁️') {
+        el.innerHTML = '<img src="assets/yumemori.svg" class="dialogue-speaker-icon" alt="Yumemori">';
+      } else {
+        el.textContent = emoji;
+      }
+    }
+
     // Hide input area by default
     inputArea.classList.add('hidden');
 
     if (line.type === 'nameInput') {
       // Name input mode
       nameEl.textContent = line.speaker;
-      emojiEl.textContent = line.emoji || '';
+      setSpeakerIcon(emojiEl, line.emoji);
       textEl.className = 'dialogue-text';
       typewriterEffect(textEl, processedText, () => {
         // Show input area after typewriter finishes
@@ -157,13 +168,13 @@ const Dialogue = (() => {
       btn.textContent = line.button || 'Continue';
     } else if (line.speaker === 'system') {
       nameEl.textContent = '';
-      emojiEl.textContent = '';
+      setSpeakerIcon(emojiEl, '');
       textEl.className = 'dialogue-text power-unlock';
       typewriterEffect(textEl, processedText);
       btn.textContent = 'Continue';
     } else {
       nameEl.textContent = line.speaker;
-      emojiEl.textContent = line.emoji || '';
+      setSpeakerIcon(emojiEl, line.emoji);
       textEl.className = 'dialogue-text';
       typewriterEffect(textEl, processedText);
       btn.textContent = line.button || 'Continue';

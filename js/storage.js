@@ -14,7 +14,8 @@ const Storage = (() => {
         3: { unlocked: false, stages: {} },
         4: { unlocked: false, stages: {} },
         5: { unlocked: false, stages: {} },
-        6: { unlocked: false, stages: {} }
+        6: { unlocked: false, stages: {} },
+        7: { unlocked: false, stages: {} }
       },
       powers: {
         freeze: { unlocked: false, uses: 2 },
@@ -31,12 +32,18 @@ const Storage = (() => {
       },
       storyProgress: {
         introSeen: false,
+        introV3Seen: false,
+        introV4Seen: false,
         world1IntroSeen: false,
         world2IntroSeen: false,
         world3IntroSeen: false,
         world4IntroSeen: false,
         world5IntroSeen: false,
-        world6IntroSeen: false
+        world6IntroSeen: false,
+        world7IntroSeen: false,
+        world7MidpointSeen: false,
+        gatheringSeen: false,
+        endingSeen: false
       }
     };
   }

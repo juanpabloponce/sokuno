@@ -86,6 +86,10 @@ const Audio = (() => {
 
   function toggle() {
     enabled = !enabled;
+    if (!enabled) {
+      stopIntroMusic(false);
+      stopMusic(false);
+    }
     return enabled;
   }
 
@@ -100,5 +104,197 @@ const Audio = (() => {
     }
   }
 
-  return { correct, wrong, buttonPress, powerUsed, victory, defeat, toggle, isEnabled, resume };
+  // === Intro/Title Music ===
+  let introPlayer = null;
+  let introFadeInterval = null;
+  const INTRO_MUSIC_SRC = 'assets/intro-song.mp3';
+  const INTRO_MUSIC_VOLUME = 0.35;
+
+  function playIntroMusic() {
+    if (!enabled) return;
+    if (introPlayer && !introPlayer.paused) return;
+
+    introPlayer = new window.Audio(INTRO_MUSIC_SRC);
+    introPlayer.loop = true;
+    introPlayer.volume = 0;
+
+    introPlayer.play().then(() => {
+      // Fade in over 2 seconds
+      if (introFadeInterval) clearInterval(introFadeInterval);
+      const steps = 20;
+      const stepTime = 2000 / steps;
+      const stepSize = INTRO_MUSIC_VOLUME / steps;
+      let current = 0;
+      let step = 0;
+      introFadeInterval = setInterval(() => {
+        step++;
+        current += stepSize;
+        if (introPlayer) introPlayer.volume = Math.min(current, INTRO_MUSIC_VOLUME);
+        if (step >= steps) {
+          clearInterval(introFadeInterval);
+          introFadeInterval = null;
+          if (introPlayer) introPlayer.volume = INTRO_MUSIC_VOLUME;
+        }
+      }, stepTime);
+    }).catch(e => {
+      console.log('Intro music autoplay blocked');
+    });
+  }
+
+  function stopIntroMusic(fade = true) {
+    if (introFadeInterval) {
+      clearInterval(introFadeInterval);
+      introFadeInterval = null;
+    }
+    if (!introPlayer) return;
+
+    if (fade && !introPlayer.paused) {
+      // Fade out over 1 second
+      const steps = 20;
+      const stepTime = 1000 / steps;
+      const startVol = introPlayer.volume;
+      const stepSize = startVol / steps;
+      let current = startVol;
+      let step = 0;
+      introFadeInterval = setInterval(() => {
+        step++;
+        current -= stepSize;
+        if (introPlayer) introPlayer.volume = Math.max(0, current);
+        if (step >= steps) {
+          clearInterval(introFadeInterval);
+          introFadeInterval = null;
+          if (introPlayer) {
+            introPlayer.pause();
+            introPlayer.currentTime = 0;
+            introPlayer = null;
+          }
+        }
+      }, stepTime);
+    } else {
+      introPlayer.pause();
+      introPlayer.currentTime = 0;
+      introPlayer = null;
+    }
+  }
+
+  // === World Music System ===
+  let musicPlayer = null;
+  let currentMusicWorld = null;
+  let musicVolume = 0.4;
+  let fadeInterval = null;
+
+  // Map of world IDs to music files (add more as you get them)
+  const WORLD_MUSIC = {
+    1: 'audio/music/world-1.mp3',
+    2: 'audio/music/world-2.mp3',
+    3: 'audio/music/world-3.mp3',
+    4: 'assets/space-song_1.mp3',
+    5: 'assets/volcano-song.mp3',
+    6: 'assets/ocean-song.mp3',
+    7: 'assets/abyss-song.mp3',
+  };
+
+  function playWorldMusic(worldId) {
+    if (!enabled) return;
+
+    // Already playing this world's music
+    if (currentMusicWorld === worldId && musicPlayer && !musicPlayer.paused) return;
+
+    // Crossfade: fade out intro smoothly (runs on its own timer)
+    stopIntroMusic(true);
+    // Fade out any current world music smoothly
+    stopMusic(true);
+
+    const src = WORLD_MUSIC[worldId];
+    if (!src) return; // No music for this world yet
+
+    currentMusicWorld = worldId;
+    musicPlayer = new window.Audio(src);
+    musicPlayer.loop = true;
+    musicPlayer.volume = 0;
+
+    musicPlayer.play().then(() => {
+      // Fade in over 2s (overlaps with the fade out for crossfade effect)
+      fadeMusic(0, musicVolume, 2000);
+    }).catch(e => {
+      console.log('Music autoplay blocked, will play on interaction');
+    });
+  }
+
+  function stopMusic(fade = true) {
+    if (!musicPlayer) {
+      if (fadeInterval) { clearInterval(fadeInterval); fadeInterval = null; }
+      return;
+    }
+
+    if (fade && !musicPlayer.paused) {
+      // Capture reference so crossfade works (new player can start while old fades)
+      const dyingPlayer = musicPlayer;
+      const dyingVol = dyingPlayer.volume;
+      musicPlayer = null;
+      currentMusicWorld = null;
+
+      // Clear any existing fade on this track
+      if (fadeInterval) { clearInterval(fadeInterval); fadeInterval = null; }
+
+      // Fade out the dying player on its own timer
+      const steps = 20;
+      const stepTime = 1000 / steps;
+      const stepSize = dyingVol / steps;
+      let current = dyingVol;
+      let step = 0;
+      const dyingFade = setInterval(() => {
+        step++;
+        current -= stepSize;
+        dyingPlayer.volume = Math.max(0, current);
+        if (step >= steps) {
+          clearInterval(dyingFade);
+          dyingPlayer.pause();
+          dyingPlayer.currentTime = 0;
+        }
+      }, stepTime);
+    } else {
+      if (fadeInterval) { clearInterval(fadeInterval); fadeInterval = null; }
+      musicPlayer.pause();
+      musicPlayer.currentTime = 0;
+      musicPlayer = null;
+      currentMusicWorld = null;
+    }
+  }
+
+  function fadeMusic(from, to, duration, onDone) {
+    if (fadeInterval) clearInterval(fadeInterval);
+    if (!musicPlayer) return;
+
+    const steps = 20;
+    const stepTime = duration / steps;
+    const stepSize = (to - from) / steps;
+    let current = from;
+    let step = 0;
+
+    musicPlayer.volume = Math.max(0, Math.min(1, from));
+
+    fadeInterval = setInterval(() => {
+      step++;
+      current += stepSize;
+      if (musicPlayer) {
+        musicPlayer.volume = Math.max(0, Math.min(1, current));
+      }
+      if (step >= steps) {
+        clearInterval(fadeInterval);
+        fadeInterval = null;
+        if (musicPlayer) musicPlayer.volume = Math.max(0, Math.min(1, to));
+        if (onDone) onDone();
+      }
+    }, stepTime);
+  }
+
+  function setMusicVolume(vol) {
+    musicVolume = Math.max(0, Math.min(1, vol));
+    if (musicPlayer && !musicPlayer.paused) {
+      musicPlayer.volume = musicVolume;
+    }
+  }
+
+  return { correct, wrong, buttonPress, powerUsed, victory, defeat, toggle, isEnabled, resume, playIntroMusic, stopIntroMusic, playWorldMusic, stopMusic, setMusicVolume };
 })();

@@ -17,8 +17,8 @@
 }
 
 .game-world-label {
-  font-family: 'Zen Dots', 'Fredoka', sans-serif;
-  font-size: 13px;
+  font-family: 'Leander', 'Zen Dots', 'Jost', sans-serif;
+  font-size: 16px;
   font-weight: 400;
   color: var(--teal);
   text-align: center;
@@ -92,8 +92,8 @@
 }
 
 .problem-display {
-  font-family: 'Zen Dots', 'Fredoka', sans-serif;
-  font-size: 40px;
+  font-family: 'Ransom', 'Zen Dots', sans-serif;
+  font-size: 46px;
   font-weight: 400;
   color: var(--text-primary);
   letter-spacing: 5px;
@@ -115,8 +115,8 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  font-family: 'Zen Dots', 'Fredoka', sans-serif;
-  font-size: 34px;
+  font-family: 'Ransom', 'Zen Dots', sans-serif;
+  font-size: 40px;
   font-weight: 400;
   color: var(--text-primary);
   position: relative;
@@ -192,8 +192,8 @@
   height: 58px;
   border: none;
   border-radius: 18px;
-  font-family: 'Zen Dots', 'Fredoka', sans-serif;
-  font-size: 24px;
+  font-family: 'Ransom', 'Zen Dots', sans-serif;
+  font-size: 28px;
   font-weight: 400;
   cursor: pointer;
   display: flex;
@@ -300,10 +300,21 @@
 .power-emoji {
   font-size: 20px;
   line-height: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.power-seal {
+  width: 24px;
+  height: 24px;
+  display: block;
+  object-fit: contain;
+  filter: drop-shadow(0 0 4px rgba(255,224,102,0.15));
 }
 
 .power-uses {
-  font-family: 'Fredoka', sans-serif;
+  font-family: 'Courier New', Courier, monospace;
   font-size: 10px;
   font-weight: 800;
   color: var(--gold);

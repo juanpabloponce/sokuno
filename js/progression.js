@@ -25,14 +25,14 @@ const Progression = (() => {
     }
 
     // Unlock next world if stage 10 completed
-    if (stageNum === 10 && worldId < 6) {
+    if (stageNum === 10 && worldId < 7) {
       const nextWorld = String(worldId + 1);
       if (!saveData.worlds[nextWorld]) {
         saveData.worlds[nextWorld] = { unlocked: true, stages: {} };
       }
       saveData.worlds[nextWorld].unlocked = true;
 
-      // Unlock the guardian power
+      // Unlock the guardian power (worlds 1-6 only, world 7 has no guardian power)
       const powerMap = { 1: 'freeze', 2: 'insight', 3: 'restore', 4: 'cosmicSolve', 5: 'blazeSkip', 6: 'simplify' };
       const powerId = powerMap[worldId];
       if (powerId && saveData.powers[powerId]) {
@@ -76,7 +76,7 @@ const Progression = (() => {
 
   function getTotalStars(saveData) {
     let total = 0;
-    for (let w = 1; w <= 6; w++) {
+    for (let w = 1; w <= 7; w++) {
       total += getWorldTotalStars(saveData, w);
     }
     return total;
@@ -89,7 +89,7 @@ const Progression = (() => {
   }
 
   function isGameComplete(saveData) {
-    for (let w = 1; w <= 6; w++) {
+    for (let w = 1; w <= 7; w++) {
       if (!isWorldComplete(saveData, w)) return false;
     }
     return true;
