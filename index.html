@@ -10,12 +10,20 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Jost:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/main.css?v=28">
-  <link rel="stylesheet" href="css/calculator.css?v=28">
-  <link rel="stylesheet" href="css/worldmap.css?v=28">
-  <link rel="stylesheet" href="css/dialogue.css?v=28">
+  <link rel="stylesheet" href="css/main.css?v=30">
+  <link rel="stylesheet" href="css/calculator.css?v=30">
+  <link rel="stylesheet" href="css/worldmap.css?v=30">
+  <link rel="stylesheet" href="css/dialogue.css?v=29">
 </head>
 <body>
+  <!-- Hand-drawn edge filter (subtle wobble on borders) -->
+  <svg style="position:absolute;width:0;height:0;" aria-hidden="true">
+    <filter id="hand-drawn">
+      <feTurbulence type="turbulence" baseFrequency="0.03" numOctaves="4" seed="2" result="noise"/>
+      <feDisplacementMap in="SourceGraphic" in2="noise" scale="1.5" xChannelSelector="R" yChannelSelector="G"/>
+    </filter>
+  </svg>
+
   <div id="game-container">
 
     <!-- ============ WAKE UP SCREEN ============ -->
@@ -38,9 +46,46 @@
 
       <div class="title-logo">SOKUNO</div>
       <button id="btn-start" class="btn-start-dream">Enter the Dream World</button>
+      <button id="btn-lore" class="btn-lore">
+        <span class="btn-lore-icon-wrap">
+          <img src="assets/book.svg" class="btn-lore-icon" alt="Lore">
+          <span id="lore-unread-dot" class="lore-unread-dot" style="display:none;"></span>
+        </span>
+        <span class="btn-lore-label">Read the Lore</span>
+      </button>
       <div class="title-tagline">
         Multi-sensory brain trainer — designed for flow state<br>
         🎧 Headphones on. World off.
+      </div>
+    </div>
+
+    <!-- ============ LORE SCREEN ============ -->
+    <div id="screen-lore" class="screen hidden">
+      <div id="lore-list-container" class="lore-container">
+        <div class="lore-header">
+          <button id="btn-back-lore" class="btn-back">← Back</button>
+          <div class="lore-title">Lore</div>
+          <div class="lore-subtitle">Story of the Dream World</div>
+        </div>
+        <div id="lore-chapter-list" class="lore-chapter-list"></div>
+      </div>
+      <div id="lore-reader" class="lore-reader hidden">
+        <div class="lore-reader-header">
+          <button id="btn-lore-reader-back" class="btn-back">← Chapters</button>
+          <div id="lore-reader-title" class="lore-reader-title"></div>
+        </div>
+        <div id="lore-reader-body" class="lore-reader-body"></div>
+      </div>
+    </div>
+
+    <!-- Lore Chapter Unlock Notification -->
+    <div id="lore-notification" class="lore-notification hidden">
+      <div class="lore-notif-box">
+        <img src="assets/book.svg" class="lore-notif-icon" alt="Book">
+        <div class="lore-notif-label">New Chapter Unlocked</div>
+        <div id="lore-notif-name" class="lore-notif-name"></div>
+        <div class="lore-notif-sub">added to Lore</div>
+        <button id="btn-lore-notif-continue" class="btn-primary lore-notif-btn">Continue</button>
       </div>
     </div>
 
@@ -48,6 +93,7 @@
     <div id="screen-worldmap" class="screen hidden">
       <div id="worldmap-stars" class="star-field"></div>
       <div class="worldmap-header">
+        <button id="btn-back-title" class="btn-back">← Back</button>
         <div class="worldmap-title">Dream World</div>
         <div class="worldmap-subtitle">Choose a realm</div>
       </div>
@@ -73,6 +119,7 @@
         <div id="stage-companion" class="stage-companion"></div>
       </div>
       <div id="stage-list" class="stage-list"></div>
+      <div id="stage-description" class="stage-description"></div>
     </div>
 
     <!-- ============ GAMEPLAY ============ -->
@@ -80,6 +127,7 @@
       <div id="game-stars" class="star-field"></div>
       <!-- Header: world label + sleep bar -->
       <div class="game-header">
+        <button id="btn-back-game" class="btn-back-game">←</button>
         <div id="game-world-label" class="game-world-label"></div>
         <div id="sleep-bar" class="sleep-bar-container">
           <div id="sleep-bar-fill" class="sleep-bar-fill" style="width: 50%"></div>
@@ -103,9 +151,9 @@
         <button class="calc-btn number" data-value="1">1</button>
         <button class="calc-btn number" data-value="2">2</button>
         <button class="calc-btn number" data-value="3">3</button>
-        <button class="calc-btn clear" data-value="C">C</button>
+        <button class="calc-btn clear" data-value="C"><span class="clear-label">C</span></button>
         <button class="calc-btn number" data-value="0">0</button>
-        <button class="calc-btn submit" data-value="submit">✓</button>
+        <button class="calc-btn submit" data-value="submit"><img src="assets/correct.svg" class="submit-icon" alt="Submit"></button>
       </div>
 
       <!-- Power buttons -->
@@ -146,16 +194,17 @@
   </div>
 
   <!-- Scripts (order matters) -->
-  <script src="js/worlds-data.js?v=28"></script>
-  <script src="js/dialogues-data.js?v=28"></script>
-  <script src="js/storage.js?v=28"></script>
-  <script src="js/audio.js?v=28"></script>
-  <script src="js/problems.js?v=28"></script>
-  <script src="js/sleepbar.js?v=28"></script>
-  <script src="js/powers.js?v=28"></script>
-  <script src="js/progression.js?v=28"></script>
-  <script src="js/dialogue.js?v=28"></script>
-  <script src="js/calculator.js?v=28"></script>
-  <script src="js/game.js?v=28"></script>
+  <script src="js/worlds-data.js?v=30"></script>
+  <script src="js/dialogues-data.js?v=29"></script>
+  <script src="js/storage.js?v=29"></script>
+  <script src="js/audio.js?v=29"></script>
+  <script src="js/problems.js?v=29"></script>
+  <script src="js/sleepbar.js?v=29"></script>
+  <script src="js/powers.js?v=29"></script>
+  <script src="js/progression.js?v=29"></script>
+  <script src="js/dialogue.js?v=29"></script>
+  <script src="js/lore.js?v=29"></script>
+  <script src="js/calculator.js?v=29"></script>
+  <script src="js/game.js?v=30"></script>
 </body>
 </html>

@@ -44,6 +44,18 @@ const Storage = (() => {
         world7MidpointSeen: false,
         gatheringSeen: false,
         endingSeen: false
+      },
+      lore: {
+        1:  { unlocked: false, seen: false },
+        2:  { unlocked: false, seen: false },
+        3:  { unlocked: false, seen: false },
+        4:  { unlocked: false, seen: false },
+        5:  { unlocked: false, seen: false },
+        6:  { unlocked: false, seen: false },
+        7:  { unlocked: false, seen: false },
+        8:  { unlocked: false, seen: false },
+        9:  { unlocked: false, seen: false },
+        10: { unlocked: false, seen: false }
       }
     };
   }

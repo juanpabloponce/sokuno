@@ -21,6 +21,7 @@ const WORLDS_DATA = {
       "guardianIcon": "assets/guardians/ice.svg",
       "powerName": "Freeze",
       "powerEffect": "Stops bar drain for 5 seconds",
+      "description": "A frozen realm trapped in eternal winter. Fubuki, the ice guardian, sleeps beneath the glaciers — waiting to be awakened.",
       "operations": ["addition", "subtraction"],
       "numberRange": [1, 10],
       "colors": {
@@ -38,6 +39,7 @@ const WORLDS_DATA = {
       "guardianIcon": "assets/guardians/psy.svg",
       "powerName": "Insight",
       "powerEffect": "Reveals first half of answer",
+      "description": "A realm of shifting thoughts and illusions. Omoi, the psychic guardian, is lost within a maze of the mind.",
       "operations": ["addition", "subtraction"],
       "numberRange": [1, 20],
       "colors": {
@@ -55,6 +57,7 @@ const WORLDS_DATA = {
       "guardianIcon": "assets/guardians/nature.svg",
       "powerName": "Restore",
       "powerEffect": "Recovers 20% of sleep bar",
+      "description": "An ancient jungle overgrown by Nightmares. Midori, the nature guardian, has been consumed by the wild.",
       "operations": ["multiplication"],
       "numberRange": [1, 5],
       "colors": {
@@ -72,6 +75,7 @@ const WORLDS_DATA = {
       "guardianIcon": "assets/guardians/cosmos.svg",
       "powerName": "Cosmic Solve",
       "powerEffect": "Auto-completes current problem correctly",
+      "description": "The vast void between stars, where silence reigns. Uchū, the cosmic guardian, drifts through infinite darkness.",
       "operations": ["division"],
       "numberRange": [1, 5],
       "colors": {
@@ -89,6 +93,7 @@ const WORLDS_DATA = {
       "guardianIcon": "assets/guardians/fire.svg",
       "powerName": "Blaze Skip",
       "powerEffect": "Skips current problem without penalty",
+      "description": "A scorching land of molten fury. Kaen, the fire guardian, burns within the heart of the volcano.",
       "operations": ["multiplication", "division"],
       "numberRange": [1, 10],
       "colors": {
@@ -106,6 +111,7 @@ const WORLDS_DATA = {
       "guardianIcon": "assets/guardians/ocean.svg",
       "powerName": "Simplify",
       "powerEffect": "Reduces current problem to easier numbers",
+      "description": "An endless sea swallowed by storms. Nami, the ocean guardian, is trapped beneath the crushing depths.",
       "operations": ["addition", "subtraction", "multiplication", "division"],
       "numberRange": [1, 20],
       "colors": {
@@ -123,6 +129,7 @@ const WORLDS_DATA = {
       "guardianIcon": "assets/guardians/abyss.svg",
       "powerName": null,
       "powerEffect": null,
+      "description": "The source of all Nightmares. Kurayami awaits at the bottom — the final dream, and the final truth.",
       "operations": ["addition", "subtraction", "multiplication", "division"],
       "numberRange": [1, 20],
       "colors": {

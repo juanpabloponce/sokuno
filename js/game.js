@@ -38,6 +38,11 @@ const Game = (() => {
     Dialogue.loadDialogues();
     Powers.init(saveData, onPowerUsed);
 
+    // Sync lore unlocks on load and show badge if needed
+    Lore.syncUnlocks(saveData);
+    Storage.save(saveData);
+    Lore.updateLoreUnreadBadge(saveData);
+
     startWakeupSequence();
     bindGlobalEvents();
   }
@@ -117,11 +122,38 @@ const Game = (() => {
         saveData.storyProgress.introSeen = true;
         Storage.save(saveData);
         Dialogue.show('intro', () => {
-          showWorldMap();
+          const newCh = Lore.syncUnlocks(saveData);
+          Storage.save(saveData);
+          Lore.updateLoreUnreadBadge(saveData);
+          if (newCh.length > 0) {
+            Lore.showChapterNotification(newCh[0], () => showWorldMap());
+          } else {
+            showWorldMap();
+          }
         });
       } else {
+        Lore.syncUnlocks(saveData);
+        Storage.save(saveData);
+        Lore.updateLoreUnreadBadge(saveData);
         showWorldMap();
       }
+    });
+
+    // Lore button
+    document.getElementById('btn-lore')?.addEventListener('click', () => {
+      Audio.buttonPress();
+      Lore.syncUnlocks(saveData);
+      Storage.save(saveData);
+      showScreen('lore');
+      Lore.renderLoreScreen(saveData);
+    });
+
+    document.getElementById('btn-back-lore')?.addEventListener('click', () => {
+      Audio.buttonPress();
+      // Reset reader view so next open shows chapter list
+      document.getElementById('lore-reader')?.classList.add('hidden');
+      document.getElementById('lore-list-container')?.classList.remove('hidden');
+      showScreen('title');
     });
 
     // Sound toggle
@@ -131,6 +163,14 @@ const Game = (() => {
     });
 
     // Back buttons
+    document.getElementById('btn-back-title')?.addEventListener('click', () => {
+      Audio.buttonPress();
+      Audio.stopMusic();
+      Audio.playIntroMusic();
+      showScreen('title');
+      createStars('title-stars', 80, null);
+    });
+
     document.getElementById('btn-back-worldmap')?.addEventListener('click', () => {
       Audio.buttonPress();
       const unlockedPowers = DEBUG_UNLOCK_ALL ? Object.keys(Powers.getAllDefs()) : Powers.getUnlockedPowers(saveData);
@@ -145,6 +185,11 @@ const Game = (() => {
     document.getElementById('btn-back-guardian')?.addEventListener('click', () => {
       Audio.buttonPress();
       showWorldMap();
+    });
+
+    document.getElementById('btn-back-game')?.addEventListener('click', () => {
+      Audio.buttonPress();
+      showStageSelect(currentWorld);
     });
 
     // Reset (hold for 3 seconds in title)
@@ -378,6 +423,12 @@ const Game = (() => {
 
       container.appendChild(div);
     }
+
+    // World description
+    const descEl = document.getElementById('stage-description');
+    if (descEl) {
+      descEl.textContent = world.description || '';
+    }
   }
 
   // --- Start Stage ---
@@ -396,6 +447,9 @@ const Game = (() => {
     if (worldId === 7 && !saveData.storyProgress.gatheringSeen && stageNum === 1) {
       saveData.storyProgress.gatheringSeen = true;
       Storage.save(saveData);
+      const gatherChapters = Lore.syncUnlocks(saveData);
+      Storage.save(saveData);
+      Lore.updateLoreUnreadBadge(saveData);
       Dialogue.show('gathering', () => {
         // Then show world intro
         if (!saveData.storyProgress[introKey]) {
@@ -594,15 +648,33 @@ const Game = (() => {
     saveData = result.saveData;
     Storage.save(saveData);
 
+    // Check for newly unlocked lore chapters
+    const newChapters = Lore.syncUnlocks(saveData);
+    Storage.save(saveData);
+    Lore.updateLoreUnreadBadge(saveData);
+
+    // Helper: show lore notification for new chapters, then callback
+    function showLoreNotifs(chapters, cb) {
+      if (chapters.length === 0) { cb(); return; }
+      const ch = chapters.shift();
+      Lore.showChapterNotification(ch, () => showLoreNotifs(chapters, cb));
+    }
+
     // World 7 Stage 10: Final battle victory — special dialogue chain
     if (currentWorld === 7 && currentStage === 10) {
       Dialogue.show('finalBattleVictory', () => {
         if (!saveData.storyProgress.endingSeen) {
           saveData.storyProgress.endingSeen = true;
           Storage.save(saveData);
-          Dialogue.show('finale', () => showVictoryScreen(result.stars));
+          // Re-sync after ending seen
+          const moreChapters = Lore.syncUnlocks(saveData);
+          Storage.save(saveData);
+          const allNew = newChapters.concat(moreChapters);
+          Dialogue.show('finale', () => {
+            showLoreNotifs(allNew, () => showVictoryScreen(result.stars));
+          });
         } else {
-          showVictoryScreen(result.stars);
+          showLoreNotifs(newChapters, () => showVictoryScreen(result.stars));
         }
       });
       return;
@@ -611,10 +683,10 @@ const Game = (() => {
     // Check if this was stage 10 (awakening) for worlds 1-6
     if (currentStage === 10 && currentWorld <= 6) {
       Dialogue.show(`awakening_${currentWorld}`, () => {
-        showVictoryScreen(result.stars);
+        showLoreNotifs(newChapters, () => showVictoryScreen(result.stars));
       });
     } else {
-      showVictoryScreen(result.stars);
+      showLoreNotifs(newChapters, () => showVictoryScreen(result.stars));
     }
   }
 

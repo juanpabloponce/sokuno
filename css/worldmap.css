@@ -17,8 +17,16 @@
 /* ============================================= */
 
 .worldmap-header {
+  position: relative;
   padding: 24px 16px 10px;
   text-align: center;
+}
+
+.worldmap-header .btn-back {
+  position: absolute;
+  top: 20px;
+  left: 16px;
+  z-index: 2;
 }
 
 .worldmap-title {
@@ -612,6 +620,20 @@
 .stage-lock {
   position: absolute;
   opacity: 0.5;
+}
+
+/* --- Stage Description (below stages) --- */
+
+.stage-description {
+  padding: 12px 24px 20px;
+  text-align: center;
+  font-family: 'Courier New', Courier, monospace;
+  font-size: 12px;
+  line-height: 1.6;
+  color: rgba(255, 255, 255, 0.45);
+  letter-spacing: 0.3px;
+  max-width: 340px;
+  margin: 0 auto;
 }
 
 /* ============================================= */

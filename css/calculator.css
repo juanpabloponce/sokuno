@@ -10,10 +10,30 @@
 }
 
 .game-header {
+  position: relative;
   padding: 14px 18px 8px;
   display: flex;
   flex-direction: column;
   gap: 10px;
+}
+
+.btn-back-game {
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  z-index: 5;
+  background: none;
+  border: none;
+  color: rgba(255, 255, 255, 0.2);
+  font-family: 'Courier New', Courier, monospace;
+  font-size: 14px;
+  cursor: pointer;
+  padding: 4px 8px;
+  transition: color 0.2s ease;
+}
+
+.btn-back-game:active {
+  color: rgba(255, 255, 255, 0.5);
 }
 
 .game-world-label {
@@ -253,6 +273,19 @@
   background: rgba(125, 255, 179, 0.22);
   border-color: rgba(125, 255, 179, 0.3);
   box-shadow: 0 0 16px rgba(125, 255, 179, 0.25);
+}
+
+.submit-icon {
+  width: 28px;
+  height: 28px;
+  object-fit: contain;
+  filter: drop-shadow(0 0 6px rgba(125, 255, 179, 0.3));
+}
+
+.clear-label {
+  font-family: 'Leander', 'Zen Dots', sans-serif;
+  font-size: 28px;
+  font-weight: 400;
 }
 
 /* --- Power Buttons --- */
