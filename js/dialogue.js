@@ -141,11 +141,23 @@ const Dialogue = (() => {
     // Apply variable replacement to text
     const processedText = replaceVariables(line.text);
 
-    // Set speaker icon (Yumemori uses SVG, guardians use their seal, others use emoji text)
+    // Set speaker icon (all guardians use their SVG seal)
+    const SPEAKER_ICONS = {
+      '👁️': 'assets/yumemori.svg',
+      '❄️': 'assets/guardians/ice.svg',
+      '🔮': 'assets/guardians/psy.svg',
+      '🌿': 'assets/guardians/nature.svg',
+      '👾': 'assets/guardians/cosmos.svg',
+      '🔥': 'assets/guardians/fire.svg',
+      '🌊': 'assets/guardians/ocean.svg',
+      '🌑': 'assets/guardians/abyss.svg',
+      '✨': 'assets/guardians/abyss.svg',
+    };
     function setSpeakerIcon(el, emoji) {
       if (!emoji) { el.innerHTML = ''; return; }
-      if (emoji === '👁️') {
-        el.innerHTML = '<img src="assets/yumemori.svg" class="dialogue-speaker-icon" alt="Yumemori">';
+      const svgPath = SPEAKER_ICONS[emoji];
+      if (svgPath) {
+        el.innerHTML = `<img src="${svgPath}" class="dialogue-speaker-icon" alt="">`;
       } else {
         el.textContent = emoji;
       }
