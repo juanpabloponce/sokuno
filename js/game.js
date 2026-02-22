@@ -619,7 +619,7 @@ const Game = (() => {
   }
 
   function showVictoryScreen(stars) {
-    Audio.playIntroMusic();
+    // Keep world music playing during victory — no music change between stages
     showScreen('victory');
     document.getElementById('victory-stars').innerHTML = starIcons(stars, 3);
     document.getElementById('victory-errors').textContent = `Errors: ${stageErrors}`;
