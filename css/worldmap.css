@@ -254,8 +254,21 @@
 .world-lock {
   position: absolute;
   right: 18px;
-  font-size: 22px;
   opacity: 0.5;
+}
+
+.lock-icon {
+  width: 22px;
+  height: 22px;
+  object-fit: contain;
+  filter: brightness(2) opacity(0.6);
+}
+
+.lock-icon-sm {
+  width: 16px;
+  height: 16px;
+  object-fit: contain;
+  filter: brightness(2) opacity(0.5);
 }
 
 /* ============================================= */
@@ -565,6 +578,16 @@
   font-size: 24px;
   font-weight: 400;
   color: var(--text-primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.final-stage-icon {
+  width: 28px;
+  height: 28px;
+  object-fit: contain;
+  filter: brightness(1.8) drop-shadow(0 0 6px rgba(255, 224, 102, 0.4));
 }
 
 .stage-stars {
@@ -588,7 +611,6 @@
 
 .stage-lock {
   position: absolute;
-  font-size: 14px;
   opacity: 0.5;
 }
 

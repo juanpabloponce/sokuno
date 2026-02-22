@@ -218,7 +218,7 @@ const Game = (() => {
           <div class="world-guardian">${world.guardian}</div>
           <div class="world-orbs">${worldOrbs(world.id)}</div>
         </div>
-        ${!unlocked ? '<div class="world-lock">🔒</div>' : ''}
+        ${!unlocked ? '<div class="world-lock"><img src="assets/lock.svg" class="lock-icon" alt="Locked"></div>' : ''}
       `;
 
       if (unlocked) {
@@ -293,7 +293,7 @@ const Game = (() => {
           <div class="guardian-opt-desc">${def.desc}</div>
         </div>
         ${isNative && unlocked ? '<span class="guardian-opt-tag">Native</span>' : ''}
-        ${!unlocked ? '<span class="guardian-opt-lock">🔒</span>' : ''}
+        ${!unlocked ? '<span class="guardian-opt-lock"><img src="assets/lock.svg" class="lock-icon-sm" alt="Locked"></span>' : ''}
       `;
 
       if (unlocked) {
@@ -363,9 +363,9 @@ const Game = (() => {
       div.style.setProperty('--world-accent', world.colors.accent);
 
       div.innerHTML = `
-        <div class="stage-number">${s === 10 ? '👑' : s}</div>
+        <div class="stage-number">${s === 10 ? '<img src="assets/final-stage.svg" class="final-stage-icon" alt="Boss">' : s}</div>
         <div class="stage-stars">${starIcons(stars, 3)}</div>
-        ${!unlocked ? '<div class="stage-lock">🔒</div>' : ''}
+        ${!unlocked ? '<div class="stage-lock"><img src="assets/lock.svg" class="lock-icon-sm" alt="Locked"></div>' : ''}
       `;
 
       if (unlocked) {
