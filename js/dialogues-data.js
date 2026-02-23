@@ -719,32 +719,107 @@ const DIALOGUES_DATA = {
     {
       "speaker": "Yumemori",
       "emoji": "👁️",
-      "text": "You did it, dreamer."
+      "text": "You have done it, dreamer."
     },
     {
       "speaker": "Yumemori",
       "emoji": "👁️",
-      "text": "I thought I had to protect everyone by myself. I was wrong."
+      "text": "All six realms shine bright. All six guardians stand with you."
     },
     {
       "speaker": "Yumemori",
       "emoji": "👁️",
-      "text": "Light grows stronger when it's shared."
+      "text": "And the seal is whole again."
     },
     {
       "speaker": "Yumemori",
       "emoji": "👁️",
-      "text": "You are Sokunō now. The Fast Brain. The Dreamer who saved the Dream World."
+      "text": "Long ago, I built this world from nothing. I thought I had to protect everyone by myself."
     },
     {
       "speaker": "Yumemori",
       "emoji": "👁️",
-      "text": "Return every night. Keep your mind sharp."
+      "text": "I was wrong. You showed me that light grows stronger when it is shared."
+    },
+    {
+      "speaker": "Fubuki",
+      "emoji": "❄️",
+      "text": "You melted through the cold."
+    },
+    {
+      "speaker": "Omoi",
+      "emoji": "🔮",
+      "text": "You saw through the doubt."
+    },
+    {
+      "speaker": "Midori",
+      "emoji": "🌿",
+      "text": "You grew through the struggle."
+    },
+    {
+      "speaker": "Uchū",
+      "emoji": "👾",
+      "text": "You reached across infinity."
+    },
+    {
+      "speaker": "Kaen",
+      "emoji": "🔥",
+      "text": "You burned through the barriers."
+    },
+    {
+      "speaker": "Nami",
+      "emoji": "🌊",
+      "text": "You flowed through every challenge."
     },
     {
       "speaker": "Yumemori",
       "emoji": "👁️",
-      "text": "And maybe... one day... Hikari will find his way home."
+      "text": "The Nightmares will return someday. They always do."
+    },
+    {
+      "speaker": "Yumemori",
+      "emoji": "👁️",
+      "text": "But you have done what no dreamer has done before."
+    },
+    {
+      "speaker": "Yumemori",
+      "emoji": "👁️",
+      "text": "So I offer you this gift."
+    },
+    {
+      "speaker": "Yumemori",
+      "emoji": "👁️",
+      "text": "From now on, you may return to the Dream World whenever you wish."
+    },
+    {
+      "speaker": "Yumemori",
+      "emoji": "👁️",
+      "text": "No stages. No limits. Just you and the numbers, for as long as you want to stay."
+    },
+    {
+      "speaker": "Yumemori",
+      "emoji": "👁️",
+      "text": "The guardians will be here. I will be here."
+    },
+    {
+      "speaker": "Yumemori",
+      "emoji": "👁️",
+      "text": "Come back every night, dreamer. Keep your light bright."
+    },
+    {
+      "speaker": "Yumemori",
+      "emoji": "👁️",
+      "text": "And maybe... maybe one day... Hikari will find his way home."
+    },
+    {
+      "speaker": "system",
+      "text": "Deep in the Abyss, past the seal, in a corner where no light reaches...",
+      "type": "ending"
+    },
+    {
+      "speaker": "system",
+      "text": "A small golden spark flickers.",
+      "type": "ending"
     },
     {
       "speaker": "Hikari",
@@ -759,7 +834,7 @@ const DIALOGUES_DATA = {
     {
       "speaker": "system",
       "text": "",
-      "button": "Continue Training"
+      "button": "Enter the Endless Dream"
     }
   ]
 };

@@ -192,6 +192,7 @@ const Audio = (() => {
     5: 'assets/volcano-song.mp3',
     6: 'assets/ocean-song.mp3',
     7: 'assets/abyss-song.mp3',
+    freestyle: 'assets/endless-dream.mp3',
   };
 
   function playWorldMusic(worldId) {
@@ -219,6 +220,10 @@ const Audio = (() => {
     }).catch(e => {
       console.log('Music autoplay blocked, will play on interaction');
     });
+  }
+
+  function playFreestyleMusic() {
+    playWorldMusic('freestyle');
   }
 
   function stopMusic(fade = true) {
@@ -296,5 +301,5 @@ const Audio = (() => {
     }
   }
 
-  return { correct, wrong, buttonPress, powerUsed, victory, defeat, toggle, isEnabled, resume, playIntroMusic, stopIntroMusic, playWorldMusic, stopMusic, setMusicVolume };
+  return { correct, wrong, buttonPress, powerUsed, victory, defeat, toggle, isEnabled, resume, playIntroMusic, stopIntroMusic, playWorldMusic, playFreestyleMusic, stopMusic, setMusicVolume };
 })();

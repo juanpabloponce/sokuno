@@ -1,0 +1,557 @@
+/* freestyle.css — Freestyle Mode: "The Endless Dream" */
+
+/* ============================================= */
+/* ===   FREESTYLE SELECT SCREEN             === */
+/* ============================================= */
+
+#screen-freestyle-select {
+  background:
+    radial-gradient(ellipse at 50% 85%, rgba(160, 130, 255, 0.04) 0%, transparent 45%),
+    radial-gradient(ellipse at 20% 20%, rgba(160, 130, 255, 0.03) 0%, transparent 35%),
+    linear-gradient(180deg, #020408 0%, #080c18 30%, #0a1020 60%, #060a14 100%);
+  flex-direction: column;
+}
+
+.freestyle-select-header {
+  position: relative;
+  padding: 12px 16px 12px;
+  text-align: center;
+}
+
+.freestyle-select-header .btn-back {
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  z-index: 2;
+}
+
+.freestyle-select-title {
+  font-family: 'Leander', 'Zen Dots', sans-serif;
+  font-size: 26px;
+  letter-spacing: 3px;
+  background: linear-gradient(135deg, #C8BFF0 0%, #A89CD8 40%, #C8BFF0 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  filter: drop-shadow(0 0 14px rgba(160, 140, 220, 0.3));
+  margin-top: 36px;
+}
+
+.freestyle-select-subtitle {
+  font-family: 'Courier New', Courier, monospace;
+  font-size: 11px;
+  color: rgba(160, 140, 200, 0.45);
+  margin-top: 6px;
+  letter-spacing: 1.5px;
+}
+
+.freestyle-select-body {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 10px 20px 32px;
+  gap: 20px;
+  overflow-y: auto;
+}
+
+/* --- Yumemori quote area --- */
+
+.freestyle-yumemori {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  padding: 16px 0;
+}
+
+.freestyle-yumemori-img {
+  width: 48px;
+  height: auto;
+  filter: brightness(0) opacity(0.7)
+    drop-shadow(0 2px 8px rgba(155, 142, 196, 0.3))
+    drop-shadow(0 0 16px rgba(155, 142, 196, 0.15));
+  animation: kidFloat 6s ease-in-out infinite;
+}
+
+.freestyle-yumemori-quote {
+  font-family: 'Courier New', Courier, monospace;
+  font-size: 12px;
+  color: rgba(155, 142, 196, 0.6);
+  text-align: center;
+  line-height: 1.8;
+  font-style: italic;
+  max-width: 300px;
+}
+
+/* --- Mode cards --- */
+
+.freestyle-mode-cards {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  width: 100%;
+  max-width: 340px;
+}
+
+.freestyle-mode-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  padding: 20px 16px;
+  border-radius: 18px;
+  background: rgba(8, 10, 24, 0.55);
+  border: 1.5px solid rgba(160, 140, 220, 0.08);
+  cursor: pointer;
+  transition: all 0.25s ease;
+  text-align: center;
+}
+
+.freestyle-mode-card:active {
+  transform: scale(0.97);
+  border-color: rgba(160, 140, 220, 0.3);
+  background: rgba(160, 140, 220, 0.04);
+  box-shadow: 0 0 20px rgba(160, 140, 220, 0.08);
+}
+
+.freestyle-mode-icon {
+  font-size: 28px;
+}
+
+.freestyle-mode-name {
+  font-family: 'Leander', 'Zen Dots', sans-serif;
+  font-size: 18px;
+  letter-spacing: 2px;
+  color: rgba(200, 190, 240, 0.9);
+  filter: drop-shadow(0 0 8px rgba(160, 140, 220, 0.2));
+}
+
+.freestyle-mode-desc {
+  font-family: 'Courier New', Courier, monospace;
+  font-size: 11px;
+  color: rgba(200, 180, 255, 0.5);
+  line-height: 1.6;
+}
+
+/* --- Records area --- */
+
+.freestyle-records {
+  width: 100%;
+  max-width: 340px;
+  padding: 8px 0;
+}
+
+.freestyle-records-title {
+  font-family: 'Leander', 'Zen Dots', sans-serif;
+  font-size: 14px;
+  color: rgba(200, 190, 240, 0.6);
+  letter-spacing: 2px;
+  text-align: center;
+  margin-bottom: 8px;
+}
+
+.freestyle-record-row {
+  font-family: 'Courier New', Courier, monospace;
+  font-size: 11px;
+  color: rgba(200, 180, 255, 0.5);
+  text-align: center;
+  line-height: 1.8;
+}
+
+.freestyle-record-val {
+  color: rgba(200, 190, 240, 0.8);
+  font-weight: 700;
+}
+
+.freestyle-record-sep {
+  color: rgba(200, 180, 255, 0.2);
+  margin: 0 6px;
+}
+
+/* ============================================= */
+/* ===   FREESTYLE GUARDIAN PICKER           === */
+/* ============================================= */
+
+#screen-freestyle-guardian {
+  background:
+    radial-gradient(ellipse at 50% 85%, rgba(160, 130, 255, 0.04) 0%, transparent 45%),
+    radial-gradient(ellipse at 30% 20%, rgba(160, 130, 255, 0.03) 0%, transparent 40%),
+    linear-gradient(180deg, #020408 0%, #080c18 30%, #0a1020 60%, #060a14 100%);
+  flex-direction: column;
+}
+
+.freestyle-guardian-header {
+  position: relative;
+  padding: 12px 16px 12px;
+  text-align: center;
+}
+
+.freestyle-guardian-header .btn-back {
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  z-index: 2;
+}
+
+.freestyle-guardian-title {
+  font-family: 'Leander', 'Zen Dots', sans-serif;
+  font-size: 22px;
+  letter-spacing: 2px;
+  background: linear-gradient(135deg, #C8BFF0 0%, #A89CD8 50%, #C8BFF0 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  filter: drop-shadow(0 0 12px rgba(160, 140, 220, 0.3));
+  margin-top: 36px;
+}
+
+.freestyle-guardian-subtitle {
+  font-family: 'Courier New', Courier, monospace;
+  font-size: 11px;
+  color: rgba(160, 140, 200, 0.35);
+  margin-top: 6px;
+}
+
+/* ============================================= */
+/* ===   FREESTYLE GAME SCREEN THEME         === */
+/* ============================================= */
+
+#screen-game[data-world="freestyle"] {
+  background:
+    radial-gradient(ellipse at 50% 30%, rgba(160, 130, 255, 0.04) 0%, transparent 40%),
+    linear-gradient(180deg, #020208 0%, #0a0a18 50%, #0d0d1a 100%);
+  background-size: 400% 400%;
+}
+
+#screen-game[data-world="freestyle"] .game-world-label {
+  color: rgba(200, 190, 240, 0.85);
+  filter: drop-shadow(0 0 8px rgba(160, 140, 220, 0.3));
+}
+
+#screen-game[data-world="freestyle"] .problem-display {
+  color: rgba(200, 190, 240, 0.9);
+  filter: drop-shadow(0 0 6px rgba(160, 140, 220, 0.2));
+}
+
+#screen-game[data-world="freestyle"] .sleep-bar-container {
+  border-color: rgba(160, 140, 220, 0.12);
+  box-shadow:
+    inset 0 2px 8px rgba(0,0,0,0.4),
+    0 0 12px rgba(160, 140, 220, 0.06);
+}
+
+#screen-game[data-world="freestyle"] .sleep-bar-fill {
+  background: linear-gradient(90deg, #7B68AE, #A89CD8, #C8BFF0);
+  box-shadow: 0 0 12px rgba(160, 140, 220, 0.3), 0 0 24px rgba(160, 140, 220, 0.15);
+}
+
+#screen-game[data-world="freestyle"] .answer-box {
+  border-color: rgba(160, 140, 220, 0.18);
+}
+
+#screen-game[data-world="freestyle"] .answer-box.empty::after {
+  color: rgba(200, 190, 240, 0.6);
+}
+
+#screen-game[data-world="freestyle"] .problem-display {
+  text-shadow: 0 0 24px rgba(160, 140, 220, 0.12), 0 0 60px rgba(160, 140, 220, 0.04);
+}
+
+/* ============================================= */
+/* ===   FREESTYLE HUD (in-game overlay)     === */
+/* ============================================= */
+
+.freestyle-hud {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 18px;
+}
+
+.freestyle-hud-streak {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.freestyle-hud-streak-icon {
+  font-size: 14px;
+  opacity: 0.6;
+}
+
+.freestyle-hud-streak-val {
+  font-family: 'Ransom', 'Zen Dots', sans-serif;
+  font-size: 18px;
+  font-weight: 400;
+  color: rgba(200, 190, 240, 0.9);
+  filter: drop-shadow(0 0 6px rgba(160, 140, 220, 0.3));
+  min-width: 28px;
+  text-align: center;
+}
+
+.freestyle-hud-tier {
+  font-family: 'Courier New', Courier, monospace;
+  font-size: 11px;
+  letter-spacing: 1.5px;
+  color: rgba(160, 140, 200, 0.45);
+  transition: all 0.5s ease;
+}
+
+.freestyle-hud-tier.tier-change {
+  color: rgba(200, 190, 240, 0.9);
+  filter: drop-shadow(0 0 10px rgba(160, 140, 220, 0.5));
+  transform: scale(1.2);
+}
+
+/* ============================================= */
+/* ===   FREESTYLE RESULTS SCREEN            === */
+/* ============================================= */
+
+#screen-freestyle-results {
+  justify-content: center;
+  align-items: center;
+  background:
+    radial-gradient(ellipse at 50% 40%, rgba(160, 130, 255, 0.06) 0%, transparent 50%),
+    radial-gradient(ellipse at 30% 80%, rgba(160, 130, 255, 0.04) 0%, transparent 40%),
+    linear-gradient(180deg, #020408 0%, #080c18 35%, #0a1020 65%, #060a14 100%);
+}
+
+.freestyle-results-body {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 24px;
+  padding: 32px;
+  text-align: center;
+  width: 100%;
+}
+
+.freestyle-results-title {
+  font-family: 'Leander', 'Zen Dots', sans-serif;
+  font-size: 36px;
+  font-weight: 400;
+  letter-spacing: 3px;
+  background: linear-gradient(135deg, #C8BFF0 0%, #A89CD8 40%, #C8BFF0 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  filter: drop-shadow(0 0 20px rgba(160, 140, 220, 0.4));
+}
+
+.freestyle-results-stats {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  width: 100%;
+  max-width: 280px;
+}
+
+.freestyle-stat {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  position: relative;
+}
+
+.freestyle-stat-label {
+  font-family: 'Courier New', Courier, monospace;
+  font-size: 11px;
+  letter-spacing: 2px;
+  color: rgba(200, 180, 255, 0.5);
+  text-transform: uppercase;
+}
+
+.freestyle-stat-value {
+  font-family: 'Ransom', 'Zen Dots', sans-serif;
+  font-size: 38px;
+  font-weight: 400;
+  color: rgba(200, 190, 240, 0.9);
+  filter: drop-shadow(0 0 10px rgba(160, 140, 220, 0.3));
+}
+
+.freestyle-stat-tier {
+  font-family: 'Leander', 'Zen Dots', sans-serif;
+  font-size: 28px;
+  letter-spacing: 3px;
+}
+
+.freestyle-stat-badge {
+  font-family: 'Leander', 'Zen Dots', sans-serif;
+  font-size: 12px;
+  letter-spacing: 2px;
+  color: #C8BFF0;
+  filter: drop-shadow(0 0 8px rgba(200, 190, 240, 0.6));
+  animation: newBestPulse 1.5s ease-in-out infinite;
+}
+
+@keyframes newBestPulse {
+  0%, 100% {
+    opacity: 0.7;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.1);
+  }
+}
+
+.freestyle-results-quote {
+  font-family: 'Courier New', Courier, monospace;
+  font-size: 12px;
+  color: rgba(200, 180, 255, 0.5);
+  font-style: italic;
+  line-height: 1.8;
+  max-width: 280px;
+  text-align: center;
+}
+
+.freestyle-results-buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-top: 8px;
+  width: 100%;
+  max-width: 280px;
+}
+
+/* ============================================= */
+/* ===   FREESTYLE BUTTON (TITLE SCREEN)     === */
+/* ============================================= */
+
+.btn-freestyle {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  padding: 10px 28px;
+  font-size: 12px;
+  font-weight: 600;
+  font-family: 'Leander', 'Zen Dots', sans-serif;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  border: 1.5px solid rgba(160, 140, 220, 0.3);
+  border-radius: 50px;
+  background: rgba(30, 20, 50, 0.5);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  color: rgba(200, 180, 255, 0.9);
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow:
+    0 0 20px rgba(100, 60, 150, 0.15),
+    inset 0 0 20px rgba(100, 60, 150, 0.05);
+  animation: freestyleBtnGlow 3s ease-in-out infinite;
+  margin-top: -6px;
+  position: relative;
+}
+
+.btn-freestyle .freestyle-lock-icon {
+  display: none;
+  position: absolute;
+  left: 16px;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.btn-freestyle .freestyle-unlock-hint {
+  display: none;
+}
+
+.btn-freestyle .btn-freestyle-title {
+  font-size: inherit;
+  letter-spacing: inherit;
+}
+
+.btn-freestyle:hover {
+  border-color: rgba(180, 160, 240, 0.5);
+  background: rgba(40, 25, 65, 0.6);
+  color: rgba(220, 200, 255, 1);
+  box-shadow:
+    0 0 30px rgba(120, 80, 180, 0.25),
+    inset 0 0 25px rgba(120, 80, 180, 0.08);
+}
+
+.btn-freestyle:active {
+  transform: scale(0.96);
+  box-shadow:
+    0 0 40px rgba(140, 100, 200, 0.35),
+    inset 0 0 30px rgba(140, 100, 200, 0.1);
+}
+
+@keyframes freestyleBtnGlow {
+  0%, 100% { box-shadow: 0 0 20px rgba(100, 60, 150, 0.15), inset 0 0 20px rgba(100, 60, 150, 0.05); }
+  50% { box-shadow: 0 0 30px rgba(120, 80, 180, 0.25), inset 0 0 25px rgba(120, 80, 180, 0.08); }
+}
+
+/* --- Locked state --- */
+.btn-freestyle.locked {
+  border-color: rgba(120, 120, 130, 0.2);
+  background: rgba(20, 20, 25, 0.4);
+  color: rgba(120, 120, 130, 0.45);
+  cursor: default;
+  animation: none;
+  box-shadow:
+    0 0 10px rgba(80, 80, 90, 0.06),
+    inset 0 0 10px rgba(80, 80, 90, 0.03);
+}
+
+.btn-freestyle.locked .freestyle-lock-icon {
+  display: block;
+  width: 12px;
+  height: 12px;
+  opacity: 0.35;
+  filter: grayscale(1) brightness(0.7);
+}
+
+.btn-freestyle.locked .freestyle-unlock-hint {
+  display: block;
+  font-family: 'Leander', 'Zen Dots', sans-serif;
+  font-size: 8px;
+  letter-spacing: 2px;
+  color: rgba(120, 120, 130, 0.35);
+  text-transform: uppercase;
+}
+
+.btn-freestyle.locked:hover {
+  border-color: rgba(120, 120, 130, 0.2);
+  background: rgba(20, 20, 25, 0.4);
+  color: rgba(120, 120, 130, 0.45);
+  box-shadow:
+    0 0 10px rgba(80, 80, 90, 0.06),
+    inset 0 0 10px rgba(80, 80, 90, 0.03);
+}
+
+.btn-freestyle.locked:active {
+  transform: none;
+}
+
+
+/* ============================================= */
+/* ===   CHAIN TRANSITION ANIMATION          === */
+/* ============================================= */
+
+.answer-box.chain-slide {
+  animation: chainSlide 0.3s ease-out;
+}
+
+@keyframes chainSlide {
+  0% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  40% {
+    transform: scale(0.8) translateY(-20px);
+    opacity: 0.6;
+  }
+  70% {
+    transform: scale(0.6) translateY(-50px);
+    opacity: 0.3;
+  }
+  100% {
+    transform: scale(0.5) translateY(-70px);
+    opacity: 0;
+  }
+}

@@ -18,11 +18,11 @@ const Storage = (() => {
         7: { unlocked: false, stages: {} }
       },
       powers: {
-        freeze: { unlocked: false, uses: 2 },
+        freeze: { unlocked: false, uses: 3 },
         insight: { unlocked: false, uses: 2 },
         restore: { unlocked: false, uses: 2 },
         cosmicSolve: { unlocked: false, uses: 1 },
-        blazeSkip: { unlocked: false, uses: 2 },
+        blazeSkip: { unlocked: false, uses: 3 },
         simplify: { unlocked: false, uses: 2 }
       },
       stats: {
@@ -43,7 +43,8 @@ const Storage = (() => {
         world7IntroSeen: false,
         world7MidpointSeen: false,
         gatheringSeen: false,
-        endingSeen: false
+        endingSeen: false,
+        freestyleUnlockSeen: false
       },
       lore: {
         1:  { unlocked: false, seen: false },
@@ -56,6 +57,11 @@ const Storage = (() => {
         8:  { unlocked: false, seen: false },
         9:  { unlocked: false, seen: false },
         10: { unlocked: false, seen: false }
+      },
+      freestyle: {
+        unlocked: false,
+        pure: { bestChain: 0, bestTotal: 0, highestTier: 0, totalSessions: 0 },
+        guardian: { bestChain: 0, bestTotal: 0, highestTier: 0, totalSessions: 0 }
       }
     };
   }

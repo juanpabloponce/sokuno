@@ -6,17 +6,31 @@
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="theme-color" content="#060e18">
-  <title>Sokunō (速脳) — Fast Brain</title>
+  <title>Sokunō</title>
+  <meta name="description" content="Train your mind. Light the dark.">
+  <!-- Open Graph (WhatsApp, Facebook, Discord, etc.) -->
+  <meta property="og:title" content="Sokunō">
+  <meta property="og:description" content="Train your mind. Light the dark.">
+  <meta property="og:type" content="website">
+  <meta property="og:image" content="assets/icon-512.png">
+  <!-- Twitter/X -->
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="Sokunō">
+  <meta name="twitter:description" content="Train your mind. Light the dark.">
+  <meta name="twitter:image" content="assets/icon-512.png">
 
   <link rel="manifest" href="manifest.json">
+  <link rel="icon" type="image/svg+xml" href="assets/icon.svg">
+  <link rel="icon" type="image/png" sizes="192x192" href="assets/icon-192.png">
   <link rel="apple-touch-icon" href="assets/icon-192.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Jost:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/main.css?v=30">
-  <link rel="stylesheet" href="css/calculator.css?v=30">
-  <link rel="stylesheet" href="css/worldmap.css?v=30">
-  <link rel="stylesheet" href="css/dialogue.css?v=29">
+  <link rel="stylesheet" href="css/main.css?v=36">
+  <link rel="stylesheet" href="css/calculator.css?v=31">
+  <link rel="stylesheet" href="css/worldmap.css?v=42">
+  <link rel="stylesheet" href="css/dialogue.css?v=42">
+  <link rel="stylesheet" href="css/freestyle.css?v=43">
 </head>
 <body>
   <!-- Hand-drawn edge filter (subtle wobble on borders) -->
@@ -32,7 +46,7 @@
     <!-- ============ WAKE UP SCREEN ============ -->
     <div id="screen-wakeup" class="screen wakeup-screen">
       <div class="wakeup-text" id="wakeup-text"></div>
-      <div class="wakeup-tap">tap</div>
+      <div class="wakeup-tap">Tap</div>
     </div>
 
     <!-- ============ TITLE SCREEN ============ -->
@@ -48,13 +62,35 @@
       </div>
 
       <div class="title-logo">SOKUNO</div>
-      <button id="btn-start" class="btn-start-dream">Enter the Dream World</button>
+      <div class="title-kid-wrap">
+        <div class="vortex">
+          <div class="vortex-disc vortex-disc-1"></div>
+          <div class="vortex-disc vortex-disc-2"></div>
+          <div class="vortex-disc vortex-disc-3"></div>
+          <div class="vortex-core"></div>
+          <div class="vortex-glow"></div>
+        </div>
+        <img src="assets/kid.svg" class="title-kid" alt="Dreamer">
+      </div>
+      <button id="btn-start" class="btn-start-dream">
+        <span class="btn-start-title">Enter the Dream World</span>
+        <span class="btn-start-label">Story Mode</span>
+      </button>
+      <button id="btn-freestyle" class="btn-freestyle locked" disabled>
+        <img src="assets/lock.svg" class="freestyle-lock-icon" alt="">
+        <span class="btn-freestyle-title">The Endless Dream</span>
+        <span class="freestyle-unlock-hint">Complete Story Mode to unlock</span>
+      </button>
       <button id="btn-lore" class="btn-lore">
         <span class="btn-lore-icon-wrap">
           <img src="assets/book.svg" class="btn-lore-icon" alt="Lore">
           <span id="lore-unread-dot" class="lore-unread-dot" style="display:none;"></span>
         </span>
         <span class="btn-lore-label">Read the Lore</span>
+      </button>
+      <button id="btn-mixtape" class="btn-mixtape">
+        <img src="assets/mixtape.svg" class="btn-mixtape-icon" alt="Mixtape">
+        <span class="btn-mixtape-label">Mixtape</span>
       </button>
       <div class="title-tagline">
         Multi-sensory brain trainer — designed for flow state<br>
@@ -89,6 +125,25 @@
         <div id="lore-notif-name" class="lore-notif-name"></div>
         <div class="lore-notif-sub">added to Lore</div>
         <button id="btn-lore-notif-continue" class="btn-primary lore-notif-btn">Continue</button>
+      </div>
+    </div>
+
+    <!-- ============ MIXTAPE SCREEN ============ -->
+    <div id="screen-mixtape" class="screen hidden">
+      <div class="mixtape-header">
+        <button id="btn-back-mixtape" class="btn-back">← Back</button>
+        <div class="mixtape-title">Mixtape</div>
+        <div class="mixtape-subtitle">Songs of the Dream World</div>
+      </div>
+      <div id="mixtape-list" class="mixtape-list"></div>
+      <!-- Now playing bar -->
+      <div id="mixtape-now-playing" class="mixtape-now-playing hidden">
+        <div class="now-playing-info">
+          <div id="now-playing-title" class="now-playing-title"></div>
+        </div>
+        <div class="now-playing-controls">
+          <button id="mixtape-btn-stop" class="mixtape-ctrl-btn" title="Stop">■</button>
+        </div>
       </div>
     </div>
 
@@ -135,6 +190,16 @@
         <div id="sleep-bar" class="sleep-bar-container">
           <div id="sleep-bar-fill" class="sleep-bar-fill" style="width: 50%"></div>
         </div>
+        <div id="power-buttons" class="power-bar"></div>
+      </div>
+
+      <!-- Freestyle HUD (hidden unless freestyle active) -->
+      <div id="freestyle-hud" class="freestyle-hud hidden">
+        <div class="freestyle-hud-streak">
+          <span class="freestyle-hud-streak-icon">🔗</span>
+          <span id="freestyle-streak-count" class="freestyle-hud-streak-val">0</span>
+        </div>
+        <div id="freestyle-tier-display" class="freestyle-hud-tier">Warm Up</div>
       </div>
 
       <!-- Problem area -->
@@ -159,8 +224,8 @@
         <button class="calc-btn submit" data-value="submit"><img src="assets/correct.svg" class="submit-icon" alt="Submit"></button>
       </div>
 
-      <!-- Power buttons -->
-      <div id="power-buttons" class="power-bar"></div>
+      <!-- Power action buttons (below calculator) -->
+      <div id="power-action-buttons" class="power-action-bar"></div>
 
       <!-- Particles -->
       <div id="particles"></div>
@@ -191,6 +256,71 @@
       </div>
     </div>
 
+    <!-- ============ FREESTYLE: MODE SELECT ============ -->
+    <div id="screen-freestyle-select" class="screen hidden">
+      <div class="freestyle-select-header">
+        <button id="btn-back-freestyle" class="btn-back">← Back</button>
+        <div class="freestyle-select-title">The Endless Dream</div>
+        <div class="freestyle-select-subtitle">How would you like to dream tonight?</div>
+      </div>
+      <div class="freestyle-select-body">
+        <div class="freestyle-yumemori">
+          <img src="assets/kid.svg" class="freestyle-yumemori-img" alt="Yumemori">
+          <div class="freestyle-yumemori-quote">"Each answer becomes the next challenge. The chain never stops... how long can you hold the dream?"</div>
+        </div>
+        <div class="freestyle-mode-cards">
+          <div id="freestyle-card-pure" class="freestyle-mode-card">
+            <div class="freestyle-mode-name">Dream Alone</div>
+            <div class="freestyle-mode-desc">Pure math. No powers. Just you.</div>
+          </div>
+          <div id="freestyle-card-guardian" class="freestyle-mode-card">
+            <div class="freestyle-mode-name">Bring a Guardian</div>
+            <div class="freestyle-mode-desc">Choose a companion. Power charges every 15 correct.</div>
+          </div>
+        </div>
+        <div class="freestyle-records" id="freestyle-records"></div>
+      </div>
+    </div>
+
+    <!-- ============ FREESTYLE: GUARDIAN PICKER ============ -->
+    <div id="screen-freestyle-guardian" class="screen hidden">
+      <div class="freestyle-guardian-header">
+        <button id="btn-back-freestyle-guardian" class="btn-back">← Back</button>
+        <div class="freestyle-guardian-title">Choose Your Companion</div>
+        <div class="freestyle-guardian-subtitle">One guardian will accompany you into the Endless Dream</div>
+      </div>
+      <div id="freestyle-guardian-list" class="guardian-pick-list"></div>
+    </div>
+
+    <!-- ============ FREESTYLE: RESULTS ============ -->
+    <div id="screen-freestyle-results" class="screen hidden">
+      <div class="freestyle-results-body">
+        <div class="freestyle-results-title">Dream Over</div>
+        <div class="freestyle-results-stats">
+          <div class="freestyle-stat">
+            <div class="freestyle-stat-label">Best Chain</div>
+            <div class="freestyle-stat-value" id="freestyle-result-chain">0</div>
+            <div class="freestyle-stat-badge hidden" id="freestyle-badge-chain">NEW BEST!</div>
+          </div>
+          <div class="freestyle-stat">
+            <div class="freestyle-stat-label">Total Correct</div>
+            <div class="freestyle-stat-value" id="freestyle-result-total">0</div>
+            <div class="freestyle-stat-badge hidden" id="freestyle-badge-total">NEW BEST!</div>
+          </div>
+          <div class="freestyle-stat">
+            <div class="freestyle-stat-label">Highest Tier</div>
+            <div class="freestyle-stat-value freestyle-stat-tier" id="freestyle-result-tier">—</div>
+            <div class="freestyle-stat-badge hidden" id="freestyle-badge-tier">NEW BEST!</div>
+          </div>
+        </div>
+        <div class="freestyle-results-quote" id="freestyle-result-quote"></div>
+        <div class="freestyle-results-buttons">
+          <button id="btn-freestyle-again" class="btn-primary">Dream Again</button>
+          <button id="btn-freestyle-exit" class="btn-secondary">Wake Up</button>
+        </div>
+      </div>
+    </div>
+
     <!-- ============ DIALOGUE OVERLAY ============ -->
     <div id="dialogue-overlay" class="hidden"></div>
 
@@ -198,17 +328,19 @@
 
   <!-- Scripts (order matters) -->
   <script src="js/worlds-data.js?v=30"></script>
-  <script src="js/dialogues-data.js?v=29"></script>
-  <script src="js/storage.js?v=29"></script>
-  <script src="js/audio.js?v=29"></script>
+  <script src="js/dialogues-data.js?v=43"></script>
+  <script src="js/storage.js?v=43"></script>
+  <script src="js/audio.js?v=43"></script>
   <script src="js/problems.js?v=29"></script>
   <script src="js/sleepbar.js?v=29"></script>
-  <script src="js/powers.js?v=29"></script>
+  <script src="js/powers.js?v=33"></script>
   <script src="js/progression.js?v=29"></script>
-  <script src="js/dialogue.js?v=29"></script>
+  <script src="js/dialogue.js?v=43"></script>
   <script src="js/lore.js?v=29"></script>
   <script src="js/calculator.js?v=29"></script>
-  <script src="js/game.js?v=30"></script>
+  <script src="js/freestyle.js?v=43"></script>
+  <script src="js/mixtape.js?v=32"></script>
+  <script src="js/game.js?v=43"></script>
   <script>
     if ('serviceWorker' in navigator) {
       navigator.serviceWorker.register('/sw.js');

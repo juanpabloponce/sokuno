@@ -18,6 +18,14 @@
   font-display: swap;
 }
 
+@font-face {
+  font-family: 'Schoolbell';
+  src: url('../assets/fonts/Schoolbell-Regular.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
 :root {
   /* Night sky palette */
   --bg-deep: #060e18;
@@ -104,16 +112,21 @@ body {
 .btn-primary,
 .btn-secondary,
 .btn-start-dream,
+.btn-freestyle,
 .btn-back,
 .calc-btn,
 .answer-box,
+.charge-bar,
 .power-btn,
 .stage-card,
 .world-card,
 .sleep-bar-container,
 .guardian-option,
 .lore-chapter,
-.dialogue-box {
+.dialogue-box,
+.mixtape-track,
+.mixtape-track-btn,
+.mixtape-ctrl-btn {
   filter: url(#hand-drawn);
 }
 
@@ -428,7 +441,11 @@ body {
 
 /* --- Start to Dream Button --- */
 .btn-start-dream {
-  padding: 12px 32px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  padding: 10px 32px;
   font-size: 13px;
   font-weight: 600;
   font-family: 'Leander', 'Zen Dots', sans-serif;
@@ -469,6 +486,14 @@ body {
   50% { box-shadow: 0 0 30px rgba(120, 80, 180, 0.25), inset 0 0 25px rgba(120, 80, 180, 0.08); }
 }
 
+.btn-start-label {
+  font-family: 'Leander', 'Zen Dots', sans-serif;
+  font-size: 8px;
+  letter-spacing: 2px;
+  color: rgba(160, 140, 200, 0.35);
+  text-transform: uppercase;
+}
+
 /* --- Title Tagline --- */
 .title-tagline {
   font-family: 'Courier New', Courier, monospace;
@@ -483,6 +508,171 @@ body {
   bottom: 0;
   left: 0;
   right: 0;
+}
+
+/* --- Shadow Kid + Spiral Black Hole --- */
+.title-kid-wrap {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 260px;
+  height: 210px;
+  z-index: 2;
+  margin: -10px 0 -6px;
+}
+
+/* Kid: dark shadow backlit by vortex light */
+.title-kid {
+  position: relative;
+  z-index: 6;
+  width: 56px;
+  height: auto;
+  filter: brightness(0) opacity(0.92)
+    drop-shadow(0 3px 6px rgba(160, 50, 210, 0.65))
+    drop-shadow(0 6px 18px rgba(130, 35, 180, 0.4))
+    drop-shadow(0 0 24px rgba(110, 25, 160, 0.25));
+  animation: kidFloat 6s ease-in-out infinite;
+  transform-origin: center bottom;
+}
+
+@keyframes kidFloat {
+  0%, 100% {
+    transform: translateY(0) rotate(-1deg);
+    filter: brightness(0) opacity(0.92)
+      drop-shadow(0 3px 6px rgba(160, 50, 210, 0.65))
+      drop-shadow(0 6px 18px rgba(130, 35, 180, 0.4))
+      drop-shadow(0 0 24px rgba(110, 25, 160, 0.25));
+  }
+  50% {
+    transform: translateY(-8px) rotate(1deg);
+    filter: brightness(0) opacity(0.95)
+      drop-shadow(0 4px 8px rgba(180, 65, 230, 0.75))
+      drop-shadow(0 8px 22px rgba(150, 45, 200, 0.5))
+      drop-shadow(0 0 30px rgba(130, 35, 180, 0.35));
+  }
+}
+
+/* ---- Spiral Vortex / Black Hole ---- */
+.vortex {
+  position: absolute;
+  bottom: 8px;
+  left: 50%;
+  transform: translateX(-50%) perspective(400px) rotateX(52deg) rotateZ(-8deg) rotateY(5deg);
+  width: 220px;
+  height: 220px;
+  z-index: 1;
+}
+
+/* Conic-gradient spiral discs — each spins at different speed */
+.vortex-disc {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+}
+
+.vortex-disc-1 {
+  background: conic-gradient(
+    from 0deg,
+    transparent 0deg,
+    rgba(120, 40, 185, 0.15) 25deg,
+    transparent 75deg,
+    rgba(100, 28, 165, 0.12) 125deg,
+    transparent 175deg,
+    rgba(125, 45, 195, 0.14) 215deg,
+    transparent 265deg,
+    rgba(110, 35, 178, 0.11) 310deg,
+    transparent 360deg
+  );
+  animation: vortexSpin 16s linear infinite;
+  filter: blur(1.5px);
+}
+
+.vortex-disc-2 {
+  inset: 14%;
+  background: conic-gradient(
+    from 50deg,
+    transparent 0deg,
+    rgba(145, 55, 215, 0.2) 35deg,
+    transparent 85deg,
+    rgba(135, 48, 205, 0.17) 145deg,
+    transparent 195deg,
+    rgba(150, 58, 220, 0.19) 245deg,
+    transparent 295deg,
+    rgba(140, 52, 210, 0.15) 340deg,
+    transparent 360deg
+  );
+  animation: vortexSpin 10s linear infinite reverse;
+  filter: blur(1px);
+}
+
+.vortex-disc-3 {
+  inset: 30%;
+  background: conic-gradient(
+    from 130deg,
+    transparent 0deg,
+    rgba(170, 72, 240, 0.25) 45deg,
+    transparent 105deg,
+    rgba(162, 68, 232, 0.22) 175deg,
+    transparent 235deg,
+    rgba(175, 78, 245, 0.24) 295deg,
+    transparent 360deg
+  );
+  animation: vortexSpin 6s linear infinite;
+  filter: blur(0.5px);
+}
+
+/* Dark void core — the black hole center */
+.vortex-core {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 38%;
+  height: 38%;
+  border-radius: 50%;
+  background: radial-gradient(ellipse at center,
+    rgba(0, 0, 0, 0.95) 0%,
+    rgba(3, 0, 8, 0.85) 35%,
+    rgba(20, 3, 40, 0.5) 60%,
+    rgba(40, 8, 65, 0.2) 80%,
+    transparent 100%);
+  box-shadow:
+    0 0 12px 4px rgba(0, 0, 0, 0.7),
+    0 0 24px 8px rgba(15, 2, 28, 0.4);
+  z-index: 3;
+  animation: corePulse 5s ease-in-out infinite;
+}
+
+/* Soft ambient glow — backlights the kid from below */
+.vortex-glow {
+  position: absolute;
+  inset: -25%;
+  border-radius: 50%;
+  background: radial-gradient(ellipse at center,
+    rgba(140, 45, 200, 0.15) 0%,
+    rgba(110, 30, 165, 0.08) 25%,
+    rgba(80, 15, 130, 0.03) 50%,
+    transparent 68%);
+  animation: vortexGlowPulse 5s ease-in-out infinite;
+  z-index: -1;
+  /* Un-tilt the glow so it spreads naturally upward to light the kid */
+  transform: perspective(300px) rotateX(-52deg);
+}
+
+@keyframes vortexGlowPulse {
+  0%, 100% { opacity: 0.7; }
+  50%      { opacity: 1; }
+}
+
+@keyframes vortexSpin {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
+
+@keyframes corePulse {
+  0%, 100% { transform: translate(-50%,-50%) scale(1);   opacity: 0.85; }
+  50%      { transform: translate(-50%,-50%) scale(1.08); opacity: 1; }
 }
 
 /* --- Wake Up Screen --- */
@@ -520,7 +710,7 @@ body {
   font-weight: 300;
   letter-spacing: 3px;
   color: rgba(150, 130, 200, 0);
-  text-transform: lowercase;
+  text-transform: none;
   transition: color 1s ease, border-color 1s ease, box-shadow 1s ease;
   width: 72px;
   height: 72px;
@@ -1160,4 +1350,286 @@ body {
   margin-top: 8px;
   padding: 10px 36px;
   font-size: 14px;
+}
+
+/* ============================================= */
+/* ===   MIXTAPE BUTTON (TITLE SCREEN)      === */
+/* ============================================= */
+
+.btn-mixtape {
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  z-index: 10;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 8px;
+  transition: all 0.3s ease;
+}
+
+.btn-mixtape:active {
+  transform: scale(0.93);
+}
+
+.btn-mixtape-icon {
+  width: 32px;
+  height: 32px;
+  object-fit: contain;
+  filter: brightness(1.6) drop-shadow(0 0 8px rgba(255, 215, 0, 0.3));
+  transition: filter 0.3s ease;
+}
+
+.btn-mixtape:hover .btn-mixtape-icon {
+  filter: brightness(2) drop-shadow(0 0 12px rgba(255, 215, 0, 0.5));
+}
+
+.btn-mixtape-label {
+  font-family: 'Leander', 'Zen Dots', sans-serif;
+  font-size: 11px;
+  letter-spacing: 1.5px;
+  color: rgba(200, 180, 255, 0.6);
+  transition: color 0.3s ease;
+}
+
+.btn-mixtape:hover .btn-mixtape-label {
+  color: rgba(255, 215, 0, 0.8);
+}
+
+/* ============================================= */
+/* ===   MIXTAPE SCREEN                     === */
+/* ============================================= */
+
+#screen-mixtape {
+  background: linear-gradient(180deg, #020408 0%, #0c0818 30%, #120a20 60%, #080414 100%);
+  flex-direction: column;
+}
+
+.mixtape-header {
+  position: relative;
+  padding: 22px 16px 12px;
+  text-align: center;
+}
+
+.mixtape-header .btn-back {
+  position: absolute;
+  top: 20px;
+  left: 16px;
+  z-index: 2;
+}
+
+.mixtape-title {
+  font-family: 'Schoolbell', 'Leander', sans-serif;
+  font-size: 32px;
+  color: #ff7bac;
+  letter-spacing: 3px;
+  filter: drop-shadow(0 0 14px rgba(255, 123, 172, 0.4));
+}
+
+.mixtape-subtitle {
+  font-family: 'Courier New', Courier, monospace;
+  font-size: 11px;
+  color: rgba(255, 123, 172, 0.35);
+  margin-top: 4px;
+  letter-spacing: 1.5px;
+}
+
+/* --- Song List --- */
+.mixtape-list {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 8px 20px 100px;
+  overflow-y: auto;
+  flex: 1;
+}
+
+.mixtape-track {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 16px;
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 123, 172, 0.06);
+  transition: all 0.2s ease;
+  position: relative;
+}
+
+.mixtape-track.locked {
+  opacity: 0.3;
+  cursor: default;
+}
+
+.mixtape-track.unlocked {
+  cursor: pointer;
+}
+
+.mixtape-track.unlocked:active {
+  transform: scale(0.97);
+  background: rgba(255, 123, 172, 0.06);
+}
+
+.mixtape-track.playing {
+  border-color: rgba(255, 123, 172, 0.3);
+  background: rgba(255, 123, 172, 0.06);
+  box-shadow: 0 0 20px rgba(255, 123, 172, 0.08);
+}
+
+.mixtape-track-number {
+  font-family: 'Schoolbell', sans-serif;
+  font-size: 22px;
+  font-weight: 400;
+  color: rgba(255, 123, 172, 0.5);
+  width: 28px;
+  text-align: center;
+  flex-shrink: 0;
+}
+
+.mixtape-track.locked .mixtape-track-number {
+  color: rgba(255, 255, 255, 0.15);
+}
+
+.mixtape-track-info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.mixtape-track-name {
+  font-family: 'Schoolbell', sans-serif;
+  font-size: 16px;
+  color: rgba(255, 255, 255, 0.85);
+  letter-spacing: 0.5px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.mixtape-track.locked .mixtape-track-name {
+  color: rgba(255, 255, 255, 0.25);
+}
+
+.mixtape-track.playing .mixtape-track-name {
+  color: #ff7bac;
+  filter: drop-shadow(0 0 6px rgba(255, 123, 172, 0.4));
+}
+
+.mixtape-track-origin {
+  font-family: 'Courier New', Courier, monospace;
+  font-size: 10px;
+  color: rgba(255, 255, 255, 0.3);
+  letter-spacing: 1px;
+}
+
+.mixtape-track.locked .mixtape-track-origin {
+  color: rgba(255, 255, 255, 0.12);
+}
+
+/* Play/Pause button on each track */
+.mixtape-track-btn {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  border: 1.5px solid rgba(255, 123, 172, 0.2);
+  background: rgba(255, 123, 172, 0.06);
+  color: #ff7bac;
+  font-size: 14px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition: all 0.2s ease;
+}
+
+.mixtape-track-btn:active {
+  transform: scale(0.9);
+  background: rgba(255, 123, 172, 0.15);
+  border-color: rgba(255, 123, 172, 0.4);
+}
+
+.mixtape-track.playing .mixtape-track-btn {
+  border-color: rgba(255, 123, 172, 0.4);
+  background: rgba(255, 123, 172, 0.12);
+  box-shadow: 0 0 12px rgba(255, 123, 172, 0.15);
+  animation: trackBtnPulse 2s ease-in-out infinite;
+}
+
+@keyframes trackBtnPulse {
+  0%, 100% { box-shadow: 0 0 12px rgba(255, 123, 172, 0.15); }
+  50% { box-shadow: 0 0 20px rgba(255, 123, 172, 0.3); }
+}
+
+.mixtape-track-lock {
+  width: 16px;
+  height: 16px;
+  object-fit: contain;
+  filter: brightness(2) opacity(0.3);
+  flex-shrink: 0;
+}
+
+/* --- Now Playing Bar --- */
+.mixtape-now-playing {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 20px;
+  background: rgba(12, 8, 24, 0.92);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-top: 1px solid rgba(255, 123, 172, 0.15);
+  z-index: 10;
+}
+
+.now-playing-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.now-playing-title {
+  font-family: 'Schoolbell', sans-serif;
+  font-size: 14px;
+  color: #ff7bac;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  filter: drop-shadow(0 0 6px rgba(255, 123, 172, 0.3));
+}
+
+.now-playing-controls {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.mixtape-ctrl-btn {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  border: 1.5px solid rgba(255, 123, 172, 0.25);
+  background: rgba(255, 123, 172, 0.06);
+  color: #ff7bac;
+  font-size: 16px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+}
+
+.mixtape-ctrl-btn:active {
+  transform: scale(0.9);
+  background: rgba(255, 123, 172, 0.15);
+  border-color: rgba(255, 123, 172, 0.4);
 }

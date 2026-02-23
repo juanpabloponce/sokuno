@@ -9,8 +9,11 @@ const Game = (() => {
   let stageErrors = 0;
   let stageProblems = 0;
   let chosenGuardian = null;
-  let gameState = 'title'; // title, worldmap, guardian-pick, stageselect, playing, victory, defeat
+  let gameState = 'title'; // title, worldmap, guardian-pick, stageselect, playing, victory, defeat, freestyle-select, freestyle-guardian, freestyle-results
   let finalBattlePhase = 0; // 0 = not in final battle, 1-3 for phases
+  let problemStartTime = 0; // timestamp when current problem was shown
+  let freestyleSubmode = null; // 'pure' or 'guardian'
+  let freestyleGuardianId = null;
 
   // DEBUG: set to true to unlock all worlds/stages/powers for testing, false for normal play
   const DEBUG_UNLOCK_ALL = false;
@@ -43,8 +46,25 @@ const Game = (() => {
     Storage.save(saveData);
     Lore.updateLoreUnreadBadge(saveData);
 
+    // Show freestyle button if unlocked
+    updateFreestyleButton();
+
     startWakeupSequence();
     bindGlobalEvents();
+  }
+
+  function updateFreestyleButton() {
+    const btn = document.getElementById('btn-freestyle');
+    if (!btn) return;
+    btn.classList.remove('hidden'); // always visible (locked or unlocked)
+    const unlocked = DEBUG_UNLOCK_ALL || (saveData.freestyle && saveData.freestyle.unlocked);
+    if (unlocked) {
+      btn.classList.remove('locked');
+      btn.disabled = false;
+    } else {
+      btn.classList.add('locked');
+      btn.disabled = true;
+    }
   }
 
   function startWakeupSequence() {
@@ -53,7 +73,7 @@ const Game = (() => {
     const tapEl = document.querySelector('.wakeup-tap');
 
     // Type out the message letter by letter
-    const lines = ['Hey...', 'Are you there?'];
+    const lines = ['You are asleep...', 'good. Now we can speak.'];
     let lineIdx = 0;
     let charIdx = 0;
     let html = '';
@@ -156,6 +176,25 @@ const Game = (() => {
       showScreen('title');
     });
 
+    // Mixtape button
+    document.getElementById('btn-mixtape')?.addEventListener('click', () => {
+      Audio.buttonPress();
+      showScreen('mixtape');
+      Mixtape.renderList(saveData, DEBUG_UNLOCK_ALL);
+    });
+
+    document.getElementById('btn-back-mixtape')?.addEventListener('click', () => {
+      Audio.buttonPress();
+      showScreen('title');
+    });
+
+    // Stop button in now-playing bar
+    document.getElementById('mixtape-btn-stop')?.addEventListener('click', () => {
+      Audio.buttonPress();
+      Mixtape.stop();
+      Mixtape.renderList(saveData, DEBUG_UNLOCK_ALL);
+    });
+
     // Sound toggle
     document.getElementById('btn-sound')?.addEventListener('click', () => {
       const enabled = Audio.toggle();
@@ -166,7 +205,10 @@ const Game = (() => {
     document.getElementById('btn-back-title')?.addEventListener('click', () => {
       Audio.buttonPress();
       Audio.stopMusic();
-      Audio.playIntroMusic();
+      // Only restart intro music if mixtape is not playing
+      if (!Mixtape.isPlaying()) {
+        Audio.playIntroMusic();
+      }
       showScreen('title');
       createStars('title-stars', 80, null);
     });
@@ -189,7 +231,12 @@ const Game = (() => {
 
     document.getElementById('btn-back-game')?.addEventListener('click', () => {
       Audio.buttonPress();
-      showStageSelect(currentWorld);
+      if (Freestyle.isActive()) {
+        // End freestyle session and show results
+        onFreestyleSessionEnd();
+      } else {
+        showStageSelect(currentWorld);
+      }
     });
 
     // Reset (hold for 3 seconds in title)
@@ -203,6 +250,63 @@ const Game = (() => {
     document.getElementById('btn-reset')?.addEventListener('mouseup', () => {
       clearTimeout(resetTimer);
     });
+
+    // --- Freestyle Mode Events ---
+
+    document.getElementById('btn-freestyle')?.addEventListener('click', () => {
+      Audio.resume();
+      Audio.buttonPress();
+      showFreestyleSelect();
+    });
+
+    document.getElementById('btn-back-freestyle')?.addEventListener('click', () => {
+      Audio.buttonPress();
+      Audio.stopMusic();
+      if (!Mixtape.isPlaying()) {
+        Audio.playIntroMusic();
+      }
+      showScreen('title');
+      createStars('title-stars', 80, null);
+    });
+
+    document.getElementById('freestyle-card-pure')?.addEventListener('click', () => {
+      Audio.buttonPress();
+      freestyleSubmode = 'pure';
+      freestyleGuardianId = null;
+      beginFreestyleGameplay('pure', null);
+    });
+
+    document.getElementById('freestyle-card-guardian')?.addEventListener('click', () => {
+      Audio.buttonPress();
+      freestyleSubmode = 'guardian';
+      showFreestyleGuardianPicker();
+    });
+
+    document.getElementById('btn-back-freestyle-guardian')?.addEventListener('click', () => {
+      Audio.buttonPress();
+      showFreestyleSelect();
+    });
+
+    document.getElementById('btn-freestyle-again')?.addEventListener('click', () => {
+      Audio.buttonPress();
+      if (freestyleSubmode === 'guardian' && freestyleGuardianId) {
+        beginFreestyleGameplay('guardian', freestyleGuardianId);
+      } else if (freestyleSubmode === 'pure') {
+        beginFreestyleGameplay('pure', null);
+      } else {
+        showFreestyleSelect();
+      }
+    });
+
+    document.getElementById('btn-freestyle-exit')?.addEventListener('click', () => {
+      Audio.buttonPress();
+      Audio.stopMusic();
+      if (!Mixtape.isPlaying()) {
+        Audio.playIntroMusic();
+      }
+      showScreen('title');
+      createStars('title-stars', 80, null);
+    });
   }
 
   // --- Screen Management ---
@@ -214,6 +318,11 @@ const Game = (() => {
     });
     // Clear star containers of hidden screens to reduce DOM weight
     ['title-stars', 'worldmap-stars', 'stageselect-stars', 'game-stars'].forEach(id => clearStars(id));
+
+    // Hide freestyle HUD when leaving game screen
+    if (screenId !== 'game') {
+      document.getElementById('freestyle-hud')?.classList.add('hidden');
+    }
 
     const target = document.getElementById(`screen-${screenId}`);
     target.classList.remove('hidden');
@@ -227,7 +336,10 @@ const Game = (() => {
 
   function showWorldMap() {
     Audio.stopMusic();
-    Audio.playIntroMusic();
+    // Only play intro music if mixtape isn't playing
+    if (!Mixtape.isPlaying()) {
+      Audio.playIntroMusic();
+    }
     showScreen('worldmap');
     createStars('worldmap-stars', 40, null);
     renderWorldMap();
@@ -302,6 +414,7 @@ const Game = (() => {
     }
 
     showScreen('guardian-pick');
+    document.getElementById('screen-guardian-pick').dataset.world = worldId;
     const container = document.getElementById('guardian-pick-list');
     container.innerHTML = '';
 
@@ -326,18 +439,19 @@ const Game = (() => {
       const def = allDefs[key];
       const unlocked = unlockedPowers.includes(key);
       const isNative = key === nativePower;
+      const hasResonance = isNative && unlocked && worldId !== 7;
 
       const div = document.createElement('div');
-      div.className = `guardian-option ${unlocked ? '' : 'locked'} ${isNative && unlocked ? 'native' : ''}`;
+      div.className = `guardian-option ${unlocked ? '' : 'locked'} ${hasResonance ? 'resonant' : ''}`;
 
       div.innerHTML = `
-        <div class="guardian-opt-emoji"><img src="${def.icon}" class="guardian-seal" alt="${def.guardian}"></div>
+        <div class="guardian-opt-emoji${hasResonance ? ' resonant-aura' : ''}"><img src="${def.icon}" class="guardian-seal" alt="${def.guardian}"></div>
         <div class="guardian-opt-info">
           <div class="guardian-opt-name">${def.guardian}</div>
           <div class="guardian-opt-power">${def.name}</div>
           <div class="guardian-opt-desc">${def.desc}</div>
         </div>
-        ${isNative && unlocked ? '<span class="guardian-opt-tag">Native</span>' : ''}
+        ${hasResonance ? '<span class="guardian-opt-tag resonance-tag">Resonance</span>' : ''}
         ${!unlocked ? '<span class="guardian-opt-lock"><img src="assets/lock.svg" class="lock-icon-sm" alt="Locked"></span>' : ''}
       `;
 
@@ -516,8 +630,9 @@ const Game = (() => {
     Calculator.init(onAnswerSubmit);
 
     // Setup powers — only the chosen guardian
+    Powers.setActiveWorld(worldId);
     Powers.resetUses();
-    renderPowerButtons();
+    renderPowerBarUI();
 
     // Show world/stage info
     const world = worldsData.worlds[worldId - 1];
@@ -531,7 +646,8 @@ const Game = (() => {
     }
     gameLabel.appendChild(document.createTextNode(` ${world.name} — Stage ${stageNum}`));
 
-    // Start world music
+    // Stop mixtape if playing, then start world music
+    Mixtape.stopForWorld();
     Audio.playWorldMusic(worldId);
 
     // Generate first problem
@@ -553,6 +669,7 @@ const Game = (() => {
 
   function nextProblem() {
     currentProblem = Problems.generateProblem(currentWorld, currentStage);
+    problemStartTime = Date.now();
     renderProblem();
     Calculator.clear();
     Calculator.setDisabled(false);
@@ -567,6 +684,8 @@ const Game = (() => {
     Calculator.setDisabled(true);
     stageProblems++;
     saveData.stats.totalProblems++;
+
+    const answerTimeMs = Date.now() - problemStartTime;
 
     if (playerAnswer === currentProblem.answer) {
       // Correct
@@ -590,6 +709,9 @@ const Game = (() => {
         setTimeout(() => answerEl.classList.remove('combo-boost'), 350);
       }
 
+      // Charge the power bar on correct answers
+      chargePowerBar(answerTimeMs);
+
       // Final battle phase advancement
       if (currentWorld === 7 && currentStage === 10) {
         updateFinalBattlePhase();
@@ -601,6 +723,8 @@ const Game = (() => {
       Calculator.showFeedback(false);
       SleepBar.wrongAnswer();
       showParticles(false);
+      // Refresh power bar UI (streak resets)
+      renderPowerBarUI();
     }
 
     Storage.save(saveData);
@@ -660,18 +784,31 @@ const Game = (() => {
       Lore.showChapterNotification(ch, () => showLoreNotifs(chapters, cb));
     }
 
+    // Unlock Freestyle Mode after completing World 7 Stage 10
+    if (currentWorld === 7 && currentStage === 10 && saveData.freestyle) {
+      saveData.freestyle.unlocked = true;
+      Storage.save(saveData);
+      updateFreestyleButton();
+    }
+
     // World 7 Stage 10: Final battle victory — special dialogue chain
     if (currentWorld === 7 && currentStage === 10) {
       Dialogue.show('finalBattleVictory', () => {
-        if (!saveData.storyProgress.endingSeen) {
+        const shouldShowFinale = !saveData.storyProgress.endingSeen || !saveData.storyProgress.freestyleUnlockSeen;
+        if (shouldShowFinale) {
           saveData.storyProgress.endingSeen = true;
+          saveData.storyProgress.freestyleUnlockSeen = true;
           Storage.save(saveData);
           // Re-sync after ending seen
           const moreChapters = Lore.syncUnlocks(saveData);
           Storage.save(saveData);
           const allNew = newChapters.concat(moreChapters);
           Dialogue.show('finale', () => {
-            showLoreNotifs(allNew, () => showVictoryScreen(result.stars));
+            showLoreNotifs(allNew, () => {
+              // "Enter the Endless Dream" — go to Freestyle select
+              Audio.stopMusic();
+              showFreestyleSelect();
+            });
           });
         } else {
           showLoreNotifs(newChapters, () => showVictoryScreen(result.stars));
@@ -745,73 +882,139 @@ const Game = (() => {
 
   // --- Powers ---
 
-  function renderPowerButtons() {
-    const container = document.getElementById('power-buttons');
-    container.innerHTML = '';
+  function chargePowerBar(answerTimeMs) {
+    const isAbyssMode = currentWorld === 7;
+    const streak = SleepBar.getStreak();
+
+    if (chosenGuardian === 'all') {
+      // World 7: charge ALL unlocked guardians
+      const unlockedPowers = DEBUG_UNLOCK_ALL ? Object.keys(Powers.getAllDefs()) : Powers.getUnlockedPowers(saveData);
+      unlockedPowers.forEach(powerId => {
+        const charge = Powers.calculateCharge(true, answerTimeMs, streak, true);
+        Powers.addCharge(powerId, charge);
+      });
+    } else if (chosenGuardian) {
+      // Normal worlds: charge only the chosen guardian
+      const charge = Powers.calculateCharge(true, answerTimeMs, streak, false);
+      Powers.addCharge(chosenGuardian, charge);
+    }
+
+    renderPowerBarUI();
+  }
+
+  function renderPowerBarUI() {
+    // --- Top: charge bar indicator (below sleep bar) ---
+    const barContainer = document.getElementById('power-buttons');
+    barContainer.innerHTML = '';
+
+    // --- Bottom: action buttons (below calculator) ---
+    const btnContainer = document.getElementById('power-action-buttons');
+    btnContainer.innerHTML = '';
 
     if (!chosenGuardian) return;
 
-    // World 7 (The Abyss): show all unlocked powers
+    // World 7 (The Abyss): all unlocked powers
     if (chosenGuardian === 'all') {
+      barContainer.className = 'power-bar power-bar--multi';
       const unlockedPowers = DEBUG_UNLOCK_ALL ? Object.keys(Powers.getAllDefs()) : Powers.getUnlockedPowers(saveData);
       unlockedPowers.forEach(powerId => {
-        const def = Powers.getDef(powerId);
-        if (!def) return;
-        const uses = Powers.getUses(powerId);
-
-        const btn = document.createElement('button');
-        btn.className = 'power-btn unlocked';
-        btn.dataset.power = powerId;
-        btn.innerHTML = `
-          <span class="power-emoji"><img src="${def.icon}" class="power-seal" alt="${def.name}"></span>
-          <span class="power-uses">${uses}</span>
-        `;
-        btn.title = `${def.name}`;
-
-        if (uses > 0) {
-          btn.addEventListener('click', () => {
-            Audio.resume();
-            usePower(powerId);
-          });
-        } else {
-          btn.classList.add('spent');
-        }
-
-        container.appendChild(btn);
+        barContainer.appendChild(createChargeBarElement(powerId, true));
+        btnContainer.appendChild(createPowerButton(powerId));
       });
       return;
     }
 
-    // Normal worlds: only show the chosen guardian's power
-    const def = Powers.getDef(chosenGuardian);
-    if (!def) return;
+    // Normal worlds: single guardian
+    barContainer.className = 'power-bar power-bar--single';
+    barContainer.appendChild(createChargeBarElement(chosenGuardian, false));
+    btnContainer.appendChild(createPowerButton(chosenGuardian));
+  }
 
-    const uses = Powers.getUses(chosenGuardian);
+  function createChargeBarElement(powerId, compact) {
+    const def = Powers.getDef(powerId);
+    const state = Powers.getChargeState(powerId);
+    const percent = Powers.getChargePercent(powerId);
 
-    const btn = document.createElement('button');
-    btn.className = 'power-btn unlocked';
-    btn.dataset.power = chosenGuardian;
-    btn.innerHTML = `
-      <span class="power-emoji"><img src="${def.icon}" class="power-seal" alt="${def.name}"></span>
-      <span class="power-uses">${uses}</span>
-    `;
-    btn.title = `${def.name}`;
+    const bar = document.createElement('div');
+    bar.className = `charge-bar ${compact ? 'charge-bar--compact' : ''}`;
+    bar.dataset.power = powerId;
 
-    if (uses > 0) {
-      btn.addEventListener('click', () => {
-        Audio.resume();
-        usePower(chosenGuardian);
-      });
+    if (state.isExhausted) {
+      bar.classList.add('charge-bar--exhausted');
+    } else if (state.isReady) {
+      bar.classList.add('charge-bar--ready');
     } else {
-      btn.classList.add('spent');
+      bar.classList.add('charge-bar--charging');
     }
 
-    container.appendChild(btn);
+    // Guardian color — use accent for dark worlds (Cosmos, Abyss)
+    const worldId = def.worldUnlock;
+    const world = worldsData.worlds[worldId - 1];
+    const guardianColor = (worldId === 4 || worldId === 7) ? world.colors.accent : world.colors.primary;
+
+    // Dynamic glow intensity based on charge percentage
+    const glowIntensity = Math.max(0.2, percent);
+    const innerGlow = Math.round(8 + percent * 14);    // 8px → 22px
+    const outerGlow = Math.round(16 + percent * 24);   // 16px → 40px
+    const farGlow   = Math.round(percent * 20);         // 0px → 20px
+
+    const fillStyle = [
+      `width: ${percent * 100}%`,
+      `background: ${guardianColor}`,
+      `color: ${guardianColor}`,
+      `box-shadow: 0 0 ${innerGlow}px ${guardianColor}, 0 0 ${outerGlow}px ${guardianColor}${farGlow > 0 ? `, 0 0 ${farGlow}px rgba(255,255,255,0.08)` : ''}`,
+    ].join('; ');
+
+    bar.innerHTML = `
+      <div class="charge-bar__icon">
+        <img src="${def.icon}" class="charge-bar__seal" alt="${def.guardian}">
+      </div>
+      <div class="charge-bar__track">
+        <div class="charge-bar__fill" style="${fillStyle}"></div>
+      </div>
+    `;
+
+    return bar;
+  }
+
+  function createPowerButton(powerId) {
+    const def = Powers.getDef(powerId);
+    const state = Powers.getChargeState(powerId);
+
+    const btn = document.createElement('button');
+    btn.className = 'power-btn';
+    btn.dataset.power = powerId;
+
+    if (state.isExhausted) {
+      btn.classList.add('power-btn--exhausted');
+      btn.innerHTML = `
+        <img src="${def.icon}" class="power-seal" alt="${def.name}">
+        <span class="power-btn__x">&times;</span>
+      `;
+    } else if (state.isReady) {
+      btn.classList.add('power-btn--ready');
+      btn.innerHTML = `
+        <img src="${def.icon}" class="power-seal" alt="${def.name}">
+        <span class="power-uses">${def.name}</span>
+      `;
+      btn.addEventListener('click', () => {
+        Audio.resume();
+        usePower(powerId);
+      });
+    } else {
+      btn.classList.add('power-btn--charging');
+      btn.innerHTML = `
+        <img src="${def.icon}" class="power-seal" alt="${def.name}">
+      `;
+    }
+
+    return btn;
   }
 
   function usePower(powerId) {
+    const chargeState = Powers.getChargeState(powerId);
+    if (!chargeState || !chargeState.isReady || chargeState.isExhausted) return;
     if (!DEBUG_UNLOCK_ALL && !Powers.canUse(powerId, saveData)) return;
-    if (DEBUG_UNLOCK_ALL && Powers.getUses(powerId) <= 0) return;
 
     switch (powerId) {
       case 'freeze':
@@ -863,7 +1066,7 @@ const Game = (() => {
         break;
     }
 
-    renderPowerButtons();
+    renderPowerBarUI();
   }
 
   function onPowerUsed(powerId, remaining) {
@@ -1036,7 +1239,432 @@ const Game = (() => {
     }
   }
 
-  return { init };
+  // ============================================
+  // === FREESTYLE MODE
+  // ============================================
+
+  function showFreestyleSelect() {
+    Audio.stopMusic();
+    if (!Mixtape.isPlaying()) {
+      Audio.playIntroMusic();
+    }
+    showScreen('freestyle-select');
+    gameState = 'freestyle-select';
+    renderFreestyleRecords();
+  }
+
+  function renderFreestyleRecords() {
+    const el = document.getElementById('freestyle-records');
+    if (!el || !saveData.freestyle) return;
+    const p = saveData.freestyle.pure;
+    const g = saveData.freestyle.guardian;
+    const hasPure = p.totalSessions > 0;
+    const hasGuardian = g.totalSessions > 0;
+    if (!hasPure && !hasGuardian) {
+      el.innerHTML = '';
+      return;
+    }
+    let html = '<div class="freestyle-records-title">Personal Records</div>';
+    if (hasPure) {
+      html += `<div class="freestyle-record-row"><span class="freestyle-record-label">Pure — Best Chain:</span> <span class="freestyle-record-val">${p.bestChain}</span> <span class="freestyle-record-sep">|</span> <span class="freestyle-record-label">Total:</span> <span class="freestyle-record-val">${p.bestTotal}</span></div>`;
+    }
+    if (hasGuardian) {
+      html += `<div class="freestyle-record-row"><span class="freestyle-record-label">Guardian — Best Chain:</span> <span class="freestyle-record-val">${g.bestChain}</span> <span class="freestyle-record-sep">|</span> <span class="freestyle-record-label">Total:</span> <span class="freestyle-record-val">${g.bestTotal}</span></div>`;
+    }
+    el.innerHTML = html;
+  }
+
+  function showFreestyleGuardianPicker() {
+    showScreen('freestyle-guardian');
+    gameState = 'freestyle-guardian';
+    const container = document.getElementById('freestyle-guardian-list');
+    container.innerHTML = '';
+
+    const unlockedPowers = DEBUG_UNLOCK_ALL ? Object.keys(Powers.getAllDefs()) : Powers.getUnlockedPowers(saveData);
+    const allDefs = Powers.getAllDefs();
+
+    Object.keys(allDefs).forEach(key => {
+      const def = allDefs[key];
+      const unlocked = unlockedPowers.includes(key);
+
+      const div = document.createElement('div');
+      div.className = `guardian-option ${unlocked ? '' : 'locked'}`;
+
+      div.innerHTML = `
+        <div class="guardian-opt-emoji"><img src="${def.icon}" class="guardian-seal" alt="${def.guardian}"></div>
+        <div class="guardian-opt-info">
+          <div class="guardian-opt-name">${def.guardian}</div>
+          <div class="guardian-opt-power">${def.name}</div>
+          <div class="guardian-opt-desc">${def.desc}</div>
+        </div>
+        ${!unlocked ? '<span class="guardian-opt-lock"><img src="assets/lock.svg" class="lock-icon-sm" alt="Locked"></span>' : ''}
+      `;
+
+      if (unlocked) {
+        div.addEventListener('click', () => {
+          Audio.buttonPress();
+          freestyleGuardianId = key;
+          beginFreestyleGameplay('guardian', key);
+        });
+      }
+
+      container.appendChild(div);
+    });
+  }
+
+  function beginFreestyleGameplay(mode, guardianId) {
+    freestyleSubmode = mode;
+    freestyleGuardianId = guardianId;
+
+    // Init Freestyle session
+    Freestyle.startSession(mode, guardianId);
+
+    // Show game screen with Freestyle theme
+    showScreen('game');
+    gameState = 'game';
+    const gameScreen = document.getElementById('screen-game');
+    gameScreen.dataset.world = 'freestyle';
+    gameScreen.style.setProperty('--world-primary', '#0D0D0D');
+    gameScreen.style.setProperty('--world-secondary', '#1A1A2E');
+    gameScreen.style.setProperty('--world-accent', '#A89CD8');
+    createStars('game-stars', 25, '#A89CD8');
+
+    // Setup sleep bar with tier 1 drain
+    const drainRate = Freestyle.getDrainRateForTier(1);
+    SleepBar.init({
+      startValue: 50,
+      drainRate: drainRate,
+      onUpdate: updateSleepBarUI,
+      onEmpty: onFreestyleSessionEnd,
+      onFull: null // Freestyle: bar never "completes" — it just keeps going
+    });
+
+    // Setup calculator with freestyle handler
+    Calculator.init(onFreestyleAnswerSubmit);
+
+    // Setup powers for guardian mode
+    if (mode === 'guardian' && guardianId) {
+      chosenGuardian = guardianId;
+      Powers.setChosenGuardian(guardianId);
+      Powers.setActiveWorld(7);
+      Powers.resetUses();
+      // Override: start with power not ready (needs 15-correct charge)
+      renderFreestylePowerUI();
+    } else {
+      chosenGuardian = null;
+      Powers.setChosenGuardian(null);
+      document.getElementById('power-buttons').innerHTML = '';
+      document.getElementById('power-action-buttons').innerHTML = '';
+    }
+
+    // Show freestyle HUD
+    const hud = document.getElementById('freestyle-hud');
+    if (hud) {
+      hud.classList.remove('hidden');
+      document.getElementById('freestyle-streak-count').textContent = '0';
+      document.getElementById('freestyle-tier-display').textContent = 'Warm Up';
+    }
+
+    // Show game label
+    const gameLabel = document.getElementById('game-world-label');
+    gameLabel.innerHTML = '';
+    gameLabel.textContent = '✦ The Endless Dream';
+
+    // Stop mixtape, start freestyle music
+    Mixtape.stopForWorld();
+    Audio.playFreestyleMusic();
+
+    // Show first problem
+    currentProblem = Freestyle.getCurrentProblem();
+    problemStartTime = Date.now();
+    renderProblem();
+    Calculator.clear();
+    Calculator.setDisabled(false);
+
+    // Start drain
+    SleepBar.startDrain();
+  }
+
+  function onFreestyleAnswerSubmit(playerAnswer) {
+    Calculator.setDisabled(true);
+    saveData.stats.totalProblems++;
+
+    if (playerAnswer === currentProblem.answer) {
+      // Correct
+      saveData.stats.totalCorrect++;
+      Audio.correct();
+      Calculator.showFeedback(true);
+
+      const result = Freestyle.onCorrectAnswer();
+
+      // Recovery with tier scaling
+      const recoveryMult = result.recoveryMultiplier || 1;
+      // Manual recovery: base 2.5 + streak bonus (capped at 5), scaled by tier
+      const streakBonus = Math.min(result.streak, 5);
+      const recovery = (2.5 + streakBonus) * recoveryMult;
+      SleepBar.restore(recovery);
+
+      // Streak milestones
+      if (result.isStreakMilestone5) {
+        SleepBar.restore(5); // bonus burst
+      }
+      if (result.isStreakMilestone10) {
+        showParticles(true);
+        showParticles(true); // extra particles
+      }
+
+      showParticles(true);
+
+      // Combo visual
+      if (result.streak >= 3) {
+        const answerEl = document.getElementById('answer-display');
+        answerEl.classList.add('combo-boost');
+        setTimeout(() => answerEl.classList.remove('combo-boost'), 350);
+      }
+
+      // Update tier
+      if (result.tierChanged) {
+        SleepBar.setDrainRate(result.drainRate);
+        const tierEl = document.getElementById('freestyle-tier-display');
+        if (tierEl) {
+          tierEl.textContent = Freestyle.getTierName();
+          tierEl.classList.add('tier-change');
+          setTimeout(() => tierEl.classList.remove('tier-change'), 1000);
+        }
+      }
+
+      // Update streak display
+      document.getElementById('freestyle-streak-count').textContent = result.streak;
+
+      // Guardian mode: update charge UI
+      if (freestyleSubmode === 'guardian') {
+        renderFreestylePowerUI();
+      }
+
+      Storage.save(saveData);
+
+      // Chain transition: animate answer sliding into next problem
+      const answerBox = document.getElementById('answer-display');
+      answerBox.classList.add('chain-slide');
+
+      setTimeout(() => {
+        answerBox.classList.remove('chain-slide');
+        if (gameState === 'game' && Freestyle.isActive()) {
+          currentProblem = Freestyle.getCurrentProblem();
+          problemStartTime = Date.now();
+          renderProblem();
+          Calculator.clear();
+          Calculator.setDisabled(false);
+        }
+      }, 300);
+    } else {
+      // Wrong
+      Audio.wrong();
+      Calculator.showFeedback(false);
+
+      const result = Freestyle.onWrongAnswer();
+      SleepBar.wrongAnswer();
+
+      showParticles(false);
+
+      // Update streak display
+      document.getElementById('freestyle-streak-count').textContent = '0';
+
+      // Guardian mode: reset charge UI
+      if (freestyleSubmode === 'guardian') {
+        renderFreestylePowerUI();
+      }
+
+      Storage.save(saveData);
+
+      setTimeout(() => {
+        if (gameState === 'game' && Freestyle.isActive()) {
+          currentProblem = Freestyle.getCurrentProblem();
+          problemStartTime = Date.now();
+          renderProblem();
+          Calculator.clear();
+          Calculator.setDisabled(false);
+        }
+      }, 350);
+    }
+  }
+
+  function onFreestyleSessionEnd() {
+    gameState = 'freestyle-results';
+    SleepBar.stopDrain();
+    Calculator.setDisabled(true);
+    Audio.defeat();
+
+    const result = Freestyle.endSession();
+    const modeKey = result.submode; // 'pure' or 'guardian'
+    const record = saveData.freestyle[modeKey];
+
+    // Check for new records
+    let newBestChain = false, newBestTotal = false, newBestTier = false;
+
+    if (result.bestChain > record.bestChain) {
+      record.bestChain = result.bestChain;
+      newBestChain = true;
+    }
+    if (result.totalCorrect > record.bestTotal) {
+      record.bestTotal = result.totalCorrect;
+      newBestTotal = true;
+    }
+    if (result.highestTier > record.highestTier) {
+      record.highestTier = result.highestTier;
+      newBestTier = true;
+    }
+    record.totalSessions++;
+    Storage.save(saveData);
+
+    // Populate results screen
+    showScreen('freestyle-results');
+
+    document.getElementById('freestyle-result-chain').textContent = result.bestChain;
+    document.getElementById('freestyle-result-total').textContent = result.totalCorrect;
+    document.getElementById('freestyle-result-tier').textContent = result.tierName;
+    document.getElementById('freestyle-result-quote').textContent = `"${result.quote}"`;
+
+    // Show "NEW BEST!" badges
+    const badgeChain = document.getElementById('freestyle-badge-chain');
+    const badgeTotal = document.getElementById('freestyle-badge-total');
+    const badgeTier = document.getElementById('freestyle-badge-tier');
+
+    badgeChain.classList.toggle('hidden', !newBestChain);
+    badgeTotal.classList.toggle('hidden', !newBestTotal);
+    badgeTier.classList.toggle('hidden', !newBestTier);
+
+    // Hide freestyle HUD
+    document.getElementById('freestyle-hud')?.classList.add('hidden');
+  }
+
+  // --- Freestyle Power UI ---
+
+  function renderFreestylePowerUI() {
+    const barContainer = document.getElementById('power-buttons');
+    const btnContainer = document.getElementById('power-action-buttons');
+    barContainer.innerHTML = '';
+    btnContainer.innerHTML = '';
+
+    if (freestyleSubmode !== 'guardian' || !freestyleGuardianId) return;
+
+    const def = Powers.getDef(freestyleGuardianId);
+    if (!def) return;
+
+    const chargePercent = Freestyle.getGuardianCharge();
+    const isReady = Freestyle.isGuardianReady();
+
+    // Charge bar
+    barContainer.className = 'power-bar power-bar--single';
+    const bar = document.createElement('div');
+    bar.className = `charge-bar ${isReady ? 'charge-bar--ready' : 'charge-bar--charging'}`;
+
+    const world = worldsData.worlds[def.worldUnlock - 1];
+    const guardianColor = (def.worldUnlock === 4 || def.worldUnlock === 7) ? world.colors.accent : world.colors.primary;
+    const percent = chargePercent;
+    const innerGlow = Math.round(8 + percent * 14);
+    const outerGlow = Math.round(16 + percent * 24);
+
+    const fillStyle = [
+      `width: ${percent * 100}%`,
+      `background: ${guardianColor}`,
+      `color: ${guardianColor}`,
+      `box-shadow: 0 0 ${innerGlow}px ${guardianColor}, 0 0 ${outerGlow}px ${guardianColor}`,
+    ].join('; ');
+
+    bar.innerHTML = `
+      <div class="charge-bar__icon">
+        <img src="${def.icon}" class="charge-bar__seal" alt="${def.guardian}">
+      </div>
+      <div class="charge-bar__track">
+        <div class="charge-bar__fill" style="${fillStyle}"></div>
+      </div>
+    `;
+    barContainer.appendChild(bar);
+
+    // Action button
+    const btn = document.createElement('button');
+    btn.className = 'power-btn';
+
+    if (isReady) {
+      btn.classList.add('power-btn--ready');
+      btn.innerHTML = `
+        <img src="${def.icon}" class="power-seal" alt="${def.name}">
+        <span class="power-uses">${def.name}</span>
+      `;
+      btn.addEventListener('click', () => {
+        Audio.resume();
+        useFreestylePower(freestyleGuardianId);
+      });
+    } else {
+      btn.classList.add('power-btn--charging');
+      btn.innerHTML = `
+        <img src="${def.icon}" class="power-seal" alt="${def.name}">
+      `;
+    }
+
+    btnContainer.appendChild(btn);
+  }
+
+  function useFreestylePower(powerId) {
+    if (!Freestyle.isGuardianReady()) return;
+    if (!Freestyle.useGuardianPower()) return;
+
+    switch (powerId) {
+      case 'freeze':
+        SleepBar.freeze(5000);
+        Audio.powerUsed();
+        showPowerEffect(Powers.getDef('freeze'), 'Freeze!');
+        break;
+
+      case 'insight': {
+        Audio.powerUsed();
+        const prob = Freestyle.getCurrentProblem();
+        const ansStr = String(prob.answer);
+        const half = ansStr.substring(0, Math.ceil(ansStr.length / 2));
+        Calculator.setAnswer(half);
+        showPowerEffect(Powers.getDef('insight'), 'Insight!');
+        break;
+      }
+
+      case 'restore':
+        SleepBar.restore(15); // Reduced from 20 in Story Mode
+        Audio.powerUsed();
+        showPowerEffect(Powers.getDef('restore'), 'Restore!');
+        break;
+
+      case 'cosmicSolve': {
+        Audio.powerUsed();
+        showPowerEffect(Powers.getDef('cosmicSolve'), 'Cosmic Solve!');
+        const prob = Freestyle.getCurrentProblem();
+        Calculator.setAnswer(prob.answer);
+        setTimeout(() => onFreestyleAnswerSubmit(prob.answer), 500);
+        break;
+      }
+
+      case 'blazeSkip':
+        Audio.powerUsed();
+        Freestyle.skipCurrentProblem();
+        showPowerEffect(Powers.getDef('blazeSkip'), 'Blaze Skip!');
+        currentProblem = Freestyle.getCurrentProblem();
+        renderProblem();
+        Calculator.clear();
+        break;
+
+      case 'simplify':
+        Audio.powerUsed();
+        Freestyle.simplifyCurrentProblem();
+        currentProblem = Freestyle.getCurrentProblem();
+        renderProblem();
+        Calculator.clear();
+        showPowerEffect(Powers.getDef('simplify'), 'Simplify!');
+        break;
+    }
+
+    renderFreestylePowerUI();
+  }
+
+  return { init, startStage };
 })();
 
 // Start game on load

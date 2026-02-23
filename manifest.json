@@ -1,7 +1,7 @@
 {
-  "name": "Sokunō — Fast Brain",
+  "name": "Sokunō",
   "short_name": "Sokunō",
-  "description": "A math-based dream world adventure game",
+  "description": "Train your mind. Light the dark.",
   "start_url": "/",
   "display": "standalone",
   "orientation": "portrait",

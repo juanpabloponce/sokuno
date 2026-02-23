@@ -183,7 +183,7 @@ const Dialogue = (() => {
       setSpeakerIcon(emojiEl, '');
       textEl.className = 'dialogue-text power-unlock';
       typewriterEffect(textEl, processedText);
-      btn.textContent = 'Continue';
+      btn.textContent = line.button || 'Continue';
     } else {
       nameEl.textContent = line.speaker;
       setSpeakerIcon(emojiEl, line.emoji);
