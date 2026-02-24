@@ -32,6 +32,15 @@ const Dialogue = (() => {
       currentSequence = dialogueData.gathering || [];
     } else if (sequenceKey === 'abyssMidpoint') {
       currentSequence = dialogueData.abyssMidpoint || [];
+    } else if (sequenceKey.startsWith('abyssStage_')) {
+      var abParts = sequenceKey.split('_');
+      var abStageNum = abParts[1];
+      var abTiming = abParts[2]; // 'pre' or 'post'
+      if (dialogueData.abyssStages && dialogueData.abyssStages[abStageNum]) {
+        currentSequence = dialogueData.abyssStages[abStageNum][abTiming] || [];
+      } else {
+        currentSequence = [];
+      }
     } else if (sequenceKey === 'finalBattleVictory') {
       currentSequence = dialogueData.finalBattleVictory || [];
     } else if (sequenceKey.startsWith('worldIntro_')) {
@@ -60,6 +69,10 @@ const Dialogue = (() => {
   function showDialogueOverlay() {
     const overlay = document.getElementById('dialogue-overlay');
     overlay.classList.remove('hidden');
+
+    // Determine if this sequence has a nameInput line (intro) — don't show skip for those
+    var hasNameInput = currentSequence.some(function(line) { return line.type === 'nameInput'; });
+
     overlay.innerHTML = `
       <div class="dialogue-box">
         <div class="dialogue-speaker">
@@ -72,6 +85,7 @@ const Dialogue = (() => {
         </div>
         <button class="dialogue-continue-btn">Continue</button>
       </div>
+      ${hasNameInput ? '' : '<button class="dialogue-skip-btn">Skip ▸▸</button>'}
     `;
 
     const btn = overlay.querySelector('.dialogue-continue-btn');
@@ -80,6 +94,19 @@ const Dialogue = (() => {
       Audio.buttonPress();
       handleContinueClick();
     });
+
+    // Skip button — jumps to the end of the dialogue
+    const skipBtn = overlay.querySelector('.dialogue-skip-btn');
+    if (skipBtn) {
+      skipBtn.addEventListener('click', () => {
+        Audio.resume();
+        Audio.buttonPress();
+        clearTimeout(typewriterTimer);
+        isTyping = false;
+        hide();
+        if (onComplete) onComplete();
+      });
+    }
 
     // Allow pressing Enter on the name input to submit
     const nameInput = overlay.querySelector('.dialogue-name-input');

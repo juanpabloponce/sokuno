@@ -28,9 +28,9 @@
   <link href="https://fonts.googleapis.com/css2?family=Jost:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="css/main.css?v=36">
   <link rel="stylesheet" href="css/calculator.css?v=31">
-  <link rel="stylesheet" href="css/worldmap.css?v=42">
-  <link rel="stylesheet" href="css/dialogue.css?v=42">
-  <link rel="stylesheet" href="css/freestyle.css?v=43">
+  <link rel="stylesheet" href="css/worldmap.css?v=52">
+  <link rel="stylesheet" href="css/dialogue.css?v=48">
+  <link rel="stylesheet" href="css/freestyle.css?v=44">
 </head>
 <body>
   <!-- Hand-drawn edge filter (subtle wobble on borders) -->
@@ -183,6 +183,8 @@
     <!-- ============ GAMEPLAY ============ -->
     <div id="screen-game" class="screen hidden">
       <div id="game-stars" class="star-field"></div>
+      <div id="game-embers" class="embers-container"></div>
+      <div id="game-heat" class="volcano-heat hidden"></div>
       <!-- Header: world label + sleep bar -->
       <div class="game-header">
         <button id="btn-back-game" class="btn-back-game">←</button>
@@ -328,19 +330,19 @@
 
   <!-- Scripts (order matters) -->
   <script src="js/worlds-data.js?v=30"></script>
-  <script src="js/dialogues-data.js?v=43"></script>
-  <script src="js/storage.js?v=43"></script>
-  <script src="js/audio.js?v=43"></script>
+  <script src="js/dialogues-data.js?v=49"></script>
+  <script src="js/storage.js?v=45"></script>
+  <script src="js/audio.js?v=44"></script>
   <script src="js/problems.js?v=29"></script>
-  <script src="js/sleepbar.js?v=29"></script>
-  <script src="js/powers.js?v=33"></script>
+  <script src="js/sleepbar.js?v=45"></script>
+  <script src="js/powers.js?v=45"></script>
   <script src="js/progression.js?v=29"></script>
-  <script src="js/dialogue.js?v=43"></script>
+  <script src="js/dialogue.js?v=48"></script>
   <script src="js/lore.js?v=29"></script>
   <script src="js/calculator.js?v=29"></script>
-  <script src="js/freestyle.js?v=43"></script>
+  <script src="js/freestyle.js?v=44"></script>
   <script src="js/mixtape.js?v=32"></script>
-  <script src="js/game.js?v=43"></script>
+  <script src="js/game.js?v=52"></script>
   <script>
     if ('serviceWorker' in navigator) {
       navigator.serviceWorker.register('/sw.js');

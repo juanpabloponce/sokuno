@@ -57,9 +57,31 @@ const SleepBar = (() => {
     }
   }
 
+  function correctAnswerScaled(multiplier) {
+    streak++;
+    var bonus = Math.min(streak, 5);
+    var gain = (2.5 + bonus) * multiplier;
+    value = Math.min(100, value + gain);
+    update();
+    if (value >= 100 && onFull) {
+      stopDrain();
+      onFull();
+    }
+  }
+
   function wrongAnswer() {
     streak = 0;
     value = Math.max(0, value - 6);
+    update();
+    if (value <= 0 && onEmpty) {
+      stopDrain();
+      onEmpty();
+    }
+  }
+
+  function wrongAnswerCustom(penalty) {
+    streak = 0;
+    value = Math.max(0, value - penalty);
     update();
     if (value <= 0 && onEmpty) {
       stopDrain();
@@ -110,10 +132,22 @@ const SleepBar = (() => {
 
     let startValue = stageNum === 10 ? 25 : 45;
 
-    // The Abyss (World 7) — drains faster than any other world
+    // The Abyss (World 7) — custom difficulty per stage from design doc
     if (worldId === 7) {
-      rate *= 1.3; // 30% faster drain across all stages
-      startValue = stageNum === 10 ? 20 : 25; // starts lower
+      var abyssConfigs = [
+        null,
+        { startValue: 30, drainRate: 1.2 },   // Stage 1
+        { startValue: 28, drainRate: 1.4 },   // Stage 2
+        { startValue: 25, drainRate: 1.6 },   // Stage 3
+        { startValue: 22, drainRate: 1.8 },   // Stage 4
+        { startValue: 20, drainRate: 2.0 },   // Stage 5
+        { startValue: 18, drainRate: 2.2 },   // Stage 6
+        { startValue: 17, drainRate: 2.3 },   // Stage 7
+        { startValue: 16, drainRate: 2.4 },   // Stage 8
+        { startValue: 15, drainRate: 2.45 },  // Stage 9
+        { startValue: 15, drainRate: 2.5 }    // Stage 10 (Final Battle)
+      ];
+      return abyssConfigs[stageNum] || { startValue: 20, drainRate: 2.0 };
     }
 
     return { drainRate: rate, startValue };
@@ -125,7 +159,8 @@ const SleepBar = (() => {
   }
 
   return {
-    init, startDrain, stopDrain, correctAnswer, wrongAnswer,
+    init, startDrain, stopDrain, correctAnswer, correctAnswerScaled,
+    wrongAnswer, wrongAnswerCustom,
     freeze, restore, getValue, getStreak, setDrainRate,
     getDrainConfig, destroy, update
   };

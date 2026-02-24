@@ -23,7 +23,8 @@ const Storage = (() => {
         restore: { unlocked: false, uses: 2 },
         cosmicSolve: { unlocked: false, uses: 1 },
         blazeSkip: { unlocked: false, uses: 3 },
-        simplify: { unlocked: false, uses: 2 }
+        simplify: { unlocked: false, uses: 2 },
+        rememberMe: { unlocked: false, uses: 1 }
       },
       stats: {
         totalProblems: 0,

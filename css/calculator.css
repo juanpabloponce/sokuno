@@ -9,8 +9,14 @@
   background-size: 400% 400%;
 }
 
+#screen-game > *:not(.star-field) {
+  position: relative;
+  z-index: 1;
+}
+
 .game-header {
   position: relative;
+  z-index: 1;
   padding: 14px 18px 8px;
   display: flex;
   flex-direction: column;

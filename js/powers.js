@@ -13,7 +13,8 @@ const Powers = (() => {
     restore:     { id: 'restore',     name: 'Restore',      icon: 'assets/guardians/nature.svg', guardian: 'Midori', desc: 'Recovers 20% of sleep bar', maxUses: 2, chargeCost: 8,  worldUnlock: 3 },
     cosmicSolve: { id: 'cosmicSolve', name: 'Cosmic Solve', icon: 'assets/guardians/cosmos.svg', guardian: 'Uchū',   desc: 'Auto-completes current problem', maxUses: 1, chargeCost: 12, worldUnlock: 4 },
     blazeSkip:   { id: 'blazeSkip',   name: 'Blaze Skip',   icon: 'assets/guardians/fire.svg',   guardian: 'Kaen',   desc: 'Skips problem without penalty', maxUses: 3, chargeCost: 5,  worldUnlock: 5 },
-    simplify:    { id: 'simplify',    name: 'Simplify',     icon: 'assets/guardians/ocean.svg',  guardian: 'Nami',   desc: 'Reduces problem to easier numbers', maxUses: 2, chargeCost: 6,  worldUnlock: 6 }
+    simplify:    { id: 'simplify',    name: 'Simplify',     icon: 'assets/guardians/ocean.svg',  guardian: 'Nami',   desc: 'Reduces problem to easier numbers', maxUses: 2, chargeCost: 6,  worldUnlock: 6 },
+    rememberMe:  { id: 'rememberMe', name: 'Remember Me',  icon: 'assets/yumemori.svg', guardian: 'Yumemori', desc: 'Yumemori fights beside you — auto-completes 5 problems', maxUses: 1, chargeCost: 0, worldUnlock: 7 }
   };
 
   // Map worldId -> powerId (native guardian of that world)
@@ -188,10 +189,66 @@ const Powers = (() => {
     return Math.min(1, state.currentCharge / effectiveCost);
   }
 
+  // --- Abyss (World 7) Cumulative Powers ---
+
+  // Returns which powers are available at a given Abyss stage
+  function getAbyssAvailablePowers(stageNum) {
+    var available = ['freeze'];
+    if (stageNum >= 2) available.push('insight');
+    if (stageNum >= 3) available.push('restore');
+    if (stageNum >= 4) available.push('cosmicSolve');
+    if (stageNum >= 5) available.push('blazeSkip');
+    if (stageNum >= 6) available.push('simplify');
+    // rememberMe is handled separately in game.js (Stage 10 only, no charge)
+    return available;
+  }
+
+  // Abyss-specific max uses (differ from normal POWER_DEFS)
+  var ABYSS_MAX_USES = { freeze: 2, insight: 2, restore: 2, cosmicSolve: 1, blazeSkip: 2, simplify: 2, rememberMe: 1 };
+
+  function getAbyssMaxUses(powerId) {
+    return ABYSS_MAX_USES[powerId] || 1;
+  }
+
+  // Reset uses with Abyss-specific max uses for given stage
+  function resetUsesAbyss(stageNum) {
+    var available = getAbyssAvailablePowers(stageNum);
+    for (var key of Object.keys(POWER_DEFS)) {
+      var maxUses = ABYSS_MAX_USES[key] || POWER_DEFS[key].maxUses;
+      if (available.indexOf(key) >= 0) {
+        usesRemaining[key] = maxUses;
+        chargeState[key] = {
+          currentCharge: 0,
+          timesUsed: 0,
+          isReady: false,
+          isExhausted: false
+        };
+      } else if (key === 'rememberMe' && stageNum === 10) {
+        // Remember Me: available in Stage 10, instantly ready (chargeCost: 0)
+        usesRemaining[key] = 1;
+        chargeState[key] = {
+          currentCharge: 0,
+          timesUsed: 0,
+          isReady: true,
+          isExhausted: false
+        };
+      } else {
+        usesRemaining[key] = 0;
+        chargeState[key] = {
+          currentCharge: 0,
+          timesUsed: 0,
+          isReady: false,
+          isExhausted: true  // not available at this stage
+        };
+      }
+    }
+  }
+
   return {
-    init, resetUses, isUnlocked, canUse, use, getUses, getDef, getAllDefs,
+    init, resetUses, resetUsesAbyss, isUnlocked, canUse, use, getUses, getDef, getAllDefs,
     unlockPower, setChosenGuardian, getChosenGuardian, getNativePower,
     getUnlockedPowers, isChosenGuardian,
+    getAbyssAvailablePowers, getAbyssMaxUses,
     calculateCharge, addCharge, getChargeState, getChargePercent,
     setActiveWorld, getActiveWorld, isResonant, getEffectiveChargeCost
   };

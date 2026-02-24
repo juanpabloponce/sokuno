@@ -636,6 +636,97 @@ const DIALOGUES_DATA = {
     }
   ],
 
+  "abyssStages": {
+    "1": {
+      "pre": [
+        { "speaker": "Kurayami", "emoji": "🌑", "text": "Fubuki. Always the first to fight." },
+        { "speaker": "Kurayami", "emoji": "🌑", "text": "You were also the first to fall. Do you remember?" },
+        { "speaker": "Fubuki", "emoji": "❄️", "text": "I remember trying to stop you. And I would do it again." },
+        { "speaker": "Kurayami", "emoji": "🌑", "text": "Brave. But bravery without strength is just noise.", "button": "Begin" }
+      ],
+      "post": [
+        { "speaker": "Fubuki", "emoji": "❄️", "text": "Still standing, Kurayami." },
+        { "speaker": "Kurayami", "emoji": "🌑", "text": "...for now." },
+        { "speaker": "system", "text": "Freeze is with you.", "type": "power", "button": "Continue" }
+      ]
+    },
+    "2": {
+      "pre": [
+        { "speaker": "Kurayami", "emoji": "🌑", "text": "Omoi. The one who sees everything." },
+        { "speaker": "Kurayami", "emoji": "🌑", "text": "Tell me — if you saw what was happening to me... why did you do nothing?" },
+        { "speaker": "Omoi", "emoji": "🔮", "text": "..." },
+        { "speaker": "Omoi", "emoji": "🔮", "text": "Because I believed you would find your own way. I was wrong." },
+        { "speaker": "Kurayami", "emoji": "🌑", "text": "At least you are honest. That makes destroying you almost sad.", "button": "Begin" }
+      ],
+      "post": [
+        { "speaker": "Omoi", "emoji": "🔮", "text": "Doubt is your weapon, Kurayami. But this dreamer does not doubt." },
+        { "speaker": "Kurayami", "emoji": "🌑", "text": "Everyone doubts. It is only a matter of time." },
+        { "speaker": "system", "text": "Insight has been unlocked.", "type": "power", "button": "Continue" }
+      ]
+    },
+    "3": {
+      "pre": [
+        { "speaker": "Kurayami", "emoji": "🌑", "text": "Midori. Always believing everything can grow." },
+        { "speaker": "Midori", "emoji": "🌿", "text": "Because it can. Even you." },
+        { "speaker": "Kurayami", "emoji": "🌑", "text": "You think I can come back? That I can 'grow' back into the light?" },
+        { "speaker": "Midori", "emoji": "🌿", "text": "I believe it with all my being." },
+        { "speaker": "Kurayami", "emoji": "🌑", "text": "...you are the most foolish of them all.", "button": "Begin" }
+      ],
+      "post": [
+        { "speaker": "Midori", "emoji": "🌿", "text": "The strongest roots grow in the darkness." },
+        { "speaker": "Kurayami", "emoji": "🌑", "text": "..." },
+        { "speaker": "system", "text": "Restore has been unlocked.", "type": "power", "button": "Continue" }
+      ]
+    },
+    "4": {
+      "pre": [
+        { "speaker": "Kurayami", "emoji": "🌑", "text": "Uchū. The silent one." },
+        { "speaker": "Uchū", "emoji": "👾", "text": "I know the void, Kurayami. I have lived in it longer than you." },
+        { "speaker": "Kurayami", "emoji": "🌑", "text": "Then you understand. You understand why I did what I did." },
+        { "speaker": "Uchū", "emoji": "👾", "text": "I understand the pain. I do not justify the destruction." },
+        { "speaker": "Kurayami", "emoji": "🌑", "text": "...you are the only one who understands anything.", "button": "Begin" }
+      ],
+      "post": [
+        { "speaker": "Uchū", "emoji": "👾", "text": "Even stars die. And are reborn." },
+        { "speaker": "Kurayami", "emoji": "🌑", "text": "Not all of them." },
+        { "speaker": "system", "text": "Cosmic Solve has been unlocked.", "type": "power", "button": "Continue" }
+      ]
+    },
+    "5": {
+      "pre": [
+        { "speaker": "Kaen", "emoji": "🔥", "text": "Let me go first. LET ME BURN HIM." },
+        { "speaker": "Kurayami", "emoji": "🌑", "text": "Kaen. All fire and no control." },
+        { "speaker": "Kaen", "emoji": "🔥", "text": "You are a TRAITOR. You put us to sleep. Your own family!" },
+        { "speaker": "Kurayami", "emoji": "🌑", "text": "Family. What kind of family forgets one of their own?" },
+        { "speaker": "Kaen", "emoji": "🔥", "text": "WE DIDN'T FORGET YOU! You stopped listening!" },
+        { "speaker": "Kurayami", "emoji": "🌑", "text": "...perhaps. But it is too late for that.", "button": "Begin" }
+      ],
+      "post": [
+        { "speaker": "Kaen", "emoji": "🔥", "text": "When this is over... we will talk. You and me." },
+        { "speaker": "Kurayami", "emoji": "🌑", "text": "If there is anything left of me to talk to." },
+        { "speaker": "system", "text": "Blaze Skip has been unlocked.", "type": "power", "button": "Continue" }
+      ]
+    },
+    "6": {
+      "pre": [
+        { "speaker": "Nami", "emoji": "🌊", "text": "Hikari..." },
+        { "speaker": "Kurayami", "emoji": "🌑", "text": "That name—" },
+        { "speaker": "Nami", "emoji": "🌊", "text": "I will call you what I want. You are my older brother." },
+        { "speaker": "Kurayami", "emoji": "🌑", "text": "..." },
+        { "speaker": "Nami", "emoji": "🌊", "text": "Do you remember when you taught me to flow? When the currents were strong." },
+        { "speaker": "Kurayami", "emoji": "🌑", "text": "...be quiet." },
+        { "speaker": "Nami", "emoji": "🌊", "text": "You told me: 'Don't fight the water, Nami. Flow with it.'" },
+        { "speaker": "Kurayami", "emoji": "🌑", "text": "ENOUGH." },
+        { "speaker": "Nami", "emoji": "🌊", "text": "I am going to remind you who you were. Even if you don't want me to.", "button": "Begin" }
+      ],
+      "post": [
+        { "speaker": "Nami", "emoji": "🌊", "text": "You are still in there. I know it." },
+        { "speaker": "Kurayami", "emoji": "🌑", "text": "...don't do this to me, Nami." },
+        { "speaker": "system", "text": "Simplify has been unlocked.", "type": "power", "button": "Continue" }
+      ]
+    }
+  },
+
   "finalBattleVictory": [
     {
       "speaker": "Yumemori",

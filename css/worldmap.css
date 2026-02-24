@@ -873,58 +873,1328 @@
 /* ============================================= */
 
 #screen-game[data-world="1"] {
-  background:
-    radial-gradient(ellipse at 50% 20%, rgba(168,213,229,0.08) 0%, transparent 50%),
-    radial-gradient(ellipse at 80% 80%, rgba(91,192,235,0.05) 0%, transparent 40%),
-    linear-gradient(180deg, #081820 0%, #0e3048 50%, #184060 100%);
-  background-size: 400% 400%;
+  background: linear-gradient(to top, #060a12 0%, #080e18 20%, #0a1020 45%, #0c1228 70%, #0e1430 100%);
+  overflow: hidden;
+  position: relative;
 }
+
+/* === AURORA BOREALIS — ICE WORLD === */
+
+.aurora-container {
+  position: absolute !important;
+  top: 0;
+  left: -20%;
+  width: 140%;
+  height: 100%;
+  pointer-events: none;
+  overflow: hidden;
+  mix-blend-mode: screen;
+  z-index: 0 !important;
+}
+
+.aurora-band {
+  position: absolute;
+  width: 200%;
+  pointer-events: none;
+  filter: blur(var(--aurora-blur, 30px));
+  opacity: 0;
+  will-change: transform, opacity;
+}
+
+/* Band 1 — Main green curtain */
+.aurora-band--1 {
+  top: 2%; left: -50%; height: 55%;
+  --aurora-blur: 45px;
+  background: linear-gradient(180deg, transparent 0%, rgba(50,210,120,0.05) 8%, rgba(60,230,130,0.14) 18%, rgba(70,240,140,0.22) 32%, rgba(80,255,150,0.18) 48%, rgba(60,220,120,0.1) 65%, rgba(40,180,100,0.04) 82%, transparent 100%);
+  animation: auroraWave1 12s ease-in-out infinite, auroraFade1 15s ease-in-out infinite;
+}
+
+/* Band 2 — Teal/cyan */
+.aurora-band--2 {
+  top: 5%; left: -30%; height: 50%;
+  --aurora-blur: 40px;
+  background: linear-gradient(180deg, transparent 0%, rgba(40,180,200,0.04) 12%, rgba(50,200,220,0.12) 25%, rgba(60,220,230,0.18) 40%, rgba(50,200,210,0.12) 56%, rgba(40,170,190,0.05) 74%, transparent 100%);
+  animation: auroraWave2 18s ease-in-out infinite, auroraFade2 14s ease-in-out infinite;
+}
+
+/* Band 3 — Purple/violet accent */
+.aurora-band--3 {
+  top: 0%; left: -40%; height: 45%;
+  --aurora-blur: 50px;
+  background: linear-gradient(180deg, transparent 0%, rgba(120,60,200,0.04) 10%, rgba(140,80,220,0.1) 22%, rgba(160,100,240,0.16) 38%, rgba(140,80,220,0.1) 55%, rgba(120,60,200,0.04) 72%, transparent 100%);
+  animation: auroraWave3 15s ease-in-out infinite, auroraFade3 19s ease-in-out infinite;
+}
+
+/* Band 4 — Bright green streak */
+.aurora-band--4 {
+  top: 8%; left: -20%; height: 40%;
+  --aurora-blur: 30px;
+  background: linear-gradient(180deg, transparent 0%, rgba(100,255,160,0.04) 15%, rgba(120,255,170,0.16) 30%, rgba(140,255,180,0.24) 45%, rgba(120,255,170,0.14) 62%, rgba(100,240,150,0.05) 80%, transparent 100%);
+  animation: auroraWave4 10s ease-in-out infinite, auroraFade4 12s ease-in-out infinite;
+}
+
+/* Band 5 — Deep blue-green */
+.aurora-band--5 {
+  top: 10%; left: -60%; height: 60%;
+  --aurora-blur: 55px;
+  background: linear-gradient(180deg, transparent 0%, rgba(30,150,130,0.03) 12%, rgba(40,170,150,0.09) 28%, rgba(50,190,160,0.14) 42%, rgba(40,170,140,0.09) 58%, rgba(30,140,120,0.03) 76%, transparent 100%);
+  animation: auroraWave5 20s ease-in-out infinite, auroraFade5 17s ease-in-out infinite;
+}
+
+/* Band 6 — Thin bright ribbon */
+.aurora-band--6 {
+  top: 12%; left: -35%; height: 20%;
+  --aurora-blur: 18px;
+  background: linear-gradient(180deg, transparent 0%, rgba(80,255,150,0.05) 20%, rgba(100,255,170,0.2) 42%, rgba(80,240,150,0.12) 60%, rgba(60,200,120,0.04) 80%, transparent 100%);
+  animation: auroraWave6 9s ease-in-out infinite, auroraFade6 11s ease-in-out infinite;
+}
+
+/* Vertical curtain streaks */
+.curtain-streak {
+  position: absolute;
+  width: var(--streak-width, 2px);
+  height: var(--streak-height, 30%);
+  top: var(--streak-top, 10%);
+  left: var(--streak-left, 50%);
+  background: linear-gradient(to bottom, transparent 0%, var(--streak-color, rgba(80,255,150,0.08)) 20%, var(--streak-color-mid, rgba(100,255,170,0.12)) 50%, var(--streak-color, rgba(80,255,150,0.06)) 80%, transparent 100%);
+  filter: blur(var(--streak-blur, 4px));
+  opacity: 0;
+  animation: curtainPulse var(--streak-duration, 8s) ease-in-out var(--streak-delay, 0s) infinite;
+}
+
+@keyframes curtainPulse {
+  0%, 100% { opacity: 0; transform: scaleX(1) translateX(0); }
+  15% { opacity: 0.8; transform: scaleX(1.3) translateX(var(--streak-sway, 5px)); }
+  45% { opacity: 1; transform: scaleX(0.7) translateX(calc(var(--streak-sway, 5px) * -0.5)); }
+  75% { opacity: 0.5; transform: scaleX(1.2) translateX(var(--streak-sway, 5px)); }
+}
+
+/* Aurora reflection on ground */
+.aurora-reflection {
+  position: absolute !important;
+  bottom: -40px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 150%;
+  height: 220px;
+  background: radial-gradient(ellipse at center bottom, rgba(60,200,140,0.07) 0%, rgba(40,160,120,0.04) 30%, rgba(30,120,100,0.02) 55%, transparent 75%);
+  filter: blur(25px);
+  pointer-events: none;
+  z-index: 0 !important;
+  animation: reflectionPulse 6s ease-in-out infinite alternate;
+}
+
+@keyframes reflectionPulse {
+  0% { opacity: 0.4; }
+  100% { opacity: 1; }
+}
+
+/* Wave animations */
+@keyframes auroraWave1 {
+  0%   { transform: translateX(-5%) skewX(-3deg) scaleY(1); }
+  25%  { transform: translateX(15%) skewX(2deg) scaleY(1.15); }
+  50%  { transform: translateX(-10%) skewX(-2deg) scaleY(0.85); }
+  75%  { transform: translateX(8%) skewX(3deg) scaleY(1.1); }
+  100% { transform: translateX(-5%) skewX(-3deg) scaleY(1); }
+}
+
+@keyframes auroraWave2 {
+  0%   { transform: translateX(10%) skewX(2deg) scaleY(1); }
+  30%  { transform: translateX(-15%) skewX(-3deg) scaleY(1.2); }
+  60%  { transform: translateX(18%) skewX(2deg) scaleY(0.8); }
+  100% { transform: translateX(10%) skewX(2deg) scaleY(1); }
+}
+
+@keyframes auroraWave3 {
+  0%   { transform: translateX(-8%) skewX(3deg) scaleY(1); }
+  35%  { transform: translateX(20%) skewX(-2deg) scaleY(1.25); }
+  65%  { transform: translateX(-12%) skewX(2deg) scaleY(0.85); }
+  100% { transform: translateX(-8%) skewX(3deg) scaleY(1); }
+}
+
+@keyframes auroraWave4 {
+  0%   { transform: translateX(0%) skewX(-2deg) scaleY(1); }
+  50%  { transform: translateX(-18%) skewX(3deg) scaleY(1.15); }
+  100% { transform: translateX(0%) skewX(-2deg) scaleY(1); }
+}
+
+@keyframes auroraWave5 {
+  0%   { transform: translateX(12%) skewX(0deg) scaleY(1); }
+  40%  { transform: translateX(-8%) skewX(-2deg) scaleY(1.15); }
+  70%  { transform: translateX(10%) skewX(1.5deg) scaleY(0.9); }
+  100% { transform: translateX(12%) skewX(0deg) scaleY(1); }
+}
+
+@keyframes auroraWave6 {
+  0%   { transform: translateX(-10%) skewX(2deg); }
+  50%  { transform: translateX(25%) skewX(-2deg); }
+  100% { transform: translateX(-10%) skewX(2deg); }
+}
+
+/* Fade animations — intensity pulsing */
+@keyframes auroraFade1 {
+  0%, 100% { opacity: 0.6; } 15% { opacity: 1; } 40% { opacity: 0.3; } 65% { opacity: 0.9; } 85% { opacity: 0.4; }
+}
+@keyframes auroraFade2 {
+  0%, 100% { opacity: 0.35; } 20% { opacity: 0.85; } 45% { opacity: 0.2; } 70% { opacity: 0.95; } 90% { opacity: 0.4; }
+}
+@keyframes auroraFade3 {
+  0%, 100% { opacity: 0.15; } 18% { opacity: 0.7; } 38% { opacity: 0.1; } 58% { opacity: 0.8; } 80% { opacity: 0.2; }
+}
+@keyframes auroraFade4 {
+  0%, 100% { opacity: 0.25; } 30% { opacity: 1; } 55% { opacity: 0.15; } 80% { opacity: 0.8; }
+}
+@keyframes auroraFade5 {
+  0%, 100% { opacity: 0.4; } 25% { opacity: 0.85; } 50% { opacity: 0.2; } 75% { opacity: 0.7; }
+}
+@keyframes auroraFade6 {
+  0%, 100% { opacity: 0.15; } 25% { opacity: 0.9; } 45% { opacity: 0.1; } 70% { opacity: 0.85; } 90% { opacity: 0.2; }
+}
+
+/* Ice snowflakes */
+.ice-particle {
+  position: absolute;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(200,230,255,var(--ice-opacity,0.4)) 0%, rgba(160,210,240,calc(var(--ice-opacity,0.4)*0.4)) 50%, transparent 100%);
+  pointer-events: none;
+  will-change: transform, opacity;
+}
+
+@keyframes snowfall {
+  0% { transform: translateX(0) translateY(0) rotate(0deg); opacity: 0; }
+  10% { opacity: var(--ice-opacity, 0.4); }
+  90% { opacity: var(--ice-opacity, 0.4); }
+  100% { transform: translateX(var(--snow-drift)) translateY(var(--snow-fall)) rotate(var(--snow-rotate)); opacity: 0; }
+}
+
 
 #screen-game[data-world="2"] {
   background:
-    radial-gradient(ellipse at 50% 20%, rgba(155,93,229,0.08) 0%, transparent 50%),
-    radial-gradient(ellipse at 80% 80%, rgba(0,187,249,0.04) 0%, transparent 40%),
-    linear-gradient(180deg, #0c0818 0%, #251848 50%, #301e5a 100%);
-  background-size: 400% 400%;
+    radial-gradient(ellipse at 50% 50%, rgba(40, 15, 60, 0.5) 0%, transparent 60%),
+    radial-gradient(ellipse at 30% 70%, rgba(20, 10, 40, 0.3) 0%, transparent 50%),
+    radial-gradient(ellipse at 70% 30%, rgba(30, 12, 50, 0.3) 0%, transparent 45%),
+    linear-gradient(to bottom, #080412 0%, #0c0618 50%, #0a0515 100%);
+  overflow: hidden;
+  position: relative;
 }
+
+/* === PSYCHIC VORTEX — WORLD 2 === */
+
+.psychic-container {
+  position: absolute !important;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  overflow: hidden;
+  z-index: 0 !important;
+}
+
+/* Vortex — concentric spinning ellipses */
+.psychic-vortex {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 150vmax;
+  height: 150vmax;
+  pointer-events: none;
+  will-change: transform, opacity;
+}
+
+.vortex-ring {
+  position: absolute;
+  top: 50%; left: 50%;
+  border-radius: 50%;
+  border: 1px solid transparent;
+  transform-origin: center center;
+  will-change: transform;
+}
+
+/* Ring 1 — outermost, largest, slowest */
+.vortex-ring--1 {
+  width: 140%; height: 140%;
+  margin-left: -70%; margin-top: -70%;
+  border-color: rgba(80, 40, 120, 0.03);
+  box-shadow:
+    inset 0 0 80px 20px rgba(60, 20, 100, 0.015),
+    0 0 60px 10px rgba(60, 20, 100, 0.01);
+  animation: psychicVortexSpin 90s linear infinite;
+}
+
+.vortex-ring--2 {
+  width: 120%; height: 115%;
+  margin-left: -60%; margin-top: -57.5%;
+  border-color: rgba(100, 50, 150, 0.04);
+  box-shadow:
+    inset 0 0 70px 18px rgba(80, 30, 130, 0.02),
+    0 0 50px 8px rgba(80, 30, 130, 0.012);
+  animation: psychicVortexSpin 75s linear infinite reverse;
+}
+
+.vortex-ring--3 {
+  width: 100%; height: 92%;
+  margin-left: -50%; margin-top: -46%;
+  border-color: rgba(120, 60, 170, 0.05);
+  box-shadow:
+    inset 0 0 65px 15px rgba(100, 40, 150, 0.025),
+    0 0 45px 7px rgba(100, 40, 150, 0.015);
+  animation: psychicVortexSpin 62s linear infinite;
+}
+
+.vortex-ring--4 {
+  width: 80%; height: 72%;
+  margin-left: -40%; margin-top: -36%;
+  border-color: rgba(140, 70, 190, 0.055);
+  box-shadow:
+    inset 0 0 55px 14px rgba(120, 50, 170, 0.03),
+    0 0 40px 6px rgba(120, 50, 170, 0.018);
+  animation: psychicVortexSpin 50s linear infinite reverse;
+}
+
+.vortex-ring--5 {
+  width: 62%; height: 54%;
+  margin-left: -31%; margin-top: -27%;
+  border-color: rgba(155, 80, 210, 0.06);
+  box-shadow:
+    inset 0 0 50px 12px rgba(140, 60, 190, 0.035),
+    0 0 35px 5px rgba(140, 60, 190, 0.02);
+  animation: psychicVortexSpin 40s linear infinite;
+}
+
+.vortex-ring--6 {
+  width: 46%; height: 38%;
+  margin-left: -23%; margin-top: -19%;
+  border-color: rgba(170, 90, 220, 0.065);
+  box-shadow:
+    inset 0 0 45px 10px rgba(155, 75, 200, 0.04),
+    0 0 30px 5px rgba(155, 75, 200, 0.022);
+  animation: psychicVortexSpin 32s linear infinite reverse;
+}
+
+.vortex-ring--7 {
+  width: 32%; height: 25%;
+  margin-left: -16%; margin-top: -12.5%;
+  border-color: rgba(180, 100, 230, 0.07);
+  box-shadow:
+    inset 0 0 40px 8px rgba(170, 85, 220, 0.045),
+    0 0 25px 4px rgba(170, 85, 220, 0.025);
+  animation: psychicVortexSpin 25s linear infinite;
+}
+
+.vortex-ring--8 {
+  width: 20%; height: 15%;
+  margin-left: -10%; margin-top: -7.5%;
+  border-color: rgba(190, 110, 240, 0.07);
+  box-shadow:
+    inset 0 0 35px 8px rgba(180, 95, 230, 0.05),
+    0 0 22px 4px rgba(180, 95, 230, 0.028);
+  animation: psychicVortexSpin 20s linear infinite reverse;
+}
+
+/* Ring 9 — innermost, fastest */
+.vortex-ring--9 {
+  width: 11%; height: 8%;
+  margin-left: -5.5%; margin-top: -4%;
+  border-color: rgba(200, 120, 245, 0.06);
+  box-shadow:
+    inset 0 0 25px 6px rgba(190, 110, 240, 0.055),
+    0 0 18px 3px rgba(190, 110, 240, 0.03);
+  animation: psychicVortexSpin 16s linear infinite;
+}
+
+/* Core glow — eye of the vortex */
+.psychic-core {
+  position: absolute;
+  top: 50%; left: 50%;
+  width: 6%; height: 6%;
+  margin-left: -3%; margin-top: -3%;
+  border-radius: 50%;
+  background: radial-gradient(circle,
+    rgba(155, 93, 229, 0.08) 0%,
+    rgba(130, 70, 200, 0.04) 40%,
+    transparent 100%
+  );
+  box-shadow:
+    0 0 40px 15px rgba(155, 93, 229, 0.04),
+    0 0 80px 30px rgba(130, 70, 200, 0.02);
+  animation: psychicCorePulse 8s ease-in-out infinite;
+}
+
+@keyframes psychicVortexSpin {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
+
+@keyframes psychicCorePulse {
+  0%, 100% { opacity: 0.6; transform: scale(1); }
+  50%      { opacity: 1; transform: scale(1.15); }
+}
+
+/* Expanding pulse rings — radiate outward from center */
+.psychic-pulse-container {
+  position: absolute;
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  width: 0; height: 0;
+  pointer-events: none;
+}
+
+.psychic-pulse {
+  position: absolute;
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  border-radius: 50%;
+  border: 1px solid rgba(155, 93, 229, 0.06);
+  animation: psychicPulseExpand var(--pulse-dur, 14s) ease-out infinite;
+  animation-delay: var(--pulse-delay, 0s);
+  opacity: 0;
+}
+
+@keyframes psychicPulseExpand {
+  0% {
+    width: 5vmin; height: 5vmin;
+    opacity: 0;
+    border-color: rgba(155, 93, 229, 0.1);
+  }
+  10% { opacity: 1; }
+  50% { border-color: rgba(130, 70, 200, 0.04); }
+  100% {
+    width: 160vmin; height: 160vmin;
+    opacity: 0;
+    border-color: rgba(100, 50, 160, 0);
+  }
+}
+
+/* Floating thought particles — glowing orbs drifting inward */
+.psychic-thought {
+  position: absolute;
+  border-radius: 50%;
+  pointer-events: none;
+  will-change: transform, opacity;
+}
+
+@keyframes psychicThoughtFloat {
+  0% {
+    transform: translate(var(--t-sx), var(--t-sy)) scale(0.5);
+    opacity: 0;
+  }
+  20% {
+    opacity: var(--t-peak, 0.5);
+    transform: translate(var(--t-mx1), var(--t-my1)) scale(1);
+  }
+  50% {
+    transform: translate(var(--t-mx2), var(--t-my2)) scale(var(--t-ms, 0.9));
+    opacity: var(--t-mid, 0.35);
+  }
+  80% {
+    transform: translate(var(--t-mx3), var(--t-my3)) scale(0.7);
+    opacity: var(--t-peak, 0.5);
+  }
+  100% {
+    transform: translate(var(--t-ex), var(--t-ey)) scale(0.3);
+    opacity: 0;
+  }
+}
+
+/* Psychic mist layers */
+.psychic-mist {
+  position: absolute;
+  pointer-events: none;
+  border-radius: 50%;
+  will-change: transform, opacity;
+  mix-blend-mode: screen;
+}
+
+.psychic-mist--1 {
+  width: 60%; height: 40%;
+  top: 55%; left: -10%;
+  background: radial-gradient(ellipse at 50% 50%, rgba(60, 20, 100, 0.04) 0%, transparent 60%);
+  filter: blur(50px);
+  animation: psychicMist1 40s ease-in-out infinite;
+}
+
+.psychic-mist--2 {
+  width: 50%; height: 35%;
+  top: 10%; right: -10%;
+  background: radial-gradient(ellipse at 50% 50%, rgba(40, 15, 80, 0.035) 0%, transparent 55%);
+  filter: blur(55px);
+  animation: psychicMist2 50s ease-in-out infinite;
+}
+
+.psychic-mist--3 {
+  width: 45%; height: 30%;
+  bottom: 5%; left: 30%;
+  background: radial-gradient(ellipse at 50% 50%, rgba(70, 25, 110, 0.03) 0%, transparent 55%);
+  filter: blur(45px);
+  animation: psychicMist3 45s ease-in-out infinite;
+}
+
+@keyframes psychicMist1 {
+  0%, 100% { transform: translate(0, 0) scale(1); opacity: 0.5; }
+  30%      { transform: translate(5%, -2%) scale(1.05); opacity: 0.8; }
+  60%      { transform: translate(-3%, 3%) scale(0.95); opacity: 0.4; }
+}
+
+@keyframes psychicMist2 {
+  0%, 100% { transform: translate(0, 0) scale(1); opacity: 0.4; }
+  40%      { transform: translate(-4%, 3%) scale(1.08); opacity: 0.7; }
+  70%      { transform: translate(2%, -2%) scale(0.96); opacity: 0.35; }
+}
+
+@keyframes psychicMist3 {
+  0%, 100% { transform: translate(0, 0); opacity: 0.45; }
+  50%      { transform: translate(3%, -4%); opacity: 0.75; }
+}
+
 
 #screen-game[data-world="3"] {
   background:
-    radial-gradient(ellipse at 50% 20%, rgba(87,204,153,0.08) 0%, transparent 50%),
-    radial-gradient(ellipse at 80% 80%, rgba(128,237,153,0.04) 0%, transparent 40%),
-    linear-gradient(180deg, #061808 0%, #0e4420 50%, #165a2e 100%);
-  background-size: 400% 400%;
+    radial-gradient(ellipse at 30% 80%, rgba(15, 40, 20, 0.4) 0%, transparent 50%),
+    radial-gradient(ellipse at 70% 85%, rgba(10, 35, 18, 0.35) 0%, transparent 45%),
+    radial-gradient(ellipse at 50% 20%, rgba(8, 25, 12, 0.3) 0%, transparent 50%),
+    linear-gradient(to bottom, #030a06 0%, #051209 30%, #061a0c 60%, #040d08 100%);
+  overflow: hidden;
+  position: relative;
+}
+
+/* === JUNGLE — FOREST SILHOUETTES + VINES + CANOPY RAYS + FIREFLIES === */
+
+.jungle-container {
+  position: absolute !important;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  overflow: hidden;
+  z-index: 0 !important;
+}
+
+/* Forest silhouette layers */
+.forest-layer {
+  position: absolute;
+  bottom: 0; left: 0;
+  width: 100%; height: 100%;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.forest-layer--far {
+  opacity: 0.25;
+  animation: forestSway1 30s ease-in-out infinite;
+}
+
+.forest-layer--mid {
+  opacity: 0.35;
+  animation: forestSway2 25s ease-in-out infinite;
+}
+
+.forest-layer--near {
+  opacity: 0.35;
+  animation: forestSway3 35s ease-in-out infinite;
+}
+
+@keyframes forestSway1 {
+  0%, 100% { transform: translateX(0); }
+  50% { transform: translateX(0.4%); }
+}
+
+@keyframes forestSway2 {
+  0%, 100% { transform: translateX(0); }
+  50% { transform: translateX(-0.6%); }
+}
+
+@keyframes forestSway3 {
+  0%, 100% { transform: translateX(0); }
+  50% { transform: translateX(0.3%); }
+}
+
+/* Hanging vines / lianas */
+.vines-layer {
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  pointer-events: none;
+  z-index: 5;
+}
+
+.vine-group {
+  transform-origin: top center;
+  will-change: transform;
+}
+
+.vine-group--1 { animation: vineSway1 12s ease-in-out infinite; }
+.vine-group--2 { animation: vineSway2 15s ease-in-out infinite; }
+.vine-group--3 { animation: vineSway3 10s ease-in-out infinite; }
+.vine-group--4 { animation: vineSway1 14s ease-in-out 2s infinite; }
+.vine-group--5 { animation: vineSway2 11s ease-in-out 1s infinite; }
+.vine-group--6 { animation: vineSway3 13s ease-in-out 3s infinite; }
+.vine-group--7 { animation: vineSway1 16s ease-in-out 4s infinite; }
+.vine-group--8 { animation: vineSway2 9s ease-in-out infinite; }
+
+@keyframes vineSway1 {
+  0%, 100% { transform: rotate(0deg); }
+  30% { transform: rotate(1.2deg); }
+  70% { transform: rotate(-0.8deg); }
+}
+
+@keyframes vineSway2 {
+  0%, 100% { transform: rotate(0deg); }
+  40% { transform: rotate(-1deg); }
+  60% { transform: rotate(0.6deg); }
+}
+
+@keyframes vineSway3 {
+  0%, 100% { transform: rotate(0.3deg); }
+  50% { transform: rotate(-1.1deg); }
+}
+
+/* Canopy light rays */
+.canopy-container {
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  pointer-events: none;
+  overflow: hidden;
+  z-index: 1;
+}
+
+.canopy-ray {
+  position: absolute;
+  top: -5%;
+  transform-origin: top center;
+  pointer-events: none;
+  will-change: transform, opacity;
+}
+
+.canopy-ray-inner {
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    to bottom,
+    var(--cr-top) 0%,
+    var(--cr-mid) 35%,
+    var(--cr-low) 65%,
+    transparent 100%
+  );
+  filter: blur(var(--cr-blur, 12px));
+}
+
+@keyframes canopyWave1 {
+  0%, 100% { transform: rotate(var(--cr-base)) scaleX(1); opacity: var(--cr-lo); }
+  30% { transform: rotate(calc(var(--cr-base) + 1.5deg)) scaleX(1.15); opacity: var(--cr-hi); }
+  60% { transform: rotate(calc(var(--cr-base) - 1deg)) scaleX(0.85); opacity: var(--cr-mid-o); }
+}
+
+@keyframes canopyWave2 {
+  0%, 100% { transform: rotate(var(--cr-base)) scaleX(1); opacity: var(--cr-mid-o); }
+  40% { transform: rotate(calc(var(--cr-base) - 2deg)) scaleX(1.2); opacity: var(--cr-hi); }
+  75% { transform: rotate(calc(var(--cr-base) + 1deg)) scaleX(0.9); opacity: var(--cr-lo); }
+}
+
+/* Ground bioluminescence */
+.ground-glow {
+  position: absolute;
+  bottom: 0; left: 0;
+  width: 100%; height: 35%;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.bio-patch {
+  position: absolute;
+  bottom: 0;
+  border-radius: 50%;
+  pointer-events: none;
+  will-change: opacity;
+  mix-blend-mode: screen;
+}
+
+@keyframes bioPulse {
+  0%, 100% { opacity: var(--bio-lo); transform: scale(1); }
+  50% { opacity: var(--bio-hi); transform: scale(var(--bio-scale, 1.05)); }
+}
+
+/* Fireflies canvas */
+.jungle-fireflies {
+  position: absolute;
+  top: 0; left: 0;
+  pointer-events: none;
+  z-index: 8;
+}
+
+/* Spores (rising particles) */
+.spore-container {
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  pointer-events: none;
+  overflow: hidden;
+  z-index: 7;
+}
+
+.spore {
+  position: absolute;
+  border-radius: 50%;
+  pointer-events: none;
+  will-change: transform, opacity;
+}
+
+@keyframes sporeRise {
+  0% {
+    transform: translate(0, 0) scale(0.6);
+    opacity: 0;
+  }
+  10% { opacity: var(--sp-peak); }
+  50% {
+    transform: translate(var(--sp-mx), var(--sp-my)) scale(1);
+    opacity: var(--sp-mid);
+  }
+  90% { opacity: var(--sp-peak); }
+  100% {
+    transform: translate(var(--sp-ex), var(--sp-ey)) scale(0.4);
+    opacity: 0;
+  }
+}
+
+/* Mist layers */
+.jungle-mist {
+  position: absolute;
+  pointer-events: none;
+  will-change: transform, opacity;
+  z-index: 4;
+}
+
+.jungle-mist--low {
+  bottom: 0; left: -20%;
+  width: 140%; height: 25%;
+  background: linear-gradient(
+    to top,
+    rgba(10, 30, 15, 0.35) 0%,
+    rgba(15, 40, 20, 0.15) 40%,
+    transparent 100%
+  );
+  filter: blur(20px);
+  animation: jungleMistLow 35s ease-in-out infinite;
+}
+
+.jungle-mist--mid {
+  bottom: 10%; left: -30%;
+  width: 160%; height: 30%;
+  background: linear-gradient(
+    to top,
+    rgba(8, 25, 12, 0.2) 0%,
+    rgba(12, 35, 18, 0.08) 50%,
+    transparent 100%
+  );
+  filter: blur(30px);
+  animation: jungleMistMid 45s ease-in-out infinite;
+}
+
+.jungle-mist--high {
+  top: 15%; left: -15%;
+  width: 130%; height: 20%;
+  background: radial-gradient(
+    ellipse at 50% 50%,
+    rgba(10, 30, 15, 0.1) 0%,
+    transparent 60%
+  );
+  filter: blur(25px);
+  animation: jungleMistHigh 55s ease-in-out infinite;
+}
+
+@keyframes jungleMistLow {
+  0%, 100% { transform: translateX(0); opacity: 0.6; }
+  30% { transform: translateX(3%); opacity: 0.9; }
+  60% { transform: translateX(-2%); opacity: 0.5; }
+}
+
+@keyframes jungleMistMid {
+  0%, 100% { transform: translateX(0) translateY(0); opacity: 0.4; }
+  40% { transform: translateX(-3%) translateY(-1%); opacity: 0.7; }
+  70% { transform: translateX(2%) translateY(1%); opacity: 0.35; }
+}
+
+@keyframes jungleMistHigh {
+  0%, 100% { transform: translateX(0); opacity: 0.3; }
+  50% { transform: translateX(4%); opacity: 0.55; }
 }
 
 #screen-game[data-world="4"] {
-  background:
-    radial-gradient(ellipse at 50% 20%, rgba(233,69,96,0.05) 0%, transparent 50%),
-    radial-gradient(ellipse at 80% 80%, rgba(26,26,46,0.3) 0%, transparent 50%),
-    linear-gradient(180deg, #08060e 0%, #161230 50%, #1a1a2e 100%);
-  background-size: 400% 400%;
+  overflow: hidden;
+  position: relative;
 }
 
+/* === COSMOS — CANVAS STAR WARP + NEBULA CLOUDS === */
+
+.cosmos-container {
+  position: absolute !important;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  overflow: hidden;
+  z-index: 0 !important;
+}
+
+.cosmos-canvas {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+
+/* Nebula clouds — large, vivid gaseous regions */
+.nebula-cloud {
+  position: absolute;
+  border-radius: 50%;
+  pointer-events: none;
+  filter: blur(var(--nebula-blur, 60px));
+  opacity: 0;
+  will-change: transform, opacity;
+}
+
+/* Red/crimson nebula — large, dominant */
+.nebula-cloud--1 {
+  top: 0%; left: 5%;
+  width: 65%; height: 50%;
+  --nebula-blur: 60px;
+  background: radial-gradient(ellipse at 40% 40%,
+    rgba(233,69,96,0.35) 0%,
+    rgba(200,50,80,0.22) 25%,
+    rgba(160,30,60,0.12) 50%,
+    rgba(100,15,40,0.04) 75%,
+    transparent 100%
+  );
+  animation: nebulaDrift1 25s ease-in-out infinite, nebulaFade1 20s ease-in-out infinite;
+}
+
+/* Deep purple/violet nebula */
+.nebula-cloud--2 {
+  top: 10%; right: 0%;
+  width: 55%; height: 55%;
+  --nebula-blur: 55px;
+  background: radial-gradient(ellipse at 55% 45%,
+    rgba(120,60,220,0.3) 0%,
+    rgba(90,40,180,0.18) 25%,
+    rgba(60,20,140,0.08) 55%,
+    transparent 100%
+  );
+  animation: nebulaDrift2 30s ease-in-out infinite, nebulaFade2 22s ease-in-out infinite;
+}
+
+/* Blue nebula — lower region */
+.nebula-cloud--3 {
+  bottom: 5%; left: 15%;
+  width: 70%; height: 40%;
+  --nebula-blur: 50px;
+  background: radial-gradient(ellipse at 50% 55%,
+    rgba(40,80,220,0.25) 0%,
+    rgba(25,55,170,0.15) 30%,
+    rgba(15,35,120,0.06) 60%,
+    transparent 100%
+  );
+  animation: nebulaDrift3 28s ease-in-out infinite, nebulaFade3 18s ease-in-out infinite;
+}
+
+/* Magenta/pink accent nebula */
+.nebula-cloud--4 {
+  top: 15%; right: 10%;
+  width: 40%; height: 35%;
+  --nebula-blur: 45px;
+  background: radial-gradient(ellipse at 50% 50%,
+    rgba(220,60,180,0.22) 0%,
+    rgba(180,40,140,0.12) 35%,
+    rgba(120,20,90,0.04) 65%,
+    transparent 100%
+  );
+  animation: nebulaDrift4 22s ease-in-out infinite, nebulaFade4 16s ease-in-out infinite;
+}
+
+/* Teal/cyan wisp — adds color variety */
+.nebula-cloud--5 {
+  top: 30%; left: 25%;
+  width: 45%; height: 30%;
+  --nebula-blur: 50px;
+  background: radial-gradient(ellipse at 45% 50%,
+    rgba(40,200,200,0.18) 0%,
+    rgba(30,150,160,0.1) 35%,
+    rgba(20,100,120,0.03) 65%,
+    transparent 100%
+  );
+  animation: nebulaDrift5 35s ease-in-out infinite, nebulaFade5 24s ease-in-out infinite;
+}
+
+/* Nebula drift animations */
+@keyframes nebulaDrift1 {
+  0%   { transform: translate(0, 0) scale(1); }
+  30%  { transform: translate(8%, -5%) scale(1.08); }
+  60%  { transform: translate(-5%, 3%) scale(0.95); }
+  100% { transform: translate(0, 0) scale(1); }
+}
+@keyframes nebulaDrift2 {
+  0%   { transform: translate(0, 0) scale(1); }
+  35%  { transform: translate(-10%, 5%) scale(1.1); }
+  70%  { transform: translate(6%, -3%) scale(0.92); }
+  100% { transform: translate(0, 0) scale(1); }
+}
+@keyframes nebulaDrift3 {
+  0%   { transform: translate(0, 0) scale(1); }
+  40%  { transform: translate(6%, -6%) scale(1.06); }
+  75%  { transform: translate(-8%, 4%) scale(0.96); }
+  100% { transform: translate(0, 0) scale(1); }
+}
+@keyframes nebulaDrift4 {
+  0%   { transform: translate(0, 0) scale(1); }
+  50%  { transform: translate(-6%, 8%) scale(1.12); }
+  100% { transform: translate(0, 0) scale(1); }
+}
+@keyframes nebulaDrift5 {
+  0%   { transform: translate(0, 0) scale(1); }
+  25%  { transform: translate(10%, 3%) scale(1.05); }
+  55%  { transform: translate(-7%, -4%) scale(0.97); }
+  80%  { transform: translate(4%, 6%) scale(1.08); }
+  100% { transform: translate(0, 0) scale(1); }
+}
+
+/* Nebula fade — intensity breathing */
+@keyframes nebulaFade1 {
+  0%, 100% { opacity: 0.6; } 25% { opacity: 1; } 50% { opacity: 0.4; } 75% { opacity: 0.9; }
+}
+@keyframes nebulaFade2 {
+  0%, 100% { opacity: 0.5; } 30% { opacity: 0.95; } 55% { opacity: 0.3; } 80% { opacity: 0.85; }
+}
+@keyframes nebulaFade3 {
+  0%, 100% { opacity: 0.55; } 20% { opacity: 0.9; } 50% { opacity: 0.35; } 80% { opacity: 0.85; }
+}
+@keyframes nebulaFade4 {
+  0%, 100% { opacity: 0.4; } 35% { opacity: 0.85; } 65% { opacity: 0.25; } 90% { opacity: 0.75; }
+}
+@keyframes nebulaFade5 {
+  0%, 100% { opacity: 0.3; } 30% { opacity: 0.7; } 60% { opacity: 0.2; } 85% { opacity: 0.65; }
+}
+
+
 #screen-game[data-world="5"] {
-  background:
-    radial-gradient(ellipse at 50% 20%, rgba(255,107,53,0.08) 0%, transparent 50%),
-    radial-gradient(ellipse at 80% 80%, rgba(247,147,30,0.04) 0%, transparent 40%),
-    linear-gradient(180deg, #180c06 0%, #44200e 50%, #5a2a14 100%);
-  background-size: 400% 400%;
+  background: linear-gradient(to top, #1a0500 0%, #0d0200 15%, #0a0a0a 40%, #050505 100%);
+  overflow: hidden;
+  position: relative;
+}
+
+/* Volcano — fire glow from below (inside embers-container) */
+.volcano-glow {
+  position: absolute !important;
+  bottom: -80px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 140%;
+  height: 200px;
+  background: radial-gradient(
+    ellipse at center bottom,
+    rgba(255, 80, 10, 0.15) 0%,
+    rgba(255, 40, 0, 0.08) 30%,
+    rgba(180, 20, 0, 0.03) 55%,
+    transparent 75%
+  );
+  filter: blur(20px);
+  pointer-events: none;
+  z-index: 0 !important;
+  animation: volcanoGlow 4s ease-in-out infinite alternate;
+}
+
+.volcano-glow-inner {
+  position: absolute !important;
+  bottom: -40px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 80%;
+  height: 120px;
+  background: radial-gradient(
+    ellipse at center bottom,
+    rgba(255, 120, 20, 0.12) 0%,
+    rgba(255, 60, 0, 0.05) 40%,
+    transparent 70%
+  );
+  filter: blur(15px);
+  pointer-events: none;
+  z-index: 0 !important;
+  animation: volcanoGlow 3s ease-in-out infinite alternate-reverse;
+}
+
+@keyframes volcanoGlow {
+  0% { opacity: 0.7; }
+  100% { opacity: 1; }
+}
+
+/* Volcano — ember container */
+.embers-container {
+  position: absolute !important;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 0 !important;
+}
+
+/* Volcano — ember particle styles */
+.ember {
+  position: absolute;
+  top: calc(100% + 20px);
+  border-radius: 50%;
+  pointer-events: none;
+  will-change: transform, opacity;
+}
+
+.ember--bright {
+  background: radial-gradient(circle at 40% 40%, #fff5e0 0%, #ffaa30 25%, #ff6a00 50%, #cc3300 75%, transparent 100%);
+  box-shadow: 0 0 4px 1px rgba(255, 140, 20, 0.6), 0 0 12px 3px rgba(255, 80, 0, 0.3);
+}
+
+.ember--warm {
+  background: radial-gradient(circle at 40% 40%, #ffe0a0 0%, #ff8c20 30%, #cc4400 65%, transparent 100%);
+  box-shadow: 0 0 3px 1px rgba(255, 100, 10, 0.5), 0 0 8px 2px rgba(255, 60, 0, 0.2);
+}
+
+.ember--dim {
+  background: radial-gradient(circle at 40% 40%, #ff9050 0%, #993300 40%, #4a1500 70%, transparent 100%);
+  box-shadow: 0 0 3px 1px rgba(200, 60, 0, 0.3), 0 0 6px 2px rgba(150, 30, 0, 0.15);
+}
+
+.ember--spark {
+  background: radial-gradient(circle, #fff 0%, #ffcc44 30%, #ff6600 60%, transparent 100%);
+  box-shadow: 0 0 2px 1px rgba(255, 200, 50, 0.8), 0 0 6px 2px rgba(255, 100, 0, 0.4);
+}
+
+@keyframes emberRise {
+  0% {
+    transform: translateX(0) translateY(0) scale(1) rotate(0deg);
+    opacity: 0;
+  }
+  5% { opacity: 1; }
+  20% { opacity: var(--peak-opacity, 0.9); }
+  70% { opacity: var(--mid-opacity, 0.4); }
+  100% {
+    transform: translateX(var(--drift-x)) translateY(var(--drift-y)) scale(var(--end-scale, 0.2)) rotate(var(--end-rotation, 180deg));
+    opacity: 0;
+  }
+}
+
+@keyframes emberFlicker {
+  0%, 100% { opacity: 1; }
+  20% { opacity: 0.7; }
+  40% { opacity: 0.95; }
+  60% { opacity: 0.6; }
+  80% { opacity: 0.85; }
+}
+
+/* Volcano — heat distortion overlay */
+.volcano-heat {
+  position: absolute !important;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 30%;
+  z-index: 0 !important;
+  background: linear-gradient(to top, rgba(255, 60, 0, 0.02) 0%, transparent 100%);
+  pointer-events: none;
+  z-index: 0;
+  animation: heatWave 8s ease-in-out infinite;
+}
+
+@keyframes heatWave {
+  0%, 100% { opacity: 0.5; }
+  50% { opacity: 1; }
 }
 
 #screen-game[data-world="6"] {
+  background: #020c18;
+  overflow: hidden;
+  position: relative;
+}
+
+/* === OCEAN — GOD RAYS + CAUSTICS + PLANKTON + DEPTH FOG === */
+
+.ocean-container {
+  position: absolute !important;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  overflow: hidden;
+  z-index: 0 !important;
+}
+
+/* Deep ocean gradient overlay */
+.ocean-depth {
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
   background:
-    radial-gradient(ellipse at 50% 20%, rgba(0,180,216,0.08) 0%, transparent 50%),
-    radial-gradient(ellipse at 80% 80%, rgba(0,119,182,0.05) 0%, transparent 40%),
-    linear-gradient(180deg, #04101a 0%, #0a3050 50%, #0e4068 100%);
-  background-size: 400% 400%;
+    linear-gradient(to bottom,
+      rgba(5, 40, 70, 0.4) 0%,
+      rgba(3, 25, 50, 0.3) 15%,
+      rgba(2, 15, 35, 0.2) 35%,
+      rgba(2, 10, 25, 0.1) 60%,
+      rgba(1, 5, 15, 0.05) 100%
+    );
+  pointer-events: none;
+}
+
+/* Surface light — faint glow at top */
+.ocean-surface-light {
+  position: absolute;
+  top: -80px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 140%;
+  height: 200px;
+  background: radial-gradient(
+    ellipse at 50% 0%,
+    rgba(0, 180, 216, 0.06) 0%,
+    rgba(0, 140, 180, 0.03) 40%,
+    transparent 70%
+  );
+  pointer-events: none;
+  animation: oceanSurfacePulse 8s ease-in-out infinite;
+}
+
+@keyframes oceanSurfacePulse {
+  0%, 100% { opacity: 0.7; }
+  50% { opacity: 1; }
+}
+
+/* God rays */
+.ocean-rays {
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.god-ray {
+  position: absolute;
+  top: -10%;
+  transform-origin: top center;
+  pointer-events: none;
+  will-change: transform, opacity;
+}
+
+.god-ray-inner {
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(to bottom,
+    var(--ray-top, rgba(0, 180, 216, 0.04)) 0%,
+    var(--ray-mid, rgba(0, 150, 190, 0.025)) 30%,
+    var(--ray-low, rgba(0, 120, 160, 0.01)) 60%,
+    transparent 100%
+  );
+  filter: blur(var(--ray-blur, 8px));
+}
+
+@keyframes rayWave1 {
+  0%, 100% { transform: rotate(var(--ray-base)) skewX(0deg) scaleX(1); opacity: var(--ray-lo); }
+  25% { transform: rotate(calc(var(--ray-base) + 1.5deg)) skewX(1deg) scaleX(1.1); opacity: var(--ray-hi); }
+  50% { transform: rotate(calc(var(--ray-base) - 1deg)) skewX(-0.5deg) scaleX(0.9); opacity: var(--ray-mid-o); }
+  75% { transform: rotate(calc(var(--ray-base) + 0.5deg)) skewX(0.5deg) scaleX(1.05); opacity: var(--ray-hi); }
+}
+
+@keyframes rayWave2 {
+  0%, 100% { transform: rotate(var(--ray-base)) scaleX(1); opacity: var(--ray-lo); }
+  30% { transform: rotate(calc(var(--ray-base) - 2deg)) scaleX(1.15); opacity: var(--ray-hi); }
+  60% { transform: rotate(calc(var(--ray-base) + 1deg)) scaleX(0.85); opacity: var(--ray-mid-o); }
+}
+
+@keyframes rayWave3 {
+  0%, 100% { transform: rotate(var(--ray-base)) scaleX(1); opacity: var(--ray-mid-o); }
+  40% { transform: rotate(calc(var(--ray-base) + 2deg)) scaleX(1.2); opacity: var(--ray-hi); }
+  70% { transform: rotate(calc(var(--ray-base) - 1.5deg)) scaleX(0.9); opacity: var(--ray-lo); }
+}
+
+/* Caustics canvas */
+.ocean-caustics {
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  pointer-events: none;
+  opacity: 0.35;
+  mix-blend-mode: screen;
+}
+
+/* Plankton particles */
+.ocean-plankton-layer {
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.plankton {
+  position: absolute;
+  border-radius: 50%;
+  pointer-events: none;
+  will-change: transform, opacity;
+}
+
+@keyframes oceanDrift {
+  0% {
+    transform: translate(var(--p-sx), var(--p-sy));
+    opacity: 0;
+  }
+  8% { opacity: var(--p-peak); }
+  50% {
+    transform: translate(var(--p-mx), var(--p-my));
+    opacity: var(--p-mid);
+  }
+  92% { opacity: var(--p-peak); }
+  100% {
+    transform: translate(var(--p-ex), var(--p-ey));
+    opacity: 0;
+  }
+}
+
+/* Floating debris */
+.ocean-debris {
+  position: absolute;
+  pointer-events: none;
+  will-change: transform, opacity;
+  border-radius: 40%;
+}
+
+@keyframes debrisDrift {
+  0% {
+    transform: translate(var(--db-sx), var(--db-sy)) rotate(0deg) scale(0.8);
+    opacity: 0;
+  }
+  15% { opacity: var(--db-o); }
+  50% {
+    transform: translate(var(--db-mx), var(--db-my)) rotate(var(--db-rot)) scale(1);
+  }
+  85% { opacity: var(--db-o); }
+  100% {
+    transform: translate(var(--db-ex), var(--db-ey)) rotate(calc(var(--db-rot) * 2)) scale(0.7);
+    opacity: 0;
+  }
+}
+
+/* Depth fog at bottom */
+.ocean-depth-fog {
+  position: absolute;
+  bottom: 0; left: 0;
+  width: 100%; height: 35%;
+  background: linear-gradient(to top, rgba(1, 8, 18, 0.6) 0%, rgba(2, 12, 25, 0.2) 50%, transparent 100%);
+  pointer-events: none;
 }
 
 #screen-game[data-world="7"] {
-  background:
-    radial-gradient(ellipse at 50% 30%, rgba(255,215,0,0.03) 0%, transparent 40%),
-    linear-gradient(180deg, #020202 0%, #080808 50%, #0d0d0d 100%);
-  background-size: 400% 400%;
+  background: #000;
+  overflow: hidden;
+  position: relative;
+}
+
+#screen-game[data-world="freestyle"] {
+  background: #050510;
+  overflow: hidden;
+  position: relative;
+}
+
+/* === ENDLESS DREAM — Freestyle flow streams === */
+
+.dream-container {
+  position: absolute !important;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  pointer-events: none;
+  overflow: hidden;
+  z-index: 0 !important;
+}
+
+.dream-canvas {
+  position: absolute;
+  top: 0; left: 0;
+  pointer-events: none;
+}
+
+/* === ABYSS — VORTEX BLACK HOLE + SHADOW SOULS === */
+
+.abyss-container {
+  position: absolute !important;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  overflow: hidden;
+  z-index: 0 !important;
+}
+
+.abyss-canvas {
+  position: absolute;
+  top: 0; left: 0;
+  pointer-events: none;
+}
+
+/* VHS scanlines overlay — visible CRT effect */
+.abyss-scanlines {
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  z-index: 4;
+  pointer-events: none;
+  background: repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 2px,
+    rgba(0, 0, 0, 0.18) 2px,
+    rgba(0, 0, 0, 0.18) 4px
+  );
+  animation: abyssScanFlicker 0.12s infinite;
+}
+
+@keyframes abyssScanFlicker {
+  0%, 100% { opacity: 0.7; }
+  50% { opacity: 0.55; }
+}
+
+/* VHS tracking distortion — scrolling band */
+.abyss-scanlines::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%; height: 8px;
+  background: linear-gradient(
+    to bottom,
+    rgba(255, 255, 255, 0.03),
+    rgba(255, 255, 255, 0.06),
+    rgba(255, 255, 255, 0.03)
+  );
+  animation: abyssVhsTrack 4s linear infinite;
+  pointer-events: none;
+}
+
+@keyframes abyssVhsTrack {
+  0% { top: -8px; }
+  100% { top: 100%; }
+}
+
+/* Horizontal glitch bands — brighter, more visible */
+.abyss-glitch-band {
+  position: absolute;
+  left: 0; width: 100%;
+  height: 3px;
+  z-index: 5;
+  pointer-events: none;
+  opacity: 0;
+  background: rgba(255, 20, 60, 0.3);
+  box-shadow: 0 0 30px rgba(255, 0, 50, 0.2), 0 0 60px rgba(255, 0, 50, 0.08);
+  transition: opacity 0.05s;
 }
 
 /* ============================================= */
@@ -979,3 +2249,260 @@
     radial-gradient(ellipse at 50% 80%, rgba(255,215,0,0.03) 0%, transparent 40%),
     linear-gradient(180deg, #010102 0%, #040408 30%, #060810 60%, #030406 100%);
 }
+
+/* ==============================================
+   ABYSS INTERFERENCE VISUALS
+   ============================================== */
+
+/* Stage 1: Frost Drain — dark frost overlay on borders */
+.frost-drain-active .game-content {
+  box-shadow: inset 0 0 80px rgba(0, 20, 40, 0.6);
+  transition: box-shadow 0.5s ease;
+}
+.frost-drain-active::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  background: radial-gradient(ellipse at center, transparent 40%, rgba(0, 15, 30, 0.35) 100%);
+  z-index: 5;
+  animation: frostPulse 2s ease-in-out infinite;
+}
+@keyframes frostPulse {
+  0%, 100% { opacity: 0.6; }
+  50% { opacity: 1; }
+}
+
+/* Stage 2: Doubt — ghost number in answer display */
+.doubt-ghost {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: rgba(120, 60, 180, 0.7);
+  font-size: 1.6rem;
+  font-weight: bold;
+  pointer-events: none;
+  animation: doubtFade 1s ease-out forwards;
+  z-index: 10;
+  text-shadow: 0 0 12px rgba(120, 60, 180, 0.5);
+}
+@keyframes doubtFade {
+  0% { opacity: 0.9; transform: translate(-50%, -50%) scale(1.2); }
+  50% { opacity: 0.6; }
+  100% { opacity: 0; transform: translate(-50%, -50%) scale(0.8); }
+}
+
+/* Stage 4: Void Pulse — darken everything except gameplay elements */
+.void-pulse-active .game-header,
+.void-pulse-active .game-stars,
+.void-pulse-active #game-embers,
+.void-pulse-active .calculator-grid {
+  opacity: 0.05;
+  transition: opacity 0.3s ease;
+}
+.void-pulse-active .problem-area,
+.void-pulse-active .sleep-bar-container,
+.void-pulse-active .answer-display {
+  opacity: 1 !important;
+  position: relative;
+  z-index: 10;
+}
+
+/* Stage 5: Provoke — red-orange flash on borders */
+.provoke-flash {
+  box-shadow: inset 0 0 60px rgba(255, 80, 0, 0.4) !important;
+  transition: box-shadow 0.2s ease;
+}
+.provoke-flash::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  background: radial-gradient(ellipse at center, transparent 50%, rgba(255, 60, 0, 0.15) 100%);
+  z-index: 5;
+}
+
+/* ==============================================
+   BATTLE TOAST (non-blocking phase dialogue)
+   ============================================== */
+.battle-toast {
+  position: absolute;
+  top: 12%;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 100;
+  background: rgba(0, 0, 0, 0.85);
+  border: 1px solid rgba(255, 215, 0, 0.3);
+  border-radius: 12px;
+  padding: 10px 18px;
+  max-width: 88%;
+  color: #e8e0d0;
+  font-size: 0.85rem;
+  line-height: 1.4;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  animation: toastFadeIn 0.5s ease forwards;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.6), 0 0 15px rgba(255, 215, 0, 0.1);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+.battle-toast--fade-out {
+  animation: toastFadeOut 0.5s ease forwards;
+}
+.battle-toast-icon {
+  width: 28px;
+  height: 28px;
+  flex-shrink: 0;
+  filter: drop-shadow(0 0 4px rgba(255, 215, 0, 0.3));
+}
+.battle-toast-emoji {
+  font-size: 1.3rem;
+  flex-shrink: 0;
+}
+.battle-toast-speaker {
+  font-weight: 600;
+  color: rgba(255, 215, 0, 0.9);
+}
+
+@keyframes toastFadeIn {
+  from { opacity: 0; transform: translateX(-50%) translateY(-10px); }
+  to { opacity: 1; transform: translateX(-50%) translateY(0); }
+}
+@keyframes toastFadeOut {
+  from { opacity: 1; transform: translateX(-50%) translateY(0); }
+  to { opacity: 0; transform: translateX(-50%) translateY(-10px); }
+}
+
+/* ==============================================
+   REMEMBER ME — Golden Auto-Solve Effects
+   ============================================== */
+.golden-autosolve {
+  color: #ffd700 !important;
+  font-weight: 900 !important;
+  text-shadow:
+    0 0 16px rgba(255, 215, 0, 1),
+    0 0 32px rgba(255, 215, 0, 0.8),
+    0 0 64px rgba(255, 180, 0, 0.4),
+    0 0 90px rgba(255, 215, 0, 0.15);
+  transform: scale(1.25);
+  transition: transform 0.08s ease, text-shadow 0.08s ease;
+}
+
+/* Full-screen golden burst per auto-solve */
+.remember-me-burst::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 50;
+  background:
+    radial-gradient(circle at center, rgba(255, 215, 0, 0.35) 0%, rgba(255, 180, 0, 0.12) 35%, transparent 65%);
+  animation: burstFlash 0.25s ease-out forwards;
+}
+/* Light rays radiating out */
+.remember-me-burst::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 49;
+  background:
+    conic-gradient(from 0deg at 50% 50%,
+      transparent 0deg, rgba(255, 215, 0, 0.06) 10deg, transparent 20deg,
+      transparent 40deg, rgba(255, 215, 0, 0.06) 50deg, transparent 60deg,
+      transparent 80deg, rgba(255, 215, 0, 0.06) 90deg, transparent 100deg,
+      transparent 120deg, rgba(255, 215, 0, 0.06) 130deg, transparent 140deg,
+      transparent 160deg, rgba(255, 215, 0, 0.06) 170deg, transparent 180deg,
+      transparent 200deg, rgba(255, 215, 0, 0.06) 210deg, transparent 220deg,
+      transparent 240deg, rgba(255, 215, 0, 0.06) 250deg, transparent 260deg,
+      transparent 280deg, rgba(255, 215, 0, 0.06) 290deg, transparent 300deg,
+      transparent 320deg, rgba(255, 215, 0, 0.06) 330deg, transparent 340deg,
+      transparent 360deg);
+  animation: burstRays 0.3s ease-out forwards;
+}
+@keyframes burstFlash {
+  0% { opacity: 1; transform: scale(0.6); }
+  100% { opacity: 0; transform: scale(2); }
+}
+@keyframes burstRays {
+  0% { opacity: 0.8; transform: scale(0.5) rotate(0deg); }
+  100% { opacity: 0; transform: scale(2.5) rotate(15deg); }
+}
+
+/* Remember Me button — powerful golden styling */
+.power-btn--remember-me {
+  background: linear-gradient(135deg, rgba(255, 215, 0, 0.2) 0%, rgba(255, 160, 0, 0.12) 50%, rgba(255, 215, 0, 0.2) 100%) !important;
+  border: 1.5px solid rgba(255, 215, 0, 0.6) !important;
+  box-shadow:
+    0 0 18px rgba(255, 215, 0, 0.5),
+    0 0 40px rgba(255, 180, 0, 0.2),
+    inset 0 0 12px rgba(255, 215, 0, 0.15) !important;
+  animation: rememberMeGlow 1.8s ease-in-out infinite alternate, rememberMeFloat 3s ease-in-out infinite;
+  position: relative;
+  overflow: visible;
+}
+/* Outer halo ring */
+.power-btn--remember-me::before {
+  content: '';
+  position: absolute;
+  inset: -6px;
+  border-radius: inherit;
+  border: 1.5px solid rgba(255, 215, 0, 0.2);
+  animation: haloExpand 2.5s ease-in-out infinite;
+  pointer-events: none;
+}
+/* Inner light particles */
+.power-btn--remember-me::after {
+  content: '';
+  position: absolute;
+  inset: -2px;
+  border-radius: inherit;
+  background: radial-gradient(circle at 30% 40%, rgba(255, 240, 150, 0.15) 0%, transparent 50%),
+              radial-gradient(circle at 70% 60%, rgba(255, 200, 50, 0.1) 0%, transparent 40%);
+  animation: innerShimmer 2s ease-in-out infinite alternate;
+  pointer-events: none;
+}
+.power-btn--remember-me .power-seal {
+  filter: drop-shadow(0 0 10px rgba(255, 215, 0, 0.8)) drop-shadow(0 0 20px rgba(255, 180, 0, 0.4));
+  animation: sealPulse 2s ease-in-out infinite alternate;
+}
+.power-btn--remember-me .power-uses {
+  color: #ffd700 !important;
+  font-weight: 700;
+  text-shadow: 0 0 8px rgba(255, 215, 0, 0.5);
+}
+@keyframes rememberMeGlow {
+  from {
+    box-shadow:
+      0 0 14px rgba(255, 215, 0, 0.3),
+      0 0 30px rgba(255, 180, 0, 0.1),
+      inset 0 0 8px rgba(255, 215, 0, 0.08);
+  }
+  to {
+    box-shadow:
+      0 0 28px rgba(255, 215, 0, 0.7),
+      0 0 60px rgba(255, 180, 0, 0.3),
+      0 0 90px rgba(255, 215, 0, 0.1),
+      inset 0 0 16px rgba(255, 215, 0, 0.2);
+  }
+}
+@keyframes rememberMeFloat {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-2px); }
+}
+@keyframes haloExpand {
+  0%, 100% { inset: -6px; opacity: 0.4; border-color: rgba(255, 215, 0, 0.2); }
+  50% { inset: -10px; opacity: 0.8; border-color: rgba(255, 215, 0, 0.35); }
+}
+@keyframes innerShimmer {
+  from { opacity: 0.5; }
+  to { opacity: 1; }
+}
+@keyframes sealPulse {
+  from { filter: drop-shadow(0 0 8px rgba(255, 215, 0, 0.6)) drop-shadow(0 0 16px rgba(255, 180, 0, 0.3)); }
+  to { filter: drop-shadow(0 0 14px rgba(255, 215, 0, 1)) drop-shadow(0 0 28px rgba(255, 180, 0, 0.5)) drop-shadow(0 0 40px rgba(255, 215, 0, 0.2)); }
+}
+
+/* Shockwave removed — was clipping on mobile */
