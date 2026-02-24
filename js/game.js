@@ -27,7 +27,7 @@ const Game = (() => {
   let rememberMeCount = 0;
 
   // DEBUG: set to true to unlock all worlds/stages/powers for testing, false for normal play
-  const DEBUG_UNLOCK_ALL = true;
+  const DEBUG_UNLOCK_ALL = false;
 
   function init() {
     saveData = Storage.load();
