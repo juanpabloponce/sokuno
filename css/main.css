@@ -1232,15 +1232,14 @@ body {
 
 .lore-reader-header {
   position: relative;
-  padding: 22px 16px 12px;
+  padding: 16px 16px 12px;
   text-align: center;
 }
 
 .lore-reader-header .btn-back {
-  position: absolute;
-  top: 20px;
-  left: 16px;
+  position: relative;
   z-index: 2;
+  margin-bottom: 8px;
 }
 
 .lore-reader-title {
@@ -1248,7 +1247,7 @@ body {
   font-size: 22px;
   letter-spacing: 2px;
   filter: drop-shadow(0 0 10px currentColor);
-  margin-top: 4px;
+  margin-top: 0;
 }
 
 .lore-reader-body {
