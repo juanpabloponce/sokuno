@@ -1228,21 +1228,23 @@ body {
   flex-direction: column;
   width: 100%;
   height: 100%;
+  overflow: hidden;
 }
 
 .lore-reader-header {
-  position: relative;
-  padding: 16px 16px 12px;
-  text-align: center;
+  padding: 16px 16px 8px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  flex-shrink: 0;
 }
 
 .lore-reader-header .btn-back {
-  position: relative;
-  z-index: 2;
-  margin-bottom: 8px;
+  margin-bottom: 6px;
 }
 
 .lore-reader-title {
+  align-self: center;
   font-family: 'Leander', 'Zen Dots', sans-serif;
   font-size: 22px;
   letter-spacing: 2px;
