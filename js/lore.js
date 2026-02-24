@@ -169,9 +169,32 @@ const Lore = (() => {
       renderLoreScreen(saveData); // refresh unread states
     };
 
-    // Next chapter button
+    // Chapter navigation buttons
+    const prevBtn = document.getElementById('btn-lore-prev');
     const nextBtn = document.getElementById('btn-lore-next');
     const currentIdx = CHAPTERS.findIndex(c => c.id === chapter.id);
+
+    // Find previous unlocked chapter
+    let prevChapter = null;
+    for (let i = currentIdx - 1; i >= 0; i--) {
+      const entry = saveData.lore ? saveData.lore[CHAPTERS[i].id] : null;
+      if (entry && entry.unlocked) {
+        prevChapter = CHAPTERS[i];
+        break;
+      }
+    }
+
+    if (prevChapter) {
+      prevBtn.classList.remove('hidden');
+      prevBtn.onclick = () => {
+        Audio.buttonPress();
+        bodyEl.scrollTop = 0;
+        showChapterReader(prevChapter, saveData);
+      };
+    } else {
+      prevBtn.classList.add('hidden');
+    }
+
     // Find next unlocked chapter
     let nextChapter = null;
     for (let i = currentIdx + 1; i < CHAPTERS.length; i++) {
