@@ -1281,9 +1281,9 @@ body {
 }
 
 .lore-next-btn {
-  position: absolute;
-  bottom: 20px;
-  right: 20px;
+  align-self: flex-end;
+  margin: 12px 20px 16px;
+  flex-shrink: 0;
   background: rgba(255, 255, 255, 0.06);
   border: 1px solid rgba(255, 255, 255, 0.15);
   color: rgba(255, 255, 255, 0.5);
