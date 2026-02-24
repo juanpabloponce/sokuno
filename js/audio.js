@@ -4,6 +4,15 @@ const Audio = (() => {
   let ctx = null;
   let enabled = true;
 
+  // --- FX nodes (created once, reused) ---
+  let reverbNode = null;   // ConvolverNode
+  let reverbGain = null;   // wet level
+  let delayNode = null;    // DelayNode
+  let delayFeedback = null; // feedback gain
+  let delayGain = null;    // wet level
+  let dryGain = null;      // dry level
+  let fxReady = false;
+
   function getContext() {
     if (!ctx) {
       ctx = new (window.AudioContext || window.webkitAudioContext)();
@@ -11,6 +20,85 @@ const Audio = (() => {
     return ctx;
   }
 
+  // Build a synthetic impulse response for reverb (dreamy hall)
+  function buildReverbIR(c) {
+    const rate = c.sampleRate;
+    const length = rate * 1.6; // 1.6s tail
+    const ir = c.createBuffer(2, length, rate);
+    for (let ch = 0; ch < 2; ch++) {
+      const data = ir.getChannelData(ch);
+      for (let i = 0; i < length; i++) {
+        // Exponential decay with slight randomness per channel
+        data[i] = (Math.random() * 2 - 1) * Math.pow(1 - i / length, 2.5);
+      }
+    }
+    return ir;
+  }
+
+  // Initialize FX chain: source → dry + (delay → reverb → wet)
+  function initFX() {
+    if (fxReady) return;
+    try {
+      const c = getContext();
+
+      // Dry path
+      dryGain = c.createGain();
+      dryGain.gain.value = 0.75;
+      dryGain.connect(c.destination);
+
+      // Delay: short slapback
+      delayNode = c.createDelay(1.0);
+      delayNode.delayTime.value = 0.18; // 180ms delay
+      delayFeedback = c.createGain();
+      delayFeedback.gain.value = 0.25; // subtle feedback
+      delayGain = c.createGain();
+      delayGain.gain.value = 0.3; // delay wet level
+
+      // Delay feedback loop
+      delayNode.connect(delayFeedback);
+      delayFeedback.connect(delayNode);
+      delayNode.connect(delayGain);
+
+      // Reverb
+      reverbNode = c.createConvolver();
+      reverbNode.buffer = buildReverbIR(c);
+      reverbGain = c.createGain();
+      reverbGain.gain.value = 0.4; // reverb wet level
+
+      // Delay feeds into reverb
+      delayGain.connect(reverbNode);
+      reverbNode.connect(reverbGain);
+      reverbGain.connect(c.destination);
+
+      fxReady = true;
+    } catch (e) {
+      fxReady = false;
+    }
+  }
+
+  // Play tone through FX chain (reverb + delay)
+  function playToneWet(freq, duration, type, volume) {
+    if (!enabled) return;
+    try {
+      const c = getContext();
+      initFX();
+      const osc = c.createOscillator();
+      const gain = c.createGain();
+      osc.type = type;
+      osc.frequency.value = freq;
+      gain.gain.value = volume;
+      gain.gain.exponentialRampToValueAtTime(0.01, c.currentTime + duration);
+      osc.connect(gain);
+      // Dry path
+      gain.connect(dryGain);
+      // Wet path (into delay → reverb)
+      gain.connect(delayNode);
+      osc.start(c.currentTime);
+      osc.stop(c.currentTime + duration);
+    } catch (e) {}
+  }
+
+  // Play tone dry (no FX) — for UI sounds
   function playTone(freq, duration, type = 'sine', volume = 0.3) {
     if (!enabled) return;
     try {
@@ -25,18 +113,16 @@ const Audio = (() => {
       gain.connect(c.destination);
       osc.start(c.currentTime);
       osc.stop(c.currentTime + duration);
-    } catch (e) {
-      // Silently fail if audio not available
-    }
+    } catch (e) {}
   }
 
   function correct() {
-    playTone(800, 0.1, 'sine', 0.2);
-    setTimeout(() => playTone(1000, 0.1, 'sine', 0.2), 80);
+    playToneWet(800, 0.15, 'sine', 0.2);
+    setTimeout(() => playToneWet(1000, 0.15, 'sine', 0.18), 80);
   }
 
   function wrong() {
-    playTone(200, 0.15, 'square', 0.15);
+    playToneWet(200, 0.15, 'sine', 0.1);
   }
 
   function buttonPress() {
@@ -44,10 +130,11 @@ const Audio = (() => {
   }
 
   function powerUsed() {
-    // Whoosh-like sound
+    // Whoosh-like sound through FX
     if (!enabled) return;
     try {
       const c = getContext();
+      initFX();
       const bufferSize = c.sampleRate * 0.3;
       const buffer = c.createBuffer(1, bufferSize, c.sampleRate);
       const data = buffer.getChannelData(0);
@@ -65,23 +152,24 @@ const Audio = (() => {
       gain.gain.exponentialRampToValueAtTime(0.01, c.currentTime + 0.3);
       source.connect(filter);
       filter.connect(gain);
-      gain.connect(c.destination);
+      gain.connect(dryGain);
+      gain.connect(delayNode);
       source.start(c.currentTime);
     } catch (e) {}
   }
 
   function victory() {
-    // Ascending arpeggio
+    // Ascending arpeggio with reverb
     const notes = [523, 659, 784, 1047];
     notes.forEach((freq, i) => {
-      setTimeout(() => playTone(freq, 0.2, 'sine', 0.2), i * 120);
+      setTimeout(() => playToneWet(freq, 0.25, 'sine', 0.2), i * 120);
     });
   }
 
   function defeat() {
-    // Descending tone
-    playTone(400, 0.3, 'sine', 0.2);
-    setTimeout(() => playTone(250, 0.4, 'sine', 0.2), 200);
+    // Descending tone with reverb
+    playToneWet(400, 0.35, 'sine', 0.2);
+    setTimeout(() => playToneWet(250, 0.5, 'sine', 0.18), 200);
   }
 
   function toggle() {
