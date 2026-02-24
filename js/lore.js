@@ -3,16 +3,16 @@
 const Lore = (() => {
 
   const CHAPTERS = [
-    { id: 1,  name: 'The Dreamer',       color: '#FFD700', dialogueKey: 'intro',               unlockCheck: (save) => save.storyProgress.introSeen },
-    { id: 2,  name: 'Fubuki Awakens',    color: '#5BC0EB', dialogueKey: 'awakenings.1',        unlockCheck: (save) => isWorldBossComplete(save, 1) },
-    { id: 3,  name: 'Omoi Awakens',      color: '#9B5DE5', dialogueKey: 'awakenings.2',        unlockCheck: (save) => isWorldBossComplete(save, 2) },
-    { id: 4,  name: 'Midori Awakens',    color: '#57CC99', dialogueKey: 'awakenings.3',        unlockCheck: (save) => isWorldBossComplete(save, 3) },
-    { id: 5,  name: 'Uch\u016B Awakens', color: '#E94560', dialogueKey: 'awakenings.4',        unlockCheck: (save) => isWorldBossComplete(save, 4) },
-    { id: 6,  name: 'Kaen Awakens',      color: '#FF6B35', dialogueKey: 'awakenings.5',        unlockCheck: (save) => isWorldBossComplete(save, 5) },
-    { id: 7,  name: 'Nami Awakens',      color: '#00B4D8', dialogueKey: 'awakenings.6',        unlockCheck: (save) => isWorldBossComplete(save, 6) },
-    { id: 8,  name: 'The Gathering',     color: '#FFD700', dialogueKey: 'gathering',           unlockCheck: (save) => save.storyProgress.gatheringSeen || (save.worlds['7'] && save.worlds['7'].unlocked) },
-    { id: 9,  name: 'The Abyss',         color: '#333333', dialogueKey: 'abyssMidpoint',       unlockCheck: (save) => save.storyProgress.world7MidpointSeen || isWorldStageComplete(save, 7, 5), border: '#FFD700' },
-    { id: 10, name: 'The End...?',        color: '#FFD700', dialogueKey: 'finale',              unlockCheck: (save) => save.storyProgress.endingSeen || isWorldBossComplete(save, 7), glow: true }
+    { id: 1,  name: 'Before Light',              color: '#FFD700', dialogueKey: 'intro',               unlockCheck: (save) => save.storyProgress.introSeen },
+    { id: 2,  name: 'The First to Fall',         color: '#5BC0EB', dialogueKey: 'awakenings.1',        unlockCheck: (save) => isWorldBossComplete(save, 1) },
+    { id: 3,  name: 'The Weight of Knowing',     color: '#9B5DE5', dialogueKey: 'awakenings.2',        unlockCheck: (save) => isWorldBossComplete(save, 2) },
+    { id: 4,  name: 'Seeds in Dark Soil',        color: '#57CC99', dialogueKey: 'awakenings.3',        unlockCheck: (save) => isWorldBossComplete(save, 3) },
+    { id: 5,  name: 'The Space Between Stars',   color: '#E94560', dialogueKey: 'awakenings.4',        unlockCheck: (save) => isWorldBossComplete(save, 4) },
+    { id: 6,  name: 'What Burns Inside',         color: '#FF6B35', dialogueKey: 'awakenings.5',        unlockCheck: (save) => isWorldBossComplete(save, 5) },
+    { id: 7,  name: 'Sunlight on Water',         color: '#00B4D8', dialogueKey: 'awakenings.6',        unlockCheck: (save) => isWorldBossComplete(save, 6) },
+    { id: 8,  name: 'Six Lights, One Dark',      color: '#FFD700', dialogueKey: 'gathering',           unlockCheck: (save) => save.storyProgress.gatheringSeen || (save.worlds['7'] && save.worlds['7'].unlocked) },
+    { id: 9,  name: 'If I Cannot Shine',         color: '#333333', dialogueKey: 'abyssMidpoint',       unlockCheck: (save) => save.storyProgress.world7MidpointSeen || isWorldStageComplete(save, 7, 5), border: '#FFD700' },
+    { id: 10, name: 'A Small Golden Spark',      color: '#FFD700', dialogueKey: 'finale',              unlockCheck: (save) => save.storyProgress.endingSeen || isWorldBossComplete(save, 7), glow: true }
   ];
 
   const SPEAKER_COLORS = {
@@ -168,6 +168,33 @@ const Lore = (() => {
       listEl.classList.remove('hidden');
       renderLoreScreen(saveData); // refresh unread states
     };
+
+    // Next chapter button
+    const nextBtn = document.getElementById('btn-lore-next');
+    const currentIdx = CHAPTERS.findIndex(c => c.id === chapter.id);
+    // Find next unlocked chapter
+    let nextChapter = null;
+    for (let i = currentIdx + 1; i < CHAPTERS.length; i++) {
+      const entry = saveData.lore ? saveData.lore[CHAPTERS[i].id] : null;
+      if (entry && entry.unlocked) {
+        nextChapter = CHAPTERS[i];
+        break;
+      }
+    }
+
+    if (nextChapter) {
+      nextBtn.classList.remove('hidden');
+      nextBtn.onclick = () => {
+        Audio.buttonPress();
+        markSeen(saveData, nextChapter.id);
+        Storage.save(saveData);
+        updateLoreUnreadBadge(saveData);
+        bodyEl.scrollTop = 0;
+        showChapterReader(nextChapter, saveData);
+      };
+    } else {
+      nextBtn.classList.add('hidden');
+    }
   }
 
   function updateLoreUnreadBadge(saveData) {
