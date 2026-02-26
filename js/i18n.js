@@ -13,7 +13,7 @@ const I18n = (() => {
     { code: 'pt-BR', name: 'Portuguese', nativeName: 'Português',  dir: 'ltr', flag: '🇧🇷' },
     { code: 'ru',    name: 'Russian',    nativeName: 'Русский',    dir: 'ltr', flag: '🇷🇺' },
     { code: 'tr',    name: 'Turkish',    nativeName: 'Türkçe',     dir: 'ltr', flag: '🇹🇷' },
-    { code: 'ar',    name: 'Arabic',     nativeName: 'العربية',    dir: 'rtl', flag: '🇸🇦' },
+    { code: 'ar',    name: 'Arabic',     nativeName: 'العربية',    dir: 'rtl', flag: '🇦🇪' },
     { code: 'ja',    name: 'Japanese',   nativeName: '日本語',      dir: 'ltr', flag: '🇯🇵' },
     { code: 'zh-CN', name: 'Chinese',    nativeName: '简体中文',    dir: 'ltr', flag: '🇨🇳' },
     { code: 'ko',    name: 'Korean',     nativeName: '한국어',      dir: 'ltr', flag: '🇰🇷' },

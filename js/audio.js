@@ -126,7 +126,7 @@ const Audio = (() => {
   }
 
   function buttonPress() {
-    playTone(600, 0.05, 'sine', 0.1);
+    playToneWet(520, 0.12, 'sine', 0.1);
   }
 
   function powerUsed() {

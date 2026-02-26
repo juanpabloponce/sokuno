@@ -1846,6 +1846,13 @@ body {
   z-index: 50;
 }
 
+#screen-settings .btn-back {
+  position: absolute;
+  top: 20px;
+  left: 16px;
+  z-index: 2;
+}
+
 .settings-panel {
   position: relative;
   width: 85%;
