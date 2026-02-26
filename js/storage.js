@@ -59,6 +59,13 @@ const Storage = (() => {
         9:  { unlocked: false, seen: false },
         10: { unlocked: false, seen: false }
       },
+      difficulty: 'normal',
+      audio: {
+        musicEnabled: true,
+        sfxEnabled: true,
+        musicVolume: 70,
+        sfxVolume: 80
+      },
       freestyle: {
         unlocked: false,
         pure: { bestChain: 0, bestTotal: 0, highestTier: 0, totalSessions: 0 },

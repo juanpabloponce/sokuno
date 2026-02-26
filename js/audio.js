@@ -4,6 +4,12 @@ const Audio = (() => {
   let ctx = null;
   let enabled = true;
 
+  // Separate music / SFX state
+  let musicEnabled = true;
+  let sfxEnabled = true;
+  let sfxVolumeScale = 0.8;   // 0-1, from user setting (default 80%)
+  let musicVolume = 0.7;      // 0-1, from user setting (default 70%)
+
   // --- FX nodes (created once, reused) ---
   let reverbNode = null;   // ConvolverNode
   let reverbGain = null;   // wet level
@@ -78,7 +84,8 @@ const Audio = (() => {
 
   // Play tone through FX chain (reverb + delay)
   function playToneWet(freq, duration, type, volume) {
-    if (!enabled) return;
+    if (!enabled || !sfxEnabled) return;
+    volume = volume * sfxVolumeScale;
     try {
       const c = getContext();
       initFX();
@@ -100,7 +107,8 @@ const Audio = (() => {
 
   // Play tone dry (no FX) — for UI sounds
   function playTone(freq, duration, type = 'sine', volume = 0.3) {
-    if (!enabled) return;
+    if (!enabled || !sfxEnabled) return;
+    volume = volume * sfxVolumeScale;
     try {
       const c = getContext();
       const osc = c.createOscillator();
@@ -131,7 +139,7 @@ const Audio = (() => {
 
   function powerUsed() {
     // Whoosh-like sound through FX
-    if (!enabled) return;
+    if (!enabled || !sfxEnabled) return;
     try {
       const c = getContext();
       initFX();
@@ -185,6 +193,21 @@ const Audio = (() => {
     return enabled;
   }
 
+  // --- Separate music / SFX controls ---
+  function setMusicEnabled(val) {
+    musicEnabled = val;
+    if (!val) {
+      stopIntroMusic(true);
+      stopMusic(true);
+    }
+  }
+  function isMusicEnabled() { return musicEnabled; }
+
+  function setSfxEnabled(val) { sfxEnabled = val; }
+  function isSfxEnabled() { return sfxEnabled; }
+
+  function setSfxVolume(pct) { sfxVolumeScale = Math.max(0, Math.min(1, pct / 100)); }
+
   // Resume audio context on user interaction
   function resume() {
     if (ctx && ctx.state === 'suspended') {
@@ -196,32 +219,31 @@ const Audio = (() => {
   let introPlayer = null;
   let introFadeInterval = null;
   const INTRO_MUSIC_SRC = 'assets/intro-song.mp3';
-  const INTRO_MUSIC_VOLUME = 0.35;
-
   function playIntroMusic() {
-    if (!enabled) return;
+    if (!enabled || !musicEnabled) return;
     if (introPlayer && !introPlayer.paused) return;
 
     introPlayer = new window.Audio(INTRO_MUSIC_SRC);
     introPlayer.loop = true;
     introPlayer.volume = 0;
 
+    const targetVol = musicVolume;
     introPlayer.play().then(() => {
       // Fade in over 2 seconds
       if (introFadeInterval) clearInterval(introFadeInterval);
       const steps = 20;
       const stepTime = 2000 / steps;
-      const stepSize = INTRO_MUSIC_VOLUME / steps;
+      const stepSize = targetVol / steps;
       let current = 0;
       let step = 0;
       introFadeInterval = setInterval(() => {
         step++;
         current += stepSize;
-        if (introPlayer) introPlayer.volume = Math.min(current, INTRO_MUSIC_VOLUME);
+        if (introPlayer) introPlayer.volume = Math.min(current, targetVol);
         if (step >= steps) {
           clearInterval(introFadeInterval);
           introFadeInterval = null;
-          if (introPlayer) introPlayer.volume = INTRO_MUSIC_VOLUME;
+          if (introPlayer) introPlayer.volume = targetVol;
         }
       }, stepTime);
     }).catch(e => {
@@ -268,7 +290,6 @@ const Audio = (() => {
   // === World Music System ===
   let musicPlayer = null;
   let currentMusicWorld = null;
-  let musicVolume = 0.4;
   let fadeInterval = null;
 
   // Map of world IDs to music files (add more as you get them)
@@ -284,7 +305,7 @@ const Audio = (() => {
   };
 
   function playWorldMusic(worldId) {
-    if (!enabled) return;
+    if (!enabled || !musicEnabled) return;
 
     // Already playing this world's music
     if (currentMusicWorld === worldId && musicPlayer && !musicPlayer.paused) return;
@@ -387,7 +408,10 @@ const Audio = (() => {
     if (musicPlayer && !musicPlayer.paused) {
       musicPlayer.volume = musicVolume;
     }
+    if (introPlayer && !introPlayer.paused) {
+      introPlayer.volume = musicVolume;
+    }
   }
 
-  return { correct, wrong, buttonPress, powerUsed, victory, defeat, toggle, isEnabled, resume, playIntroMusic, stopIntroMusic, playWorldMusic, playFreestyleMusic, stopMusic, setMusicVolume };
+  return { correct, wrong, buttonPress, powerUsed, victory, defeat, toggle, isEnabled, resume, playIntroMusic, stopIntroMusic, playWorldMusic, playFreestyleMusic, stopMusic, setMusicVolume, setMusicEnabled, isMusicEnabled, setSfxEnabled, isSfxEnabled, setSfxVolume };
 })();

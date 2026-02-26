@@ -3,6 +3,7 @@
 const SleepBar = (() => {
   let value = 50;        // percentage 0-100
   let drainRate = 0.5;   // % per second
+  let difficultyMultiplier = 1.0; // easy=0.5, normal=1.0, hard=1.5
   let frozen = false;
   let freezeTimer = null;
   let drainInterval = null;
@@ -28,7 +29,7 @@ const SleepBar = (() => {
     if (drainInterval) clearInterval(drainInterval);
     drainInterval = setInterval(() => {
       if (!frozen) {
-        value = Math.max(0, value - (drainRate / 10));
+        value = Math.max(0, value - (drainRate * difficultyMultiplier / 10));
         update();
         if (value <= 0 && onEmpty) {
           stopDrain();
@@ -119,6 +120,10 @@ const SleepBar = (() => {
     drainRate = rate;
   }
 
+  function setDifficultyMultiplier(mult) {
+    difficultyMultiplier = Math.max(0.1, mult);
+  }
+
   function getDrainConfig(worldId, stageNum) {
     // Base drain rates scale with difficulty
     let rate;
@@ -162,6 +167,6 @@ const SleepBar = (() => {
     init, startDrain, stopDrain, correctAnswer, correctAnswerScaled,
     wrongAnswer, wrongAnswerCustom,
     freeze, restore, getValue, getStreak, setDrainRate,
-    getDrainConfig, destroy, update
+    setDifficultyMultiplier, getDrainConfig, destroy, update
   };
 })();

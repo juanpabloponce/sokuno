@@ -124,6 +124,72 @@
             <span class="settings-row-value" id="settings-current-lang"></span>
             <span class="settings-row-arrow">›</span>
           </button>
+
+          <!-- Audio Settings Row (opens audio sub-panel) -->
+          <button id="btn-settings-audio" class="settings-row">
+            <img src="assets/audio.svg" class="settings-row-icon-img" alt="Audio">
+            <span class="settings-row-label" data-i18n="ui.audioSettings">Audio</span>
+            <span class="settings-row-value" id="settings-audio-status"></span>
+            <span class="settings-row-arrow">›</span>
+          </button>
+
+          <!-- Difficulty Setting -->
+          <div class="settings-row settings-row-difficulty">
+            <img src="assets/difficulty.svg" class="settings-row-icon-img" alt="Difficulty">
+            <span class="settings-row-label" data-i18n="ui.difficulty">Difficulty</span>
+            <div id="difficulty-selector" class="difficulty-segments">
+              <button class="difficulty-seg" data-diff="easy" data-i18n="ui.easy">Easy</button>
+              <button class="difficulty-seg active" data-diff="normal" data-i18n="ui.normal">Normal</button>
+              <button class="difficulty-seg" data-diff="hard" data-i18n="ui.hard">Hard</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ============ AUDIO SETTINGS SUB-SCREEN ============ -->
+    <div id="screen-audio-settings" class="screen hidden">
+      <button id="btn-close-audio-settings" class="btn-back" data-i18n="ui.back">← Back</button>
+      <div class="settings-panel audio-settings-panel">
+        <div class="audio-settings-title">
+          <img src="assets/audio.svg" class="audio-settings-title-icon" alt="">
+          <span data-i18n="ui.audioSettings">Audio</span>
+        </div>
+
+        <!-- Music Toggle -->
+        <div class="audio-setting-row">
+          <span class="audio-setting-label" data-i18n="ui.music">Music</span>
+          <button id="toggle-music" class="audio-toggle active" aria-pressed="true">
+            <span class="audio-toggle-knob"></span>
+            <span class="audio-toggle-text" data-i18n="ui.on">On</span>
+          </button>
+        </div>
+
+        <!-- Music Volume Slider -->
+        <div id="music-volume-row" class="audio-setting-row audio-slider-row">
+          <span class="audio-setting-label" data-i18n="ui.musicVolume">Music Volume</span>
+          <div class="audio-slider-wrap">
+            <input type="range" id="slider-music-volume" class="audio-slider" min="0" max="100" value="70">
+            <span id="music-volume-value" class="audio-slider-value">70</span>
+          </div>
+        </div>
+
+        <!-- SFX Toggle -->
+        <div class="audio-setting-row">
+          <span class="audio-setting-label" data-i18n="ui.soundEffects">Sound Effects</span>
+          <button id="toggle-sfx" class="audio-toggle active" aria-pressed="true">
+            <span class="audio-toggle-knob"></span>
+            <span class="audio-toggle-text" data-i18n="ui.on">On</span>
+          </button>
+        </div>
+
+        <!-- SFX Volume Slider -->
+        <div id="sfx-volume-row" class="audio-setting-row audio-slider-row">
+          <span class="audio-setting-label" data-i18n="ui.sfxVolume">SFX Volume</span>
+          <div class="audio-slider-wrap">
+            <input type="range" id="slider-sfx-volume" class="audio-slider" min="0" max="100" value="80">
+            <span id="sfx-volume-value" class="audio-slider-value">80</span>
+          </div>
         </div>
       </div>
     </div>

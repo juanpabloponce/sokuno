@@ -1,4 +1,4 @@
-const CACHE_NAME = 'sokuno-v72';
+const CACHE_NAME = 'sokuno-v73';
 
 const ASSETS = [
   '/',
@@ -46,6 +46,10 @@ const ASSETS = [
   '/assets/fonts/Ransom.ttf',
   '/assets/fonts/Schoolbell-Regular.ttf',
   '/assets/mixtape.svg',
+  '/assets/settings.svg',
+  '/assets/language.svg',
+  '/assets/audio.svg',
+  '/assets/difficulty.svg',
   '/js/mixtape.js',
   '/assets/intro-song.mp3',
   '/audio/music/world-1.mp3',

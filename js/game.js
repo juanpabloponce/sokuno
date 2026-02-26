@@ -161,6 +161,12 @@ const Game = (() => {
     // Apply i18n to DOM
     I18n.applyToDOM();
 
+    // Apply saved audio settings
+    applyAudioSettings();
+
+    // Apply saved difficulty
+    SleepBar.setDifficultyMultiplier(getDifficultyMultiplier(saveData.difficulty || 'normal'));
+
     startWakeupSequence();
     bindGlobalEvents();
 
@@ -195,8 +201,8 @@ const Game = (() => {
     closeBtn.parentNode.replaceChild(newClose, closeBtn);
     newClose.addEventListener('click', () => {
       Audio.buttonPress();
-      // Fade: settings → title
-      fadeTransition(settingsScreen, titleScreen);
+      // Fade: settings → title (fetch fresh refs to avoid stale closures)
+      fadeTransition(document.getElementById('screen-settings'), document.getElementById('screen-title'));
     });
 
     // Bind language row
@@ -206,9 +212,189 @@ const Game = (() => {
     newLangRow.addEventListener('click', () => {
       Audio.buttonPress();
       // Fade: settings → language selector
-      fadeTransition(settingsScreen, null, () => {
+      fadeTransition(document.getElementById('screen-settings'), null, () => {
         showLanguageSelector(true);
       });
+    });
+
+    // Bind audio settings row
+    const audioRow = document.getElementById('btn-settings-audio');
+    const newAudioRow = audioRow.cloneNode(true);
+    audioRow.parentNode.replaceChild(newAudioRow, audioRow);
+    newAudioRow.addEventListener('click', () => {
+      Audio.buttonPress();
+      fadeTransition(document.getElementById('screen-settings'), document.getElementById('screen-audio-settings'));
+      showAudioSettings();
+    });
+
+    // Update audio status text in main settings
+    updateAudioStatusText();
+
+    // Bind difficulty selector
+    initDifficultySelector();
+  }
+
+  function initDifficultySelector() {
+    const selector = document.getElementById('difficulty-selector');
+    if (!selector) return;
+    const current = saveData.difficulty || 'normal';
+
+    // Highlight current
+    selector.querySelectorAll('.difficulty-seg').forEach(btn => {
+      btn.classList.toggle('active', btn.dataset.diff === current);
+    });
+
+    // Clone to clear old listeners
+    const newSelector = selector.cloneNode(true);
+    selector.parentNode.replaceChild(newSelector, selector);
+    newSelector.id = 'difficulty-selector';
+
+    newSelector.querySelectorAll('.difficulty-seg').forEach(btn => {
+      btn.addEventListener('click', () => {
+        Audio.buttonPress();
+        const diff = btn.dataset.diff;
+        saveData.difficulty = diff;
+        Storage.save(saveData);
+        SleepBar.setDifficultyMultiplier(getDifficultyMultiplier(diff));
+
+        newSelector.querySelectorAll('.difficulty-seg').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+      });
+    });
+  }
+
+  function getDifficultyMultiplier(diff) {
+    if (diff === 'easy') return 0.5;
+    if (diff === 'hard') return 1.5;
+    return 1.0;
+  }
+
+  function updateAudioStatusText() {
+    const el = document.getElementById('settings-audio-status');
+    if (!el) return;
+    const a = saveData.audio || {};
+    const musicOn = a.musicEnabled !== false;
+    const sfxOn = a.sfxEnabled !== false;
+    if (musicOn && sfxOn) {
+      el.textContent = I18n.t('ui.on') || 'On';
+    } else if (!musicOn && !sfxOn) {
+      el.textContent = I18n.t('ui.off') || 'Off';
+    } else {
+      el.textContent = '';
+    }
+  }
+
+  function applyAudioSettings() {
+    const a = saveData.audio || {};
+    Audio.setMusicEnabled(a.musicEnabled !== false);
+    Audio.setSfxEnabled(a.sfxEnabled !== false);
+    Audio.setMusicVolume((a.musicVolume != null ? a.musicVolume : 70) / 100);
+    Audio.setSfxVolume(a.sfxVolume != null ? a.sfxVolume : 80);
+  }
+
+  function showAudioSettings() {
+    const audioScreen = document.getElementById('screen-audio-settings');
+    const settingsScreen = document.getElementById('screen-settings');
+    const a = saveData.audio || {};
+
+    // --- Music toggle ---
+    const musicToggle = document.getElementById('toggle-music');
+    const musicOn = a.musicEnabled !== false;
+    musicToggle.classList.toggle('active', musicOn);
+    musicToggle.setAttribute('aria-pressed', musicOn);
+    musicToggle.querySelector('.audio-toggle-text').textContent = musicOn ? (I18n.t('ui.on') || 'On') : (I18n.t('ui.off') || 'Off');
+
+    // --- SFX toggle ---
+    const sfxToggle = document.getElementById('toggle-sfx');
+    const sfxOn = a.sfxEnabled !== false;
+    sfxToggle.classList.toggle('active', sfxOn);
+    sfxToggle.setAttribute('aria-pressed', sfxOn);
+    sfxToggle.querySelector('.audio-toggle-text').textContent = sfxOn ? (I18n.t('ui.on') || 'On') : (I18n.t('ui.off') || 'Off');
+
+    // --- Music Volume slider ---
+    const musicSlider = document.getElementById('slider-music-volume');
+    const musicVal = document.getElementById('music-volume-value');
+    const musicVolRow = document.getElementById('music-volume-row');
+    musicSlider.value = a.musicVolume != null ? a.musicVolume : 70;
+    musicVal.textContent = musicSlider.value;
+    musicVolRow.classList.toggle('hidden', !musicOn);
+
+    // --- SFX Volume slider ---
+    const sfxSlider = document.getElementById('slider-sfx-volume');
+    const sfxVal = document.getElementById('sfx-volume-value');
+    const sfxVolRow = document.getElementById('sfx-volume-row');
+    sfxSlider.value = a.sfxVolume != null ? a.sfxVolume : 80;
+    sfxVal.textContent = sfxSlider.value;
+    sfxVolRow.classList.toggle('hidden', !sfxOn);
+
+    // --- Event listeners (clone to avoid duplicates) ---
+    // Music toggle
+    const newMusicToggle = musicToggle.cloneNode(true);
+    musicToggle.parentNode.replaceChild(newMusicToggle, musicToggle);
+    newMusicToggle.addEventListener('click', () => {
+      const now = !saveData.audio.musicEnabled;
+      saveData.audio.musicEnabled = now;
+      Storage.save(saveData);
+      Audio.setMusicEnabled(now);
+      newMusicToggle.classList.toggle('active', now);
+      newMusicToggle.setAttribute('aria-pressed', now);
+      newMusicToggle.querySelector('.audio-toggle-text').textContent = now ? (I18n.t('ui.on') || 'On') : (I18n.t('ui.off') || 'Off');
+      document.getElementById('music-volume-row').classList.toggle('hidden', !now);
+      if (now) {
+        Audio.setMusicVolume(saveData.audio.musicVolume / 100);
+        Audio.playIntroMusic();
+      }
+      Audio.buttonPress();
+    });
+
+    // SFX toggle
+    const newSfxToggle = sfxToggle.cloneNode(true);
+    sfxToggle.parentNode.replaceChild(newSfxToggle, sfxToggle);
+    newSfxToggle.addEventListener('click', () => {
+      const now = !saveData.audio.sfxEnabled;
+      saveData.audio.sfxEnabled = now;
+      Storage.save(saveData);
+      Audio.setSfxEnabled(now);
+      newSfxToggle.classList.toggle('active', now);
+      newSfxToggle.setAttribute('aria-pressed', now);
+      newSfxToggle.querySelector('.audio-toggle-text').textContent = now ? (I18n.t('ui.on') || 'On') : (I18n.t('ui.off') || 'Off');
+      document.getElementById('sfx-volume-row').classList.toggle('hidden', !now);
+      if (now) Audio.buttonPress();
+    });
+
+    // Music volume slider
+    const newMusicSlider = musicSlider.cloneNode(true);
+    musicSlider.parentNode.replaceChild(newMusicSlider, musicSlider);
+    newMusicSlider.addEventListener('input', (e) => {
+      const v = parseInt(e.target.value, 10);
+      document.getElementById('music-volume-value').textContent = v;
+      saveData.audio.musicVolume = v;
+      Audio.setMusicVolume(v / 100);
+    });
+    newMusicSlider.addEventListener('change', () => { Storage.save(saveData); });
+
+    // SFX volume slider
+    const newSfxSlider = sfxSlider.cloneNode(true);
+    sfxSlider.parentNode.replaceChild(newSfxSlider, sfxSlider);
+    newSfxSlider.addEventListener('input', (e) => {
+      const v = parseInt(e.target.value, 10);
+      document.getElementById('sfx-volume-value').textContent = v;
+      saveData.audio.sfxVolume = v;
+      Audio.setSfxVolume(v);
+    });
+    newSfxSlider.addEventListener('change', () => {
+      Storage.save(saveData);
+      Audio.buttonPress(); // preview SFX sound
+    });
+
+    // Back button (fetch fresh refs to avoid stale closures)
+    const closeBtn = document.getElementById('btn-close-audio-settings');
+    const newClose = closeBtn.cloneNode(true);
+    closeBtn.parentNode.replaceChild(newClose, closeBtn);
+    newClose.addEventListener('click', () => {
+      Audio.buttonPress();
+      fadeTransition(document.getElementById('screen-audio-settings'), document.getElementById('screen-settings'));
+      updateAudioStatusText();
     });
   }
 
