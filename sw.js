@@ -1,4 +1,4 @@
-const CACHE_NAME = 'sokuno-v73';
+const CACHE_NAME = 'sokuno-v74';
 
 const ASSETS = [
   '/',
@@ -102,7 +102,7 @@ self.addEventListener('fetch', e => {
     );
   } else {
     e.respondWith(
-      caches.match(e.request).then(cached => cached || fetch(e.request))
+      caches.match(e.request, { ignoreSearch: true }).then(cached => cached || fetch(e.request))
     );
   }
 });
