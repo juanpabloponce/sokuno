@@ -1,4 +1,4 @@
-const CACHE_NAME = 'sokuno-v68';
+const CACHE_NAME = 'sokuno-v69';
 
 const ASSETS = [
   '/',
