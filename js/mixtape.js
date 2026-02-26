@@ -43,11 +43,12 @@ const Mixtape = (() => {
       el.dataset.trackId = track.id;
 
       if (unlocked) {
+        const originLabel = I18n.t('mixtapeOrigins.' + track.id) || track.origin;
         el.innerHTML = `
           <div class="mixtape-track-number">${track.id}</div>
           <div class="mixtape-track-info">
             <div class="mixtape-track-name">${track.name}</div>
-            <div class="mixtape-track-origin">${track.origin}</div>
+            <div class="mixtape-track-origin">${originLabel}</div>
           </div>
           <button class="mixtape-track-btn" data-action="${isPlaying ? 'pause' : 'play'}" title="${isPlaying ? 'Pause' : 'Play'}">
             ${isPlaying ? '❚❚' : '▶'}
@@ -76,11 +77,12 @@ const Mixtape = (() => {
           }
         });
       } else {
+        const lockedOriginLabel = I18n.t('mixtapeOrigins.' + track.id) || track.origin;
         el.innerHTML = `
           <div class="mixtape-track-number">${track.id}</div>
           <div class="mixtape-track-info">
             <div class="mixtape-track-name">???</div>
-            <div class="mixtape-track-origin">${track.origin}</div>
+            <div class="mixtape-track-origin">${lockedOriginLabel}</div>
           </div>
           <img src="assets/lock.svg" class="mixtape-track-lock" alt="Locked">
         `;

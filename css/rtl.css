@@ -1,0 +1,111 @@
+/* rtl.css — Right-to-left overrides for Arabic */
+
+/* Base direction */
+[dir="rtl"] body {
+  direction: rtl;
+  text-align: right;
+}
+
+/* Back buttons — flip arrow */
+[dir="rtl"] .btn-back,
+[dir="rtl"] #btn-lore-back,
+[dir="rtl"] #btn-lore-reader-back {
+  direction: ltr;
+  unicode-bidi: bidi-override;
+}
+
+/* Sleep bar fill direction */
+[dir="rtl"] .sleep-fill {
+  transform-origin: right center;
+}
+
+/* Horizontal flex layouts — reverse */
+[dir="rtl"] .guardian-picker-card,
+[dir="rtl"] .power-info,
+[dir="rtl"] .mixtape-track,
+[dir="rtl"] .now-playing-bar,
+[dir="rtl"] .lore-chapter {
+  flex-direction: row-reverse;
+}
+
+/* Lore reader nav buttons */
+[dir="rtl"] #btn-lore-prev {
+  float: right;
+}
+
+[dir="rtl"] #btn-lore-next {
+  float: left;
+}
+
+/* Stage select companion label */
+[dir="rtl"] .stage-companion-label {
+  text-align: right;
+}
+
+/* Dialogue box */
+[dir="rtl"] .dialogue-speaker {
+  flex-direction: row-reverse;
+}
+
+[dir="rtl"] .dialogue-skip-btn {
+  left: 16px;
+  right: auto;
+}
+
+/* Victory/defeat stats */
+[dir="rtl"] .victory-stat,
+[dir="rtl"] .defeat-stat {
+  text-align: right;
+}
+
+/* Power charge bar */
+[dir="rtl"] .power-charge-fill {
+  transform-origin: right center;
+}
+
+/* Freestyle result stats */
+[dir="rtl"] .freestyle-stat {
+  text-align: right;
+}
+
+/* Settings button position */
+[dir="rtl"] .btn-settings {
+  right: auto;
+  left: 20px;
+}
+
+/* Settings row arrow flip */
+[dir="rtl"] .settings-row {
+  flex-direction: row-reverse;
+}
+
+[dir="rtl"] .settings-row-value {
+  text-align: left;
+}
+
+[dir="rtl"] .settings-close {
+  right: auto;
+  left: 16px;
+}
+
+/* World map card layout */
+[dir="rtl"] .world-card-content {
+  text-align: right;
+}
+
+/* Resonance tag */
+[dir="rtl"] .resonance-tag {
+  margin-left: 0;
+  margin-right: 8px;
+}
+
+/* Calculator buttons stay LTR (numbers are universal) */
+[dir="rtl"] .calc-grid,
+[dir="rtl"] .calc-display {
+  direction: ltr;
+}
+
+/* Mixtape now playing */
+[dir="rtl"] .now-playing-controls {
+  flex-direction: row-reverse;
+}

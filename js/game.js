@@ -32,6 +32,104 @@ const Game = (() => {
   function init() {
     saveData = Storage.load();
 
+    // Initialize i18n
+    I18n.init(() => {
+      // Check if language was chosen
+      if (!I18n.getSavedLang()) {
+        // First launch: show language selector
+        showLanguageSelector();
+        return;
+      }
+      continueInit();
+    });
+  }
+
+  /**
+   * Smooth fade transition between two screens.
+   * fadeOut hides, fadeIn shows, callback fires after transition ends.
+   */
+  function fadeTransition(hideEl, showEl, callback) {
+    const DURATION = 200; // ms – matches CSS 0.2s
+
+    if (hideEl) {
+      // Fade out the current screen
+      hideEl.classList.add('fade-out');
+    }
+
+    setTimeout(() => {
+      // After fade-out completes, hide it and show the new one
+      if (hideEl) {
+        hideEl.classList.add('hidden');
+        hideEl.classList.remove('fade-out', 'fade-in');
+      }
+
+      if (showEl) {
+        // Prepare: visible but transparent
+        showEl.classList.remove('hidden');
+        showEl.classList.add('fade-ready');
+        void showEl.offsetWidth; // force reflow
+        // Fade in
+        showEl.classList.remove('fade-ready');
+        showEl.classList.add('fade-in');
+
+        setTimeout(() => {
+          showEl.classList.remove('fade-in');
+          if (callback) callback();
+        }, DURATION);
+      } else {
+        if (callback) callback();
+      }
+    }, hideEl ? DURATION : 0);
+  }
+
+  function showLanguageSelector(isChange) {
+    // Hide all screens, show language selector with fade
+    document.querySelectorAll('.screen').forEach(s => {
+      s.classList.add('hidden');
+      s.classList.remove('fade-out', 'fade-in', 'fade-ready');
+    });
+    const screen = document.getElementById('screen-lang-select');
+    // Fade in the language selector
+    screen.classList.remove('hidden');
+    screen.classList.add('fade-ready');
+    void screen.offsetWidth;
+    screen.classList.remove('fade-ready');
+    screen.classList.add('fade-in');
+    setTimeout(() => screen.classList.remove('fade-in'), 200);
+
+    createStars('lang-stars', 60, null);
+
+    const grid = document.getElementById('lang-select-grid');
+    grid.innerHTML = '';
+
+    I18n.getSupportedLanguages().forEach(lang => {
+      const btn = document.createElement('button');
+      btn.className = 'lang-btn';
+      btn.innerHTML = `<span class="lang-flag">${lang.flag}</span><span class="lang-native">${lang.nativeName}</span>`;
+      btn.addEventListener('click', () => {
+        Audio.resume();
+        Audio.buttonPress();
+        I18n.setLang(lang.code, () => {
+          if (isChange) {
+            I18n.applyToDOM();
+            const titleScreen = document.getElementById('screen-title');
+            // Fade: lang-select → title
+            fadeTransition(screen, titleScreen, () => {
+              gameState = 'title';
+            });
+          } else {
+            // First launch: fade out lang, then continue init
+            fadeTransition(screen, null, () => {
+              continueInit();
+            });
+          }
+        });
+      });
+      grid.appendChild(btn);
+    });
+  }
+
+  function continueInit() {
     // Generate title screen stars (comic-style per-star rhythm)
     createStars('title-stars', 80, null);
 
@@ -60,8 +158,58 @@ const Game = (() => {
     // Show freestyle button if unlocked
     updateFreestyleButton();
 
+    // Apply i18n to DOM
+    I18n.applyToDOM();
+
     startWakeupSequence();
     bindGlobalEvents();
+
+    // Settings button
+    const settingsBtn = document.getElementById('btn-settings');
+    if (settingsBtn) {
+      settingsBtn.addEventListener('click', () => {
+        Audio.buttonPress();
+        showSettings();
+      });
+    }
+  }
+
+  function showSettings() {
+    // Populate current language name
+    const langEl = document.getElementById('settings-current-lang');
+    if (langEl) {
+      const langs = I18n.getSupportedLanguages();
+      const current = langs.find(l => l.code === I18n.getLang());
+      langEl.textContent = current ? current.nativeName : '';
+    }
+
+    const titleScreen = document.getElementById('screen-title');
+    const settingsScreen = document.getElementById('screen-settings');
+
+    // Fade: title → settings
+    fadeTransition(titleScreen, settingsScreen);
+
+    // Bind close button (re-bind each time to avoid duplicates)
+    const closeBtn = document.getElementById('btn-close-settings');
+    const newClose = closeBtn.cloneNode(true);
+    closeBtn.parentNode.replaceChild(newClose, closeBtn);
+    newClose.addEventListener('click', () => {
+      Audio.buttonPress();
+      // Fade: settings → title
+      fadeTransition(settingsScreen, titleScreen);
+    });
+
+    // Bind language row
+    const langRow = document.getElementById('btn-settings-lang');
+    const newLangRow = langRow.cloneNode(true);
+    langRow.parentNode.replaceChild(newLangRow, langRow);
+    newLangRow.addEventListener('click', () => {
+      Audio.buttonPress();
+      // Fade: settings → language selector
+      fadeTransition(settingsScreen, null, () => {
+        showLanguageSelector(true);
+      });
+    });
   }
 
   function updateFreestyleButton() {
@@ -83,8 +231,15 @@ const Game = (() => {
     const textEl = document.getElementById('wakeup-text');
     const tapEl = document.querySelector('.wakeup-tap');
 
+    // Ensure wakeup screen is visible and reset state
+    wakeup.classList.remove('hidden', 'fade-out');
+    wakeup.style.display = '';
+    textEl.innerHTML = '';
+    textEl.classList.remove('visible');
+    tapEl.classList.remove('visible');
+
     // Type out the message letter by letter
-    const lines = ['You are asleep...', 'good. Now we can speak.'];
+    const lines = [I18n.t('wakeup.line1'), I18n.t('wakeup.line2')];
     let lineIdx = 0;
     let charIdx = 0;
     let html = '';
@@ -372,7 +527,7 @@ const Game = (() => {
     container.innerHTML = '';
 
     if (!worldsData || !worldsData.worlds) {
-      container.innerHTML = '<div style="padding:2rem;text-align:center;color:#f66;">Failed to load worlds. Please refresh the page.</div>';
+      container.innerHTML = '<div style="padding:2rem;text-align:center;color:#f66;">' + I18n.t('ui.failedToLoadWorlds') + '</div>';
       return;
     }
 
@@ -390,10 +545,11 @@ const Game = (() => {
       div.style.setProperty('--world-accent', world.colors.accent);
 
       const icon = WORLD_ICONS[world.id] || `<img src="${world.guardianIcon}" class="guardian-seal" alt="${world.guardian}">`;
+      const worldName = I18n.t('worlds.' + world.id + '.name') || world.name;
       div.innerHTML = `
         <div class="world-icon">${icon}</div>
         <div class="world-info">
-          <div class="world-name">${world.name}</div>
+          <div class="world-name">${worldName}</div>
           <div class="world-guardian">${world.guardian}</div>
           <div class="world-orbs">${worldOrbs(world.id)}</div>
         </div>
@@ -467,14 +623,16 @@ const Game = (() => {
       const div = document.createElement('div');
       div.className = `guardian-option ${unlocked ? '' : 'locked'} ${hasResonance ? 'resonant' : ''}`;
 
+      const powerName = I18n.t('powers.' + key + '.name') || def.name;
+      const powerDesc = I18n.t('powers.' + key + '.desc') || def.desc;
       div.innerHTML = `
         <div class="guardian-opt-emoji${hasResonance ? ' resonant-aura' : ''}"><img src="${def.icon}" class="guardian-seal" alt="${def.guardian}"></div>
         <div class="guardian-opt-info">
           <div class="guardian-opt-name">${def.guardian}</div>
-          <div class="guardian-opt-power">${def.name}</div>
-          <div class="guardian-opt-desc">${def.desc}</div>
+          <div class="guardian-opt-power">${powerName}</div>
+          <div class="guardian-opt-desc">${powerDesc}</div>
         </div>
-        ${hasResonance ? '<span class="guardian-opt-tag resonance-tag">Resonance</span>' : ''}
+        ${hasResonance ? '<span class="guardian-opt-tag resonance-tag">' + I18n.t('ui.resonance') + '</span>' : ''}
         ${!unlocked ? '<span class="guardian-opt-lock"><img src="assets/lock.svg" class="lock-icon-sm" alt="Locked"></span>' : ''}
       `;
 
@@ -508,7 +666,7 @@ const Game = (() => {
       iconSpan.innerHTML = WORLD_ICONS[world.id];
       stageTitle.appendChild(iconSpan);
     }
-    stageTitle.appendChild(document.createTextNode(` ${world.name} Realm`));
+    stageTitle.appendChild(document.createTextNode(' ' + I18n.t('ui.realm', I18n.t('worlds.' + world.id + '.name') || world.name)));
     // Use accent color for dark worlds (like Cosmos and Abyss) so title is visible
     const titleColor = (worldId === 4 || worldId === 7) ? world.colors.accent : world.colors.primary;
     document.getElementById('stage-world-name').style.color = titleColor;
@@ -521,16 +679,16 @@ const Game = (() => {
       const icons = Object.entries(allDefs).filter(([k]) => k !== 'rememberMe').map(([, d]) => `<img src="${d.icon}" class="companion-seal" alt="${d.guardian}">`).join('');
       companionEl.innerHTML = `
         <span class="companion-emoji">${icons}</span>
-        All Guardians
+        ${I18n.t('ui.allGuardians')}
       `;
     } else if (chosenGuardian) {
       const def = Powers.getDef(chosenGuardian);
       companionEl.innerHTML = `
         <span class="companion-emoji"><img src="${def.icon}" class="companion-seal" alt="${def.guardian}"></span>
-        Companion: <span class="companion-name">${def.guardian}</span>
+        ${I18n.t('ui.companion', def.guardian)}
       `;
     } else {
-      companionEl.innerHTML = '<span style="opacity:0.5;">No companion</span>';
+      companionEl.innerHTML = '<span style="opacity:0.5;">' + I18n.t('ui.noCompanion') + '</span>';
     }
 
     const container = document.getElementById('stage-list');
@@ -545,7 +703,7 @@ const Game = (() => {
       div.style.setProperty('--world-accent', world.colors.accent);
 
       div.innerHTML = `
-        <div class="stage-number">${s === 10 ? '<img src="assets/final-stage.svg" class="final-stage-icon" alt="Boss">' : s}</div>
+        <div class="stage-number">${s === 10 ? '<img src="assets/final-stage.svg" class="final-stage-icon" alt="Boss">' : I18n.formatNum(s)}</div>
         <div class="stage-stars">${starIcons(stars, 3)}</div>
         ${!unlocked ? '<div class="stage-lock"><img src="assets/lock.svg" class="lock-icon-sm" alt="Locked"></div>' : ''}
       `;
@@ -564,7 +722,7 @@ const Game = (() => {
     // World description
     const descEl = document.getElementById('stage-description');
     if (descEl) {
-      descEl.textContent = world.description || '';
+      descEl.textContent = I18n.t('worlds.' + world.id + '.description') || world.description || '';
     }
   }
 
@@ -725,9 +883,9 @@ const Game = (() => {
         // Phase 1 toasts (delayed so player sees the game first)
         setTimeout(function() {
           queueBattleToasts([
-            { speaker: 'Kurayami', emoji: '🌑', text: 'Six guardians. One dreamer. One broken old man.', duration: 4000 },
-            { speaker: 'Kurayami', emoji: '🌑', text: 'Is this all?', duration: 3000 },
-            { speaker: 'Kurayami', emoji: '🌑', text: 'I was the best. And THEY FORGOT ME.', duration: 5000 }
+            { speaker: 'Kurayami', emoji: '\uD83C\uDF11', text: I18n.t('battleToasts.sixGuardians'), duration: 4000 },
+            { speaker: 'Kurayami', emoji: '\uD83C\uDF11', text: I18n.t('battleToasts.isThisAll'), duration: 3000 },
+            { speaker: 'Kurayami', emoji: '\uD83C\uDF11', text: I18n.t('battleToasts.iWasTheBest'), duration: 5000 }
           ]);
         }, 3000);
       }
@@ -744,7 +902,8 @@ const Game = (() => {
       iconSpan.innerHTML = WORLD_ICONS[world.id];
       gameLabel.appendChild(iconSpan);
     }
-    gameLabel.appendChild(document.createTextNode(` ${world.name} — Stage ${stageNum}`));
+    const worldNameTranslated = I18n.t('worlds.' + world.id + '.name') || world.name;
+    gameLabel.appendChild(document.createTextNode(' ' + I18n.t('ui.stage', worldNameTranslated, stageNum)));
 
     // Stop mixtape if playing, then start world music
     Mixtape.stopForWorld();
@@ -920,7 +1079,7 @@ const Game = (() => {
     var ghostNum = Math.floor(Math.random() * 900) + 100;
     var ghost = document.createElement('span');
     ghost.className = 'doubt-ghost';
-    ghost.textContent = ghostNum;
+    ghost.textContent = I18n.formatNum(ghostNum);
     answerDisplay.style.position = 'relative';
     answerDisplay.appendChild(ghost);
     setTimeout(function() {
@@ -1031,9 +1190,9 @@ const Game = (() => {
 
     // Inline dialogue on specific counts
     if (rememberMeCount === 4) {
-      showBattleToast('Kurayami', '🌑', '...Father... stop. You don\'t have the strength for this.', 3000);
+      showBattleToast('Kurayami', '\uD83C\uDF11', I18n.t('battleToasts.fatherStop'), 3000);
     } else if (rememberMeCount === 2) {
-      showBattleToast('Yumemori', '👁️', 'I have enough. To protect the one I love.', 3000);
+      showBattleToast('Yumemori', '\uD83D\uDC41\uFE0F', I18n.t('battleToasts.iHaveEnough'), 3000);
     }
 
     rememberMeCount--;
@@ -1045,7 +1204,7 @@ const Game = (() => {
 
       if (rememberMeCount <= 0) {
         rememberMeActive = false;
-        showBattleToast('Kurayami', '🌑', 'Always giving everything for others. You never kept anything for yourself.', 5000);
+        showBattleToast('Kurayami', '\uD83C\uDF11', I18n.t('battleToasts.alwaysGiving'), 5000);
         renderPowerBarUI();
       }
 
@@ -1092,7 +1251,7 @@ const Game = (() => {
 
   function renderProblem() {
     const el = document.getElementById('problem-display');
-    el.textContent = `${currentProblem.a} ${currentProblem.symbol} ${currentProblem.b} = ?`;
+    el.textContent = `${I18n.formatNum(currentProblem.a)} ${currentProblem.symbol} ${I18n.formatNum(currentProblem.b)} = ?`;
   }
 
   function onAnswerSubmit(playerAnswer) {
@@ -1296,8 +1455,8 @@ const Game = (() => {
     // Keep world music playing during victory — no music change between stages
     showScreen('victory');
     document.getElementById('victory-stars').innerHTML = starIcons(stars, 3);
-    document.getElementById('victory-errors').textContent = `Errors: ${stageErrors}`;
-    document.getElementById('victory-problems').textContent = `Problems solved: ${stageProblems}`;
+    document.getElementById('victory-errors').textContent = I18n.t('ui.errorsCount', I18n.formatNum(stageErrors));
+    document.getElementById('victory-problems').textContent = I18n.t('ui.problemsSolved', I18n.formatNum(stageProblems));
 
     document.getElementById('btn-next-stage').onclick = () => {
       Audio.buttonPress();
@@ -1341,7 +1500,7 @@ const Game = (() => {
     Audio.defeat();
 
     showScreen('defeat');
-    document.getElementById('defeat-message').textContent = 'The Nightmares have woken you up... You have left the Dream World.';
+    document.getElementById('defeat-message').textContent = I18n.t('ui.defeatMessage');
 
     document.getElementById('btn-retry').onclick = () => {
       Audio.buttonPress();
@@ -1475,9 +1634,10 @@ const Game = (() => {
       `;
     } else if (state.isReady) {
       btn.classList.add('power-btn--ready');
+      const pName = I18n.t('powers.' + powerId + '.name') || def.name;
       btn.innerHTML = `
-        <img src="${def.icon}" class="power-seal" alt="${def.name}">
-        <span class="power-uses">${def.name}</span>
+        <img src="${def.icon}" class="power-seal" alt="${pName}">
+        <span class="power-uses">${pName}</span>
       `;
       btn.addEventListener('click', () => {
         Audio.resume();
@@ -1498,7 +1658,7 @@ const Game = (() => {
     var btn = document.createElement('button');
     btn.className = 'power-btn power-btn--remember-me power-btn--ready';
     btn.dataset.power = 'rememberMe';
-    btn.innerHTML = '<img src="' + def.icon + '" class="power-seal" alt="Remember Me"><span class="power-uses">Remember Me</span>';
+    btn.innerHTML = '<img src="' + def.icon + '" class="power-seal" alt="' + I18n.t('powers.rememberMe.name') + '"><span class="power-uses">' + I18n.t('powers.rememberMe.name') + '</span>';
     btn.addEventListener('click', function() {
       Audio.resume();
       usePower('rememberMe');
@@ -1520,7 +1680,7 @@ const Game = (() => {
         Powers.use(powerId);
         SleepBar.freeze(5000);
         Audio.powerUsed();
-        showPowerEffect(Powers.getDef('freeze'), 'Freeze!');
+        showPowerEffect(Powers.getDef('freeze'), I18n.t('powerEffects.freeze'));
         break;
 
       case 'insight': {
@@ -1529,7 +1689,7 @@ const Game = (() => {
         const ansStr = String(currentProblem.answer);
         const half = ansStr.substring(0, Math.ceil(ansStr.length / 2));
         Calculator.setAnswer(half);
-        showPowerEffect(Powers.getDef('insight'), 'Insight!');
+        showPowerEffect(Powers.getDef('insight'), I18n.t('powerEffects.insight'));
         break;
       }
 
@@ -1537,21 +1697,21 @@ const Game = (() => {
         Powers.use(powerId);
         SleepBar.restore(20);
         Audio.powerUsed();
-        showPowerEffect(Powers.getDef('restore'), 'Restore!');
+        showPowerEffect(Powers.getDef('restore'), I18n.t('powerEffects.restore'));
         break;
 
       case 'cosmicSolve':
         Powers.use(powerId);
         Audio.powerUsed();
         Calculator.setAnswer(currentProblem.answer);
-        showPowerEffect(Powers.getDef('cosmicSolve'), 'Cosmic Solve!');
+        showPowerEffect(Powers.getDef('cosmicSolve'), I18n.t('powerEffects.cosmicSolve'));
         setTimeout(() => onAnswerSubmit(currentProblem.answer), 500);
         break;
 
       case 'blazeSkip':
         Powers.use(powerId);
         Audio.powerUsed();
-        showPowerEffect(Powers.getDef('blazeSkip'), 'Blaze Skip!');
+        showPowerEffect(Powers.getDef('blazeSkip'), I18n.t('powerEffects.blazeSkip'));
         setTimeout(() => nextProblem(), 300);
         break;
 
@@ -1561,7 +1721,7 @@ const Game = (() => {
         currentProblem = Problems.simplifyProblem(currentProblem);
         renderProblem();
         Calculator.clear();
-        showPowerEffect(Powers.getDef('simplify'), 'Simplify!');
+        showPowerEffect(Powers.getDef('simplify'), I18n.t('powerEffects.simplify'));
         break;
 
       case 'rememberMe':
@@ -1569,8 +1729,8 @@ const Game = (() => {
         Audio.powerUsed();
         rememberMeActive = true;
         rememberMeCount = 5;
-        showPowerEffect(Powers.getDef('rememberMe'), 'Remember Me!');
-        showBattleToast('Yumemori', '👁️', 'One more time. Just one more time.', 3000);
+        showPowerEffect(Powers.getDef('rememberMe'), I18n.t('powerEffects.rememberMe'));
+        showBattleToast('Yumemori', '\uD83D\uDC41\uFE0F', I18n.t('battleToasts.oneMoreTime'), 3000);
         // Power shockwave from button position
         triggerRememberMeWave();
         // INSTANT — freeze drain briefly then unleash Yumemori
@@ -4073,12 +4233,12 @@ const Game = (() => {
       el.innerHTML = '';
       return;
     }
-    let html = '<div class="freestyle-records-title">Personal Records</div>';
+    let html = '<div class="freestyle-records-title">' + I18n.t('ui.personalRecords') + '</div>';
     if (hasPure) {
-      html += `<div class="freestyle-record-row"><span class="freestyle-record-label">Pure — Best Chain:</span> <span class="freestyle-record-val">${p.bestChain}</span> <span class="freestyle-record-sep">|</span> <span class="freestyle-record-label">Total:</span> <span class="freestyle-record-val">${p.bestTotal}</span></div>`;
+      html += `<div class="freestyle-record-row"><span class="freestyle-record-label">${I18n.t('ui.pureBestChain')}</span> <span class="freestyle-record-val">${I18n.formatNum(p.bestChain)}</span> <span class="freestyle-record-sep">|</span> <span class="freestyle-record-label">${I18n.t('ui.pureTotal')}</span> <span class="freestyle-record-val">${I18n.formatNum(p.bestTotal)}</span></div>`;
     }
     if (hasGuardian) {
-      html += `<div class="freestyle-record-row"><span class="freestyle-record-label">Guardian — Best Chain:</span> <span class="freestyle-record-val">${g.bestChain}</span> <span class="freestyle-record-sep">|</span> <span class="freestyle-record-label">Total:</span> <span class="freestyle-record-val">${g.bestTotal}</span></div>`;
+      html += `<div class="freestyle-record-row"><span class="freestyle-record-label">${I18n.t('ui.guardianBestChain')}</span> <span class="freestyle-record-val">${I18n.formatNum(g.bestChain)}</span> <span class="freestyle-record-sep">|</span> <span class="freestyle-record-label">${I18n.t('ui.guardianTotal')}</span> <span class="freestyle-record-val">${I18n.formatNum(g.bestTotal)}</span></div>`;
     }
     el.innerHTML = html;
   }
@@ -4100,12 +4260,14 @@ const Game = (() => {
       const div = document.createElement('div');
       div.className = `guardian-option ${unlocked ? '' : 'locked'}`;
 
+      const fsPowerName = I18n.t('powers.' + key + '.name') || def.name;
+      const fsPowerDesc = I18n.t('powers.' + key + '.desc') || def.desc;
       div.innerHTML = `
         <div class="guardian-opt-emoji"><img src="${def.icon}" class="guardian-seal" alt="${def.guardian}"></div>
         <div class="guardian-opt-info">
           <div class="guardian-opt-name">${def.guardian}</div>
-          <div class="guardian-opt-power">${def.name}</div>
-          <div class="guardian-opt-desc">${def.desc}</div>
+          <div class="guardian-opt-power">${fsPowerName}</div>
+          <div class="guardian-opt-desc">${fsPowerDesc}</div>
         </div>
         ${!unlocked ? '<span class="guardian-opt-lock"><img src="assets/lock.svg" class="lock-icon-sm" alt="Locked"></span>' : ''}
       `;
@@ -4180,14 +4342,14 @@ const Game = (() => {
     const hud = document.getElementById('freestyle-hud');
     if (hud) {
       hud.classList.remove('hidden');
-      document.getElementById('freestyle-streak-count').textContent = '0';
-      document.getElementById('freestyle-tier-display').textContent = 'Warm Up';
+      document.getElementById('freestyle-streak-count').textContent = I18n.formatNum(0);
+      document.getElementById('freestyle-tier-display').textContent = I18n.t('tiers.1');
     }
 
     // Show game label
     const gameLabel = document.getElementById('game-world-label');
     gameLabel.innerHTML = '';
-    gameLabel.textContent = '✦ The Endless Dream';
+    gameLabel.textContent = I18n.t('freestyle.gameLabel');
 
     // Stop mixtape, start freestyle music
     Mixtape.stopForWorld();
@@ -4254,7 +4416,7 @@ const Game = (() => {
       }
 
       // Update streak display
-      document.getElementById('freestyle-streak-count').textContent = result.streak;
+      document.getElementById('freestyle-streak-count').textContent = I18n.formatNum(result.streak);
 
       // Guardian mode: update charge UI
       if (freestyleSubmode === 'guardian') {
@@ -4288,7 +4450,7 @@ const Game = (() => {
       showParticles(false);
 
       // Update streak display
-      document.getElementById('freestyle-streak-count').textContent = '0';
+      document.getElementById('freestyle-streak-count').textContent = I18n.formatNum(0);
 
       // Guardian mode: reset charge UI
       if (freestyleSubmode === 'guardian') {
@@ -4348,8 +4510,8 @@ const Game = (() => {
     // Populate results screen
     showScreen('freestyle-results');
 
-    document.getElementById('freestyle-result-chain').textContent = result.bestChain;
-    document.getElementById('freestyle-result-total').textContent = result.totalCorrect;
+    document.getElementById('freestyle-result-chain').textContent = I18n.formatNum(result.bestChain);
+    document.getElementById('freestyle-result-total').textContent = I18n.formatNum(result.totalCorrect);
     document.getElementById('freestyle-result-tier').textContent = result.tierName;
     document.getElementById('freestyle-result-quote').textContent = `"${result.quote}"`;
 

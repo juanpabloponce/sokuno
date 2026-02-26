@@ -1,4 +1,4 @@
-const CACHE_NAME = 'sokuno-v56';
+const CACHE_NAME = 'sokuno-v68';
 
 const ASSETS = [
   '/',
@@ -21,6 +21,8 @@ const ASSETS = [
   '/js/lore.js',
   '/js/calculator.js',
   '/js/freestyle.js',
+  '/js/i18n.js',
+  '/lang/en.js',
   '/js/game.js',
   '/assets/icon.svg',
   '/assets/icon-192.png',
@@ -75,8 +77,28 @@ self.addEventListener('activate', e => {
 });
 
 // Fetch — serve from cache, fallback to network
+// Language files (lang/*.js) are cached dynamically on first load
 self.addEventListener('fetch', e => {
-  e.respondWith(
-    caches.match(e.request).then(cached => cached || fetch(e.request))
-  );
+  const url = new URL(e.request.url);
+  const isLangFile = url.pathname.startsWith('/lang/') && url.pathname.endsWith('.js');
+
+  if (isLangFile) {
+    // Cache-first with network fallback, and cache new lang files dynamically
+    e.respondWith(
+      caches.match(e.request).then(cached => {
+        if (cached) return cached;
+        return fetch(e.request).then(response => {
+          if (response.ok) {
+            const clone = response.clone();
+            caches.open(CACHE_NAME).then(cache => cache.put(e.request, clone));
+          }
+          return response;
+        });
+      })
+    );
+  } else {
+    e.respondWith(
+      caches.match(e.request).then(cached => cached || fetch(e.request))
+    );
+  }
 });

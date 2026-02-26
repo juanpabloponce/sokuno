@@ -26,6 +26,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Jost:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;700&family=Noto+Sans+JP:wght@400;500;700&family=Noto+Sans+KR:wght@400;500;700&family=Noto+Sans+Arabic:wght@400;500;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="css/main.css?v=39">
   <link rel="stylesheet" href="css/calculator.css?v=31">
   <link rel="stylesheet" href="css/worldmap.css?v=52">
@@ -43,10 +44,20 @@
 
   <div id="game-container">
 
+    <!-- ============ LANGUAGE SELECT SCREEN ============ -->
+    <div id="screen-lang-select" class="screen hidden">
+      <div id="lang-stars" class="star-field"></div>
+      <div class="lang-select-container">
+        <div class="lang-select-logo">SOKUNO</div>
+        <div class="lang-select-subtitle">Choose your language</div>
+        <div class="lang-select-grid" id="lang-select-grid"></div>
+      </div>
+    </div>
+
     <!-- ============ WAKE UP SCREEN ============ -->
-    <div id="screen-wakeup" class="screen wakeup-screen">
+    <div id="screen-wakeup" class="screen wakeup-screen hidden">
       <div class="wakeup-text" id="wakeup-text"></div>
-      <div class="wakeup-tap">Tap</div>
+      <div class="wakeup-tap" data-i18n="ui.tap">Tap</div>
     </div>
 
     <!-- ============ TITLE SCREEN ============ -->
@@ -73,28 +84,47 @@
         <img src="assets/kid.svg" class="title-kid" alt="Dreamer">
       </div>
       <button id="btn-start" class="btn-start-dream">
-        <span class="btn-start-title">Enter the Dream World</span>
-        <span class="btn-start-label">Story Mode</span>
+        <span class="btn-start-title" data-i18n="ui.enterDreamWorld">Enter the Dream World</span>
+        <span class="btn-start-label" data-i18n="ui.storyMode">Story Mode</span>
       </button>
       <button id="btn-freestyle" class="btn-freestyle locked" disabled>
         <img src="assets/lock.svg" class="freestyle-lock-icon" alt="">
-        <span class="btn-freestyle-title">The Endless Dream</span>
-        <span class="freestyle-unlock-hint">Complete Story Mode to unlock</span>
+        <span class="btn-freestyle-title" data-i18n="ui.theEndlessDream">The Endless Dream</span>
+        <span class="freestyle-unlock-hint" data-i18n="ui.completeStoryToUnlock">Complete Story Mode to unlock</span>
       </button>
       <button id="btn-lore" class="btn-lore">
         <span class="btn-lore-icon-wrap">
           <img src="assets/book.svg" class="btn-lore-icon" alt="Lore">
           <span id="lore-unread-dot" class="lore-unread-dot" style="display:none;"></span>
         </span>
-        <span class="btn-lore-label">Read the Lore</span>
+        <span class="btn-lore-label" data-i18n="ui.readTheLore">Read the Lore</span>
       </button>
       <button id="btn-mixtape" class="btn-mixtape">
         <img src="assets/mixtape.svg" class="btn-mixtape-icon" alt="Mixtape">
-        <span class="btn-mixtape-label">Mixtape</span>
+        <span class="btn-mixtape-label" data-i18n="ui.mixtape">Mixtape</span>
+      </button>
+      <button id="btn-settings" class="btn-settings">
+        <img src="assets/settings.svg" class="btn-settings-icon" alt="Settings">
+        <span class="btn-settings-label" data-i18n="ui.settings">Settings</span>
       </button>
       <div class="title-tagline">
-        Multi-sensory brain trainer — designed for flow state<br>
-        🎧 Headphones on. World off.
+        <span data-i18n="ui.tagline">Multi-sensory brain trainer — designed for flow state</span><br>
+        <span data-i18n="ui.headphonesOn">🎧 Headphones on. World off.</span>
+      </div>
+    </div>
+
+    <!-- ============ SETTINGS OVERLAY ============ -->
+    <div id="screen-settings" class="screen hidden">
+      <div class="settings-panel">
+        <button id="btn-close-settings" class="settings-close">&times;</button>
+        <div class="settings-list">
+          <button id="btn-settings-lang" class="settings-row">
+            <img src="assets/language.svg" class="settings-row-icon-img" alt="Language">
+            <span class="settings-row-label" data-i18n="ui.language">Language</span>
+            <span class="settings-row-value" id="settings-current-lang"></span>
+            <span class="settings-row-arrow">›</span>
+          </button>
+        </div>
       </div>
     </div>
 
@@ -102,21 +132,21 @@
     <div id="screen-lore" class="screen hidden">
       <div id="lore-list-container" class="lore-container">
         <div class="lore-header">
-          <button id="btn-back-lore" class="btn-back">← Back</button>
-          <div class="lore-title">Lore</div>
-          <div class="lore-subtitle">Story of the Dream World</div>
+          <button id="btn-back-lore" class="btn-back" data-i18n="ui.back">← Back</button>
+          <div class="lore-title" data-i18n="ui.loreTitle">Lore</div>
+          <div class="lore-subtitle" data-i18n="ui.loreSubtitle">Story of the Dream World</div>
         </div>
         <div id="lore-chapter-list" class="lore-chapter-list"></div>
       </div>
       <div id="lore-reader" class="lore-reader hidden">
         <div class="lore-reader-header">
-          <button id="btn-lore-reader-back" class="btn-back">← Chapters</button>
+          <button id="btn-lore-reader-back" class="btn-back" data-i18n="ui.chapters">← Chapters</button>
           <div id="lore-reader-title" class="lore-reader-title"></div>
         </div>
         <div id="lore-reader-body" class="lore-reader-body"></div>
         <div class="lore-nav-bar">
-          <button id="btn-lore-prev" class="lore-nav-btn hidden">◂ Prev</button>
-          <button id="btn-lore-next" class="lore-nav-btn hidden">Next ▸</button>
+          <button id="btn-lore-prev" class="lore-nav-btn hidden" data-i18n="ui.prev">◂ Prev</button>
+          <button id="btn-lore-next" class="lore-nav-btn hidden" data-i18n="ui.next">Next ▸</button>
         </div>
       </div>
     </div>
@@ -125,19 +155,19 @@
     <div id="lore-notification" class="lore-notification hidden">
       <div class="lore-notif-box">
         <img src="assets/book.svg" class="lore-notif-icon" alt="Book">
-        <div class="lore-notif-label">New Chapter Unlocked</div>
+        <div class="lore-notif-label" data-i18n="ui.newChapterUnlocked">New Chapter Unlocked</div>
         <div id="lore-notif-name" class="lore-notif-name"></div>
-        <div class="lore-notif-sub">added to Lore</div>
-        <button id="btn-lore-notif-continue" class="btn-primary lore-notif-btn">Continue</button>
+        <div class="lore-notif-sub" data-i18n="ui.addedToLore">added to Lore</div>
+        <button id="btn-lore-notif-continue" class="btn-primary lore-notif-btn" data-i18n="ui.continue_">Continue</button>
       </div>
     </div>
 
     <!-- ============ MIXTAPE SCREEN ============ -->
     <div id="screen-mixtape" class="screen hidden">
       <div class="mixtape-header">
-        <button id="btn-back-mixtape" class="btn-back">← Back</button>
-        <div class="mixtape-title">Mixtape</div>
-        <div class="mixtape-subtitle">Songs of the Dream World</div>
+        <button id="btn-back-mixtape" class="btn-back" data-i18n="ui.back">← Back</button>
+        <div class="mixtape-title" data-i18n="ui.mixtapeTitle">Mixtape</div>
+        <div class="mixtape-subtitle" data-i18n="ui.mixtapeSubtitle">Songs of the Dream World</div>
       </div>
       <div id="mixtape-list" class="mixtape-list"></div>
       <!-- Now playing bar -->
@@ -146,7 +176,7 @@
           <div id="now-playing-title" class="now-playing-title"></div>
         </div>
         <div class="now-playing-controls">
-          <button id="mixtape-btn-stop" class="mixtape-ctrl-btn" title="Stop">■</button>
+          <button id="mixtape-btn-stop" class="mixtape-ctrl-btn" data-i18n-title="ui.stop" title="Stop">■</button>
         </div>
       </div>
     </div>
@@ -155,9 +185,9 @@
     <div id="screen-worldmap" class="screen hidden">
       <div id="worldmap-stars" class="star-field"></div>
       <div class="worldmap-header">
-        <button id="btn-back-title" class="btn-back">← Back</button>
-        <div class="worldmap-title">Dream World</div>
-        <div class="worldmap-subtitle">Choose a realm</div>
+        <button id="btn-back-title" class="btn-back" data-i18n="ui.back">← Back</button>
+        <div class="worldmap-title" data-i18n="ui.dreamWorldTitle">Dream World</div>
+        <div class="worldmap-subtitle" data-i18n="ui.chooseARealm">Choose a realm</div>
       </div>
       <div id="world-list" class="world-list"></div>
     </div>
@@ -165,9 +195,9 @@
     <!-- ============ GUARDIAN PICKER ============ -->
     <div id="screen-guardian-pick" class="screen hidden">
       <div class="guardian-pick-header">
-        <button id="btn-back-guardian" class="btn-back">← Back</button>
-        <div class="guardian-pick-title">Choose Your Companion</div>
-        <div class="guardian-pick-subtitle">One guardian will accompany you through this realm</div>
+        <button id="btn-back-guardian" class="btn-back" data-i18n="ui.back">← Back</button>
+        <div class="guardian-pick-title" data-i18n="ui.chooseYourCompanion">Choose Your Companion</div>
+        <div class="guardian-pick-subtitle" data-i18n="ui.oneGuardianStory">One guardian will accompany you through this realm</div>
       </div>
       <div id="guardian-pick-list" class="guardian-pick-list"></div>
     </div>
@@ -176,7 +206,7 @@
     <div id="screen-stageselect" class="screen hidden">
       <div id="stageselect-stars" class="star-field"></div>
       <div class="stageselect-header">
-        <button id="btn-back-worldmap" class="btn-back">← Back</button>
+        <button id="btn-back-worldmap" class="btn-back" data-i18n="ui.back">← Back</button>
         <div id="stage-world-name" class="stage-world-name"></div>
         <div id="stage-companion" class="stage-companion"></div>
       </div>
@@ -205,7 +235,7 @@
           <span class="freestyle-hud-streak-icon">🔗</span>
           <span id="freestyle-streak-count" class="freestyle-hud-streak-val">0</span>
         </div>
-        <div id="freestyle-tier-display" class="freestyle-hud-tier">Warm Up</div>
+        <div id="freestyle-tier-display" class="freestyle-hud-tier" data-i18n="tiers.1">Warm Up</div>
       </div>
 
       <!-- Problem area -->
@@ -242,46 +272,46 @@
 
     <!-- ============ VICTORY SCREEN ============ -->
     <div id="screen-victory" class="screen hidden">
-      <div class="result-title" style="color: var(--gold);">Stage Clear!</div>
+      <div class="result-title" style="color: var(--gold);" data-i18n="ui.stageClear">Stage Clear!</div>
       <div id="victory-stars" class="result-stars"></div>
       <div id="victory-errors" class="result-info">Errors: 0</div>
       <div id="victory-problems" class="result-info">Problems solved: 10</div>
       <div class="result-buttons">
-        <button id="btn-next-stage" class="btn-primary">Next Stage</button>
-        <button id="btn-victory-worldmap" class="btn-secondary">World Map</button>
+        <button id="btn-next-stage" class="btn-primary" data-i18n="ui.nextStage">Next Stage</button>
+        <button id="btn-victory-worldmap" class="btn-secondary" data-i18n="ui.worldMap">World Map</button>
       </div>
     </div>
 
     <!-- ============ DEFEAT SCREEN ============ -->
     <div id="screen-defeat" class="screen hidden">
-      <div class="result-title" style="color: var(--danger);">Defeated</div>
-      <div id="defeat-message" class="result-info">The Nightmares have woken you up... You have left the Dream World.</div>
+      <div class="result-title" style="color: var(--danger);" data-i18n="ui.defeated">Defeated</div>
+      <div id="defeat-message" class="result-info" data-i18n="ui.defeatMessage">The Nightmares have woken you up... You have left the Dream World.</div>
       <div class="result-buttons">
-        <button id="btn-retry" class="btn-primary">Retry</button>
-        <button id="btn-defeat-worldmap" class="btn-secondary">World Map</button>
+        <button id="btn-retry" class="btn-primary" data-i18n="ui.retry">Retry</button>
+        <button id="btn-defeat-worldmap" class="btn-secondary" data-i18n="ui.worldMap">World Map</button>
       </div>
     </div>
 
     <!-- ============ FREESTYLE: MODE SELECT ============ -->
     <div id="screen-freestyle-select" class="screen hidden">
       <div class="freestyle-select-header">
-        <button id="btn-back-freestyle" class="btn-back">← Back</button>
-        <div class="freestyle-select-title">The Endless Dream</div>
-        <div class="freestyle-select-subtitle">How would you like to dream tonight?</div>
+        <button id="btn-back-freestyle" class="btn-back" data-i18n="ui.back">← Back</button>
+        <div class="freestyle-select-title" data-i18n="freestyle.selectTitle">The Endless Dream</div>
+        <div class="freestyle-select-subtitle" data-i18n="freestyle.selectSubtitle">How would you like to dream tonight?</div>
       </div>
       <div class="freestyle-select-body">
         <div class="freestyle-yumemori">
           <img src="assets/kid.svg" class="freestyle-yumemori-img" alt="Yumemori">
-          <div class="freestyle-yumemori-quote">"Each answer becomes the next challenge. The chain never stops... how long can you hold the dream?"</div>
+          <div class="freestyle-yumemori-quote" data-i18n="freestyle.yumemoriQuote">"Each answer becomes the next challenge. The chain never stops... how long can you hold the dream?"</div>
         </div>
         <div class="freestyle-mode-cards">
           <div id="freestyle-card-pure" class="freestyle-mode-card">
-            <div class="freestyle-mode-name">Dream Alone</div>
-            <div class="freestyle-mode-desc">Pure math. No powers. Just you.</div>
+            <div class="freestyle-mode-name" data-i18n="freestyle.dreamAlone">Dream Alone</div>
+            <div class="freestyle-mode-desc" data-i18n="freestyle.dreamAloneDesc">Pure math. No powers. Just you.</div>
           </div>
           <div id="freestyle-card-guardian" class="freestyle-mode-card">
-            <div class="freestyle-mode-name">Bring a Guardian</div>
-            <div class="freestyle-mode-desc">Choose a companion. Power charges every 15 correct.</div>
+            <div class="freestyle-mode-name" data-i18n="freestyle.bringAGuardian">Bring a Guardian</div>
+            <div class="freestyle-mode-desc" data-i18n="freestyle.bringAGuardianDesc">Choose a companion. Power charges every 15 correct.</div>
           </div>
         </div>
         <div class="freestyle-records" id="freestyle-records"></div>
@@ -291,9 +321,9 @@
     <!-- ============ FREESTYLE: GUARDIAN PICKER ============ -->
     <div id="screen-freestyle-guardian" class="screen hidden">
       <div class="freestyle-guardian-header">
-        <button id="btn-back-freestyle-guardian" class="btn-back">← Back</button>
-        <div class="freestyle-guardian-title">Choose Your Companion</div>
-        <div class="freestyle-guardian-subtitle">One guardian will accompany you into the Endless Dream</div>
+        <button id="btn-back-freestyle-guardian" class="btn-back" data-i18n="ui.back">← Back</button>
+        <div class="freestyle-guardian-title" data-i18n="freestyle.guardianPickerTitle">Choose Your Companion</div>
+        <div class="freestyle-guardian-subtitle" data-i18n="freestyle.guardianPickerSubtitle">One guardian will accompany you into the Endless Dream</div>
       </div>
       <div id="freestyle-guardian-list" class="guardian-pick-list"></div>
     </div>
@@ -301,28 +331,28 @@
     <!-- ============ FREESTYLE: RESULTS ============ -->
     <div id="screen-freestyle-results" class="screen hidden">
       <div class="freestyle-results-body">
-        <div class="freestyle-results-title">Dream Over</div>
+        <div class="freestyle-results-title" data-i18n="ui.dreamOver">Dream Over</div>
         <div class="freestyle-results-stats">
           <div class="freestyle-stat">
-            <div class="freestyle-stat-label">Best Chain</div>
+            <div class="freestyle-stat-label" data-i18n="ui.bestChain">Best Chain</div>
             <div class="freestyle-stat-value" id="freestyle-result-chain">0</div>
-            <div class="freestyle-stat-badge hidden" id="freestyle-badge-chain">NEW BEST!</div>
+            <div class="freestyle-stat-badge hidden" id="freestyle-badge-chain" data-i18n="ui.newBest">NEW BEST!</div>
           </div>
           <div class="freestyle-stat">
-            <div class="freestyle-stat-label">Total Correct</div>
+            <div class="freestyle-stat-label" data-i18n="ui.totalCorrect">Total Correct</div>
             <div class="freestyle-stat-value" id="freestyle-result-total">0</div>
-            <div class="freestyle-stat-badge hidden" id="freestyle-badge-total">NEW BEST!</div>
+            <div class="freestyle-stat-badge hidden" id="freestyle-badge-total" data-i18n="ui.newBest">NEW BEST!</div>
           </div>
           <div class="freestyle-stat">
-            <div class="freestyle-stat-label">Highest Tier</div>
+            <div class="freestyle-stat-label" data-i18n="ui.highestTier">Highest Tier</div>
             <div class="freestyle-stat-value freestyle-stat-tier" id="freestyle-result-tier">—</div>
-            <div class="freestyle-stat-badge hidden" id="freestyle-badge-tier">NEW BEST!</div>
+            <div class="freestyle-stat-badge hidden" id="freestyle-badge-tier" data-i18n="ui.newBest">NEW BEST!</div>
           </div>
         </div>
         <div class="freestyle-results-quote" id="freestyle-result-quote"></div>
         <div class="freestyle-results-buttons">
-          <button id="btn-freestyle-again" class="btn-primary">Dream Again</button>
-          <button id="btn-freestyle-exit" class="btn-secondary">Wake Up</button>
+          <button id="btn-freestyle-again" class="btn-primary" data-i18n="ui.dreamAgain">Dream Again</button>
+          <button id="btn-freestyle-exit" class="btn-secondary" data-i18n="ui.wakeUp">Wake Up</button>
         </div>
       </div>
     </div>
@@ -333,6 +363,8 @@
   </div>
 
   <!-- Scripts (order matters) -->
+  <script src="lang/en.js?v=1"></script>
+  <script src="js/i18n.js?v=1"></script>
   <script src="js/worlds-data.js?v=30"></script>
   <script src="js/dialogues-data.js?v=49"></script>
   <script src="js/storage.js?v=45"></script>

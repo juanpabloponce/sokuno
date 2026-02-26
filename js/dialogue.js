@@ -23,15 +23,20 @@ const Dialogue = (() => {
 
   function show(sequenceKey, callback) {
     onComplete = callback;
+    let i18nPath = '';
 
     if (sequenceKey === 'intro') {
       currentSequence = dialogueData.intro || [];
+      i18nPath = 'intro';
     } else if (sequenceKey === 'finale') {
       currentSequence = dialogueData.finale || [];
+      i18nPath = 'finale';
     } else if (sequenceKey === 'gathering') {
       currentSequence = dialogueData.gathering || [];
+      i18nPath = 'gathering';
     } else if (sequenceKey === 'abyssMidpoint') {
       currentSequence = dialogueData.abyssMidpoint || [];
+      i18nPath = 'abyssMidpoint';
     } else if (sequenceKey.startsWith('abyssStage_')) {
       var abParts = sequenceKey.split('_');
       var abStageNum = abParts[1];
@@ -41,19 +46,39 @@ const Dialogue = (() => {
       } else {
         currentSequence = [];
       }
+      i18nPath = 'abyssStages.' + abStageNum + '.' + abTiming;
     } else if (sequenceKey === 'finalBattleVictory') {
       currentSequence = dialogueData.finalBattleVictory || [];
+      i18nPath = 'finalBattleVictory';
     } else if (sequenceKey.startsWith('worldIntro_')) {
       const wId = sequenceKey.split('_')[1];
       currentSequence = dialogueData.worldIntros[wId] || [];
+      i18nPath = 'worldIntros.' + wId;
     } else if (sequenceKey.startsWith('stage10Intro_')) {
       const wId = sequenceKey.split('_')[1];
       currentSequence = dialogueData.stage10Intros[wId] || [];
+      i18nPath = 'stage10Intros.' + wId;
     } else if (sequenceKey.startsWith('awakening_')) {
       const wId = sequenceKey.split('_')[1];
       currentSequence = dialogueData.awakenings[wId] || [];
+      i18nPath = 'awakenings.' + wId;
     } else {
       currentSequence = [];
+    }
+
+    // Overlay translated text/button from i18n (keeps speaker, emoji, type from original)
+    if (i18nPath) {
+      const translated = I18n.getSection('dialogues.' + i18nPath);
+      if (translated && Array.isArray(translated)) {
+        currentSequence = currentSequence.map((line, idx) => {
+          const tLine = translated[idx];
+          if (!tLine) return line;
+          return Object.assign({}, line, {
+            text: tLine.text || line.text,
+            button: tLine.button || line.button
+          });
+        });
+      }
     }
 
     if (currentSequence.length === 0) {
@@ -81,11 +106,11 @@ const Dialogue = (() => {
         </div>
         <div class="dialogue-text"></div>
         <div class="dialogue-input-area hidden">
-          <input type="text" class="dialogue-name-input" placeholder="Your name..." maxlength="20" autocomplete="off" />
+          <input type="text" class="dialogue-name-input" placeholder="${I18n.t('ui.yourName')}" maxlength="20" autocomplete="off" />
         </div>
-        <button class="dialogue-continue-btn">Continue</button>
+        <button class="dialogue-continue-btn">${I18n.t('ui.continue_')}</button>
       </div>
-      ${hasNameInput ? '' : '<button class="dialogue-skip-btn">Skip ▸▸</button>'}
+      ${hasNameInput ? '' : '<button class="dialogue-skip-btn">' + I18n.t('ui.skip') + '</button>'}
     `;
 
     const btn = overlay.querySelector('.dialogue-continue-btn');
@@ -204,19 +229,19 @@ const Dialogue = (() => {
         nameInput.value = '';
         nameInput.focus();
       });
-      btn.textContent = line.button || 'Continue';
+      btn.textContent = line.button || I18n.t('ui.continue_');
     } else if (line.speaker === 'system') {
       nameEl.textContent = '';
       setSpeakerIcon(emojiEl, '');
       textEl.className = 'dialogue-text power-unlock';
       typewriterEffect(textEl, processedText);
-      btn.textContent = line.button || 'Continue';
+      btn.textContent = line.button || I18n.t('ui.continue_');
     } else {
       nameEl.textContent = line.speaker;
       setSpeakerIcon(emojiEl, line.emoji);
       textEl.className = 'dialogue-text';
       typewriterEffect(textEl, processedText);
-      btn.textContent = line.button || 'Continue';
+      btn.textContent = line.button || I18n.t('ui.continue_');
     }
   }
 

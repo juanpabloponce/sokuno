@@ -102,9 +102,10 @@ const Lore = (() => {
         ? `background: ${ch.color}; box-shadow: 0 0 8px ${ch.color}${ch.glow ? ', 0 0 16px ' + ch.color : ''};`
         : 'background: rgba(255,255,255,0.1);';
 
+      const chapterName = I18n.t('lore.' + ch.id) || ch.name;
       div.innerHTML = `
         <span class="lore-dot" style="${dotStyle}"></span>
-        <span class="lore-chapter-name">${ch.name}</span>
+        <span class="lore-chapter-name">${chapterName}</span>
         ${!unlocked ? '<img src="assets/lock.svg" class="lore-lock" alt="Locked">' : ''}
         ${!seen && unlocked ? '<span class="lore-unread-badge"></span>' : ''}
       `;
@@ -131,17 +132,26 @@ const Lore = (() => {
     listEl.classList.add('hidden');
     reader.classList.remove('hidden');
 
-    const lines = getDialogueLines(chapter.dialogueKey);
+    let lines = getDialogueLines(chapter.dialogueKey);
+    // Overlay translated text from i18n
+    const translated = I18n.getSection('dialogues.' + chapter.dialogueKey);
+    if (translated && Array.isArray(translated)) {
+      lines = lines.map((line, idx) => {
+        const tLine = translated[idx];
+        if (!tLine) return line;
+        return Object.assign({}, line, { text: tLine.text || line.text });
+      });
+    }
     const titleEl = document.getElementById('lore-reader-title');
     const bodyEl = document.getElementById('lore-reader-body');
 
-    titleEl.textContent = chapter.name;
+    titleEl.textContent = I18n.t('lore.' + chapter.id) || chapter.name;
     titleEl.style.color = chapter.color;
 
     bodyEl.innerHTML = '';
 
     if (lines.length === 0) {
-      bodyEl.innerHTML = '<div class="lore-line"><span class="lore-line-text" style="opacity:0.5;">This chapter\'s story has yet to be written...</span></div>';
+      bodyEl.innerHTML = '<div class="lore-line"><span class="lore-line-text" style="opacity:0.5;">' + I18n.t('lore.chapterStoryNotWritten') + '</span></div>';
     } else {
       lines.forEach(line => {
         if (line.speaker === 'system') return; // skip system messages in lore view
@@ -232,7 +242,7 @@ const Lore = (() => {
     const overlay = document.getElementById('lore-notification');
     if (!overlay) { if (onContinue) onContinue(); return; }
 
-    document.getElementById('lore-notif-name').textContent = chapter.name;
+    document.getElementById('lore-notif-name').textContent = I18n.t('lore.' + chapter.id) || chapter.name;
     overlay.classList.remove('hidden');
     overlay.classList.add('lore-notif-enter');
 

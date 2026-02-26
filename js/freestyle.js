@@ -294,8 +294,8 @@ const Freestyle = (() => {
       bestChain,
       totalCorrect,
       highestTier: currentTier,
-      tierName: TIER_NAMES[currentTier] || 'Unknown',
-      quote: RESULT_QUOTES[currentTier] || RESULT_QUOTES[1],
+      tierName: I18n.t('tiers.' + currentTier) || 'Unknown',
+      quote: I18n.t('tierQuotes.' + currentTier) || I18n.t('tierQuotes.1'),
       guardian: selectedGuardian,
     };
   }
@@ -373,10 +373,10 @@ const Freestyle = (() => {
   function getBestChain() { return bestChain; }
   function getTotalCorrect() { return totalCorrect; }
   function getCurrentTier() { return currentTier; }
-  function getTierName() { return TIER_NAMES[currentTier] || ''; }
+  function getTierName() { return I18n.t('tiers.' + currentTier) || ''; }
   function getGuardianCharge() { return guardianReady ? 1 : guardianCharge / 15; }
   function isGuardianReady() { return guardianReady; }
-  function getResultQuote(tier) { return RESULT_QUOTES[tier] || RESULT_QUOTES[1]; }
+  function getResultQuote(tier) { return I18n.t('tierQuotes.' + tier) || I18n.t('tierQuotes.1'); }
   function getDrainRateForTier(tier) { return getDrainRate(tier); }
 
   return {

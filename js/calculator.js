@@ -16,7 +16,7 @@ const Calculator = (() => {
   function render() {
     const display = document.getElementById('answer-display');
     if (display) {
-      display.textContent = currentInput || '';
+      display.textContent = currentInput ? I18n.formatNum(currentInput) : '';
       // Show cursor blink when empty
       display.classList.toggle('empty', currentInput.length === 0);
     }

@@ -126,7 +126,10 @@ body {
 .dialogue-box,
 .mixtape-track,
 .mixtape-track-btn,
-.mixtape-ctrl-btn {
+.mixtape-ctrl-btn,
+.lang-btn,
+.settings-panel,
+.settings-row {
   filter: url(#hand-drawn);
 }
 
@@ -503,7 +506,7 @@ body {
   color: rgba(160, 140, 200, 0.4);
   text-align: center;
   line-height: 1.8;
-  padding: 0 36px 24px;
+  padding: 0 70px 24px;
   position: absolute;
   bottom: 0;
   left: 0;
@@ -1015,6 +1018,24 @@ body {
     opacity: 1;
     transform: translateY(0);
   }
+}
+
+/* Smooth fade transitions for settings / lang-select */
+.screen.fade-out {
+  opacity: 0;
+  transition: opacity 0.2s ease-out;
+  pointer-events: none;
+}
+
+.screen.fade-in {
+  opacity: 1;
+  transition: opacity 0.2s ease-in;
+}
+
+.screen.fade-ready {
+  display: flex;
+  opacity: 0;
+  pointer-events: none;
 }
 
 /* ============================================= */
@@ -1665,4 +1686,258 @@ body {
   transform: scale(0.9);
   background: rgba(255, 123, 172, 0.15);
   border-color: rgba(255, 123, 172, 0.4);
+}
+
+/* ========== Language Selection Screen ========== */
+
+#screen-lang-select {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  min-height: 100dvh;
+  padding: 0 20px;
+  background: linear-gradient(180deg, #020408 0%, #080c18 30%, #0a1020 60%, #060a14 100%);
+  overflow: hidden;
+}
+
+.lang-select-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  z-index: 2;
+  padding-top: clamp(30px, 8vh, 60px);
+}
+
+.lang-select-logo {
+  font-family: 'Leander', 'Zen Dots', 'Jost', sans-serif;
+  font-size: clamp(34px, 10vw, 50px);
+  font-weight: 400;
+  background: linear-gradient(135deg,
+    rgba(255, 255, 255, 0.95) 0%,
+    rgba(200, 180, 255, 0.9) 30%,
+    rgba(160, 140, 220, 0.85) 60%,
+    rgba(120, 100, 180, 0.8) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  filter: drop-shadow(0 0 20px rgba(160, 130, 255, 0.35))
+          drop-shadow(0 0 40px rgba(130, 80, 200, 0.15));
+  letter-spacing: 6px;
+  text-transform: uppercase;
+  margin-bottom: 6px;
+}
+
+.lang-select-subtitle {
+  font-family: 'Courier New', Courier, monospace;
+  font-size: 11px;
+  font-weight: 300;
+  letter-spacing: 1.5px;
+  color: rgba(160, 140, 200, 0.45);
+  text-align: center;
+  margin-bottom: clamp(20px, 4vh, 36px);
+}
+
+#lang-select-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px;
+  max-width: 380px;
+  width: 100%;
+  overflow-y: auto;
+  padding-bottom: 20px;
+}
+
+.lang-btn {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 14px 18px;
+  border-radius: 20px;
+  border: 1.5px solid rgba(160, 130, 255, 0.12);
+  background: rgba(8, 10, 24, 0.55);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  color: rgba(255, 255, 255, 0.85);
+  cursor: pointer;
+  transition: transform 0.2s ease, border-color 0.25s, background 0.25s, box-shadow 0.3s;
+  font-family: 'Leander', 'Zen Dots', sans-serif;
+  font-size: 1rem;
+  letter-spacing: 0.5px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+  position: relative;
+  overflow: hidden;
+}
+
+.lang-btn:hover {
+  border-color: rgba(160, 130, 255, 0.2);
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.25), 0 0 25px rgba(140, 100, 220, 0.1);
+}
+
+.lang-btn:active {
+  transform: scale(0.97);
+}
+
+.lang-flag {
+  font-size: 1.5rem;
+  line-height: 1;
+}
+
+.lang-native {
+  font-weight: 400;
+}
+
+/* Settings button on title screen (bottom right) */
+.btn-settings {
+  position: absolute;
+  bottom: 20px;
+  right: 20px;
+  z-index: 10;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 8px;
+  transition: all 0.3s ease;
+}
+
+.btn-settings:active {
+  transform: scale(0.93);
+}
+
+.btn-settings-icon {
+  width: 28px;
+  height: 28px;
+  object-fit: contain;
+  filter: brightness(1.6) drop-shadow(0 0 8px rgba(255, 215, 0, 0.3));
+  transition: filter 0.3s ease;
+}
+
+.btn-settings:hover .btn-settings-icon {
+  filter: brightness(2) drop-shadow(0 0 12px rgba(255, 215, 0, 0.5));
+}
+
+.btn-settings-label {
+  font-family: 'Leander', 'Zen Dots', sans-serif;
+  font-size: 11px;
+  letter-spacing: 1.5px;
+  color: rgba(200, 180, 255, 0.5);
+  transition: color 0.3s ease;
+}
+
+.btn-settings:hover .btn-settings-label {
+  color: rgba(255, 215, 0, 0.8);
+}
+
+/* Settings overlay */
+#screen-settings {
+  justify-content: center;
+  align-items: center;
+  background: rgba(2, 4, 8, 0.85);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  z-index: 50;
+}
+
+.settings-panel {
+  position: relative;
+  width: 85%;
+  max-width: 360px;
+  padding: 32px 24px;
+  border-radius: 18px;
+  border: 1.5px solid rgba(160, 130, 255, 0.12);
+  background: rgba(20, 12, 40, 0.75);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  box-shadow: 0 0 40px rgba(100, 60, 150, 0.25),
+              inset 0 1px 0 rgba(255, 255, 255, 0.04);
+}
+
+.settings-close {
+  position: absolute;
+  top: 12px;
+  right: 16px;
+  background: none;
+  border: none;
+  color: rgba(200, 180, 255, 0.5);
+  font-size: 28px;
+  cursor: pointer;
+  padding: 4px 8px;
+  line-height: 1;
+  transition: color 0.2s ease;
+}
+
+.settings-close:hover {
+  color: rgba(255, 215, 0, 0.8);
+}
+
+.settings-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+.settings-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 16px;
+  border-radius: 12px;
+  border: 1px solid rgba(160, 130, 255, 0.1);
+  background: rgba(30, 20, 60, 0.5);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-align: left;
+  width: 100%;
+}
+
+.settings-row:hover {
+  background: rgba(40, 25, 80, 0.6);
+  border-color: rgba(160, 130, 255, 0.25);
+  box-shadow: 0 0 12px rgba(160, 130, 255, 0.08);
+}
+
+.settings-row:active {
+  transform: scale(0.98);
+}
+
+.settings-row-icon {
+  font-size: 22px;
+  flex-shrink: 0;
+}
+
+.settings-row-icon-img {
+  width: 24px;
+  height: 24px;
+  flex-shrink: 0;
+  filter: brightness(1.4);
+}
+
+.settings-row-label {
+  font-family: 'Leander', 'Zen Dots', sans-serif;
+  font-size: 13px;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: rgba(200, 180, 255, 0.8);
+  flex-shrink: 0;
+}
+
+.settings-row-value {
+  flex: 1;
+  text-align: right;
+  font-family: 'Leander', 'Zen Dots', sans-serif;
+  font-size: 12px;
+  color: rgba(93, 230, 200, 0.8);
+  letter-spacing: 1px;
+}
+
+.settings-row-arrow {
+  font-size: 20px;
+  color: rgba(200, 180, 255, 0.4);
+  flex-shrink: 0;
 }
