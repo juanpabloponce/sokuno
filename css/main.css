@@ -129,7 +129,8 @@ body {
 .mixtape-ctrl-btn,
 .lang-btn,
 .settings-panel,
-.settings-row {
+.settings-row,
+.lore-nav-btn {
   filter: url(#hand-drawn);
 }
 
@@ -1310,22 +1311,24 @@ body {
   flex-shrink: 0;
 }
 .lore-nav-btn {
-  background: rgba(255, 255, 255, 0.08);
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  color: rgba(255, 255, 255, 0.6);
-  font-family: 'Jost', sans-serif;
-  font-size: 13px;
-  letter-spacing: 1px;
-  padding: 8px 18px;
+  background: rgba(20, 12, 40, 0.6);
+  border: 1.5px solid rgba(160, 130, 255, 0.18);
+  color: rgba(200, 180, 255, 0.8);
+  font-family: 'Leander', 'Zen Dots', sans-serif;
+  font-size: 14px;
+  letter-spacing: 1.5px;
+  padding: 10px 22px;
   border-radius: 20px;
   cursor: pointer;
   transition: all 0.2s ease;
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
 }
 .lore-nav-btn:active {
-  background: rgba(255, 255, 255, 0.12);
-  color: rgba(255, 255, 255, 0.8);
+  background: rgba(40, 25, 80, 0.7);
+  border-color: rgba(160, 130, 255, 0.35);
+  color: rgba(255, 215, 0, 0.8);
 }
 /* Override global .hidden for nav buttons — keep in flow but invisible */
 .lore-nav-bar .lore-nav-btn.hidden {
