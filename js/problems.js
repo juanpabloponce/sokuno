@@ -135,18 +135,18 @@ const Problems = (() => {
 
       case 6: // Ocean — All operations mixed
         operations = ['addition', 'subtraction', 'multiplication', 'division'];
-        if (stageNum <= 3) { min = 2; max = 10; }
-        else if (stageNum <= 6) { min = 3; max = 16; }
-        else if (stageNum <= 9) { min = 4; max = 20; }
-        else { min = 2; max = 22; }
+        if (stageNum <= 3) { min = 2; max = 9; }
+        else if (stageNum <= 6) { min = 3; max = 14; }
+        else if (stageNum <= 9) { min = 3; max = 17; }
+        else { min = 2; max = 19; }
         break;
 
       case 7: // The Abyss — All operations, extreme, unpredictable
         operations = ['addition', 'subtraction', 'multiplication', 'division'];
-        if (stageNum <= 3) { min = 3; max = 14; }
-        else if (stageNum <= 6) { min = 4; max = 18; }
-        else if (stageNum <= 9) { min = 5; max = 22; }
-        else { min = 3; max = 25; } // Stage 10: Final battle
+        if (stageNum <= 3) { min = 2; max = 12; }
+        else if (stageNum <= 6) { min = 3; max = 15; }
+        else if (stageNum <= 9) { min = 4; max = 19; }
+        else { min = 3; max = 21; } // Stage 10: Final battle
         break;
 
       default:

@@ -137,22 +137,40 @@ const SleepBar = (() => {
 
     let startValue = stageNum === 10 ? 25 : 45;
 
-    // The Abyss (World 7) — custom difficulty per stage from design doc
+    // Ocean (World 6) — custom difficulty per stage (reduced 15%)
+    if (worldId === 6) {
+      var oceanConfigs = [
+        null,
+        { startValue: 52, drainRate: 0.99 },   // Stage 1
+        { startValue: 52, drainRate: 1.05 },   // Stage 2
+        { startValue: 52, drainRate: 1.1 },    // Stage 3
+        { startValue: 52, drainRate: 1.21 },   // Stage 4
+        { startValue: 52, drainRate: 1.3 },    // Stage 5
+        { startValue: 52, drainRate: 1.38 },   // Stage 6
+        { startValue: 52, drainRate: 1.46 },   // Stage 7
+        { startValue: 52, drainRate: 1.5 },    // Stage 8
+        { startValue: 52, drainRate: 1.54 },   // Stage 9
+        { startValue: 29, drainRate: 1.98 }    // Stage 10
+      ];
+      return oceanConfigs[stageNum] || { startValue: 52, drainRate: 1.3 };
+    }
+
+    // The Abyss (World 7) — custom difficulty per stage (reduced 15%)
     if (worldId === 7) {
       var abyssConfigs = [
         null,
-        { startValue: 30, drainRate: 1.2 },   // Stage 1
-        { startValue: 28, drainRate: 1.4 },   // Stage 2
-        { startValue: 25, drainRate: 1.6 },   // Stage 3
-        { startValue: 22, drainRate: 1.8 },   // Stage 4
-        { startValue: 20, drainRate: 2.0 },   // Stage 5
-        { startValue: 18, drainRate: 2.2 },   // Stage 6
-        { startValue: 17, drainRate: 2.3 },   // Stage 7
-        { startValue: 16, drainRate: 2.4 },   // Stage 8
-        { startValue: 15, drainRate: 2.45 },  // Stage 9
-        { startValue: 15, drainRate: 2.5 }    // Stage 10 (Final Battle)
+        { startValue: 35, drainRate: 1.02 },   // Stage 1
+        { startValue: 32, drainRate: 1.19 },   // Stage 2
+        { startValue: 29, drainRate: 1.36 },   // Stage 3
+        { startValue: 25, drainRate: 1.53 },   // Stage 4
+        { startValue: 23, drainRate: 1.7 },    // Stage 5
+        { startValue: 21, drainRate: 1.87 },   // Stage 6
+        { startValue: 20, drainRate: 1.96 },   // Stage 7
+        { startValue: 18, drainRate: 2.04 },   // Stage 8
+        { startValue: 17, drainRate: 2.08 },   // Stage 9
+        { startValue: 17, drainRate: 2.13 }    // Stage 10 (Final Battle)
       ];
-      return abyssConfigs[stageNum] || { startValue: 20, drainRate: 2.0 };
+      return abyssConfigs[stageNum] || { startValue: 23, drainRate: 1.7 };
     }
 
     return { drainRate: rate, startValue };
